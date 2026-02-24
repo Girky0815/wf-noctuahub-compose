@@ -1,3 +1,47 @@
+# Noctua Hub(Compose 版)
+Material 3 Expressive を使用した Warframe ワールドステータス確認アプリ(Compose 版)
+
+---
+このリポジトリは、Android およびデスクトップ (JVM) をターゲットとした Kotlin Multiplatform プロジェクトです。
+
+* [/composeApp](./composeApp/src) は、Compose Multiplatform アプリケーション間で共有されるコードのためのディレクトリです。
+  ここにはいくつかのサブフォルダーが含まれています：
+  - [commonMain](./composeApp/src/commonMain/kotlin) は、すべてのターゲットに共通するコード用です。
+  - その他のフォルダーは、フォルダー名に示されたプラットフォーム専用にコンパイルされる Kotlin コード用です。
+    例えば、Kotlin アプリの iOS 部分で Apple の CoreCrypto を使用したい場合、[iosMain](./composeApp/src/iosMain/kotlin) フォルダーがそのような呼び出しを記述する適切な場所になります。
+    同様に、デスクトップ (JVM) 固有の部分を編集したい場合は、[jvmMain](./composeApp/src/jvmMain/kotlin) フォルダーが適切な場所となります。
+
+### Android アプリケーションのビルドと実行
+
+開発バージョンの Android アプリをビルドして実行するには、IDE のツールバーにある実行ウィジェットから実行構成（Run Configuration）を使用するか、ターミナルから直接ビルドしてください。
+
+- macOS/Linux の場合
+  ```shell
+  ./gradlew :composeApp:assembleDebug
+  ```
+- Windows の場合
+  ```shell
+  .\gradlew.bat :composeApp:assembleDebug
+  ```
+
+### デスクトップ (JVM) アプリケーションのビルドと実行
+
+開発バージョンのデスクトップアプリをビルドして実行するには、IDE のツールバーにある実行ウィジェットから実行構成を使用するか、ターミナルから直接実行してください。
+
+- macOS/Linux の場合
+  ```shell
+  ./gradlew :composeApp:run
+  ```
+- Windows の場合
+  ```shell
+  .\gradlew.bat :composeApp:run
+  ```
+
+---
+
+[Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html) についての詳細はこちら…
+
+<!--
 This is a Kotlin Multiplatform project targeting Android, Desktop (JVM).
 
 * [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
@@ -38,3 +82,4 @@ in your IDE’s toolbar or run it directly from the terminal:
 ---
 
 Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+-->
