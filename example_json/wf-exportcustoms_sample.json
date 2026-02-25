@@ -1,0 +1,10 @@
+{
+  "ExportCustoms": [
+    {
+      "uniqueName": "/Lotus/Characters/Tenno/Accessory/Scarves/GrnBannerScarf/GrnBannerScarfItem",
+      "name": "Vanquished Banner",
+      "codexSecret": false,
+      "description": "グリニアの旗を身に着け挑発しよう。"
+    }
+  ]
+}

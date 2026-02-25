@@ -1,0 +1,221 @@
+{
+  "ExportRelicArcane": [
+    {
+      "uniqueName": "/Lotus/Types/Game/Projections/T1VoidProjectionSevagothPrimeASilver",
+      "name": "Lith C12 レリック",
+      "codexSecret": false,
+      "description": "オロキンの秘密を宿すアーティファクト。Voidの力のみで開封可能。",
+      "relicRewards": [
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/Weapons/WeaponParts/CobraCranePrimeGuard",
+          "rarity": "RARE",
+          "tier": 0,
+          "itemCount": 1
+        },
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/Weapons/WeaponParts/FulminPrimeStock",
+          "rarity": "UNCOMMON",
+          "tier": 0,
+          "itemCount": 1
+        },
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/WarframeRecipes/GrendelPrimeChassisBlueprint",
+          "rarity": "UNCOMMON",
+          "tier": 0,
+          "itemCount": 1
+        },
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/WarframeRecipes/SevagothPrimeSystemsBlueprint",
+          "rarity": "COMMON",
+          "tier": 0,
+          "itemCount": 1
+        },
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/Weapons/WeaponParts/ShadePrimeCerebrum",
+          "rarity": "COMMON",
+          "tier": 0,
+          "itemCount": 1
+        },
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/Weapons/WeaponParts/OkinaPrimeBlade",
+          "rarity": "COMMON",
+          "tier": 0,
+          "itemCount": 1
+        }
+      ]
+    },
+    {
+      "uniqueName": "/Lotus/Types/Game/Projections/T1VoidProjectionSevagothPrimeAGold",
+      "name": "Lith C12 レリック",
+      "codexSecret": false,
+      "description": "オロキンの秘密を宿すアーティファクト。Voidの力のみで開封可能。",
+      "relicRewards": [
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/Weapons/WeaponParts/CobraCranePrimeGuard",
+          "rarity": "RARE",
+          "tier": 0,
+          "itemCount": 1
+        },
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/Weapons/WeaponParts/FulminPrimeStock",
+          "rarity": "UNCOMMON",
+          "tier": 0,
+          "itemCount": 1
+        },
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/WarframeRecipes/GrendelPrimeChassisBlueprint",
+          "rarity": "UNCOMMON",
+          "tier": 0,
+          "itemCount": 1
+        },
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/WarframeRecipes/SevagothPrimeSystemsBlueprint",
+          "rarity": "COMMON",
+          "tier": 0,
+          "itemCount": 1
+        },
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/Weapons/WeaponParts/ShadePrimeCerebrum",
+          "rarity": "COMMON",
+          "tier": 0,
+          "itemCount": 1
+        },
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/Weapons/WeaponParts/OkinaPrimeBlade",
+          "rarity": "COMMON",
+          "tier": 0,
+          "itemCount": 1
+        }
+      ]
+    },
+    {
+      "uniqueName": "/Lotus/Types/Game/Projections/T1VoidProjectionSevagothPrimeAPlatinum",
+      "name": "Lith C12 レリック",
+      "codexSecret": false,
+      "description": "オロキンの秘密を宿すアーティファクト。Voidの力のみで開封可能。",
+      "relicRewards": [
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/Weapons/WeaponParts/CobraCranePrimeGuard",
+          "rarity": "RARE",
+          "tier": 0,
+          "itemCount": 1
+        },
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/Weapons/WeaponParts/FulminPrimeStock",
+          "rarity": "UNCOMMON",
+          "tier": 0,
+          "itemCount": 1
+        },
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/WarframeRecipes/GrendelPrimeChassisBlueprint",
+          "rarity": "UNCOMMON",
+          "tier": 0,
+          "itemCount": 1
+        },
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/WarframeRecipes/SevagothPrimeSystemsBlueprint",
+          "rarity": "COMMON",
+          "tier": 0,
+          "itemCount": 1
+        },
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/Weapons/WeaponParts/ShadePrimeCerebrum",
+          "rarity": "COMMON",
+          "tier": 0,
+          "itemCount": 1
+        },
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/Weapons/WeaponParts/OkinaPrimeBlade",
+          "rarity": "COMMON",
+          "tier": 0,
+          "itemCount": 1
+        }
+      ]
+    },
+    {
+      "uniqueName": "/Lotus/Types/Game/Projections/T1VoidProjectionSevagothPrimeABronze",
+      "name": "Lith C12 レリック",
+      "codexSecret": false,
+      "description": "オロキンの秘密を宿すアーティファクト。Voidの力のみで開封可能。",
+      "relicRewards": [
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/Weapons/WeaponParts/CobraCranePrimeGuard",
+          "rarity": "RARE",
+          "tier": 0,
+          "itemCount": 1
+        },
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/Weapons/WeaponParts/FulminPrimeStock",
+          "rarity": "UNCOMMON",
+          "tier": 0,
+          "itemCount": 1
+        },
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/WarframeRecipes/GrendelPrimeChassisBlueprint",
+          "rarity": "UNCOMMON",
+          "tier": 0,
+          "itemCount": 1
+        },
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/WarframeRecipes/SevagothPrimeSystemsBlueprint",
+          "rarity": "COMMON",
+          "tier": 0,
+          "itemCount": 1
+        },
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/Weapons/WeaponParts/ShadePrimeCerebrum",
+          "rarity": "COMMON",
+          "tier": 0,
+          "itemCount": 1
+        },
+        {
+          "rewardName": "/Lotus/StoreItems/Types/Recipes/Weapons/WeaponParts/OkinaPrimeBlade",
+          "rarity": "COMMON",
+          "tier": 0,
+          "itemCount": 1
+        }
+      ]
+    },
+    {
+      "uniqueName": "/Lotus/Upgrades/CosmeticEnhancers/Utility/GolemArcaneRadialEnergyOnEnergyPickup",
+      "name": "アルケイン エナージャイズ",
+      "codexSecret": true,
+      "rarity": "LEGENDARY",
+      "levelStats": [
+        {
+          "stats": [
+            "エネルギーオーブ回収時：\r\n60％の確率で自身と15m以内の味方のエネルギーを25回復\r\n15秒のクールダウン"
+          ]
+        },
+        {
+          "stats": [
+            "エネルギーオーブ回収時：\r\n60％の確率で自身と15m以内の味方のエネルギーを50回復\r\n15秒のクールダウン"
+          ]
+        },
+        {
+          "stats": [
+            "エネルギーオーブ回収時：\r\n60％の確率で自身と15m以内の味方のエネルギーを75回復\r\n15秒のクールダウン"
+          ]
+        },
+        {
+          "stats": [
+            "エネルギーオーブ回収時：\r\n60％の確率で自身と15m以内の味方のエネルギーを100回復\r\n15秒のクールダウン\r\n+1 アルケイン 復活ユニット",
+            "+1 アルケイン 復活ユニット"
+          ]
+        },
+        {
+          "stats": [
+            "エネルギーオーブ回収時：\r\n60％の確率で自身と15m以内の味方のエネルギーを125回復\r\n15秒のクールダウン\r\n+1 アルケイン 復活ユニット",
+            "+1 アルケイン 復活ユニット"
+          ]
+        },
+        {
+          "stats": [
+            "エネルギーオーブ回収時：\r\n60％の確率で自身と15m以内の味方のエネルギーを150回復\r\n15秒のクールダウン\r\n+1 アルケイン 復活ユニット",
+            "+1 アルケイン 復活ユニット"
+          ]
+        }
+      ]
+    }
+  ]
+}

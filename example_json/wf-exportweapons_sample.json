@@ -1,0 +1,55 @@
+{
+  "ExportWeapons": [
+    {
+      "name": "Okina Prime",
+      "uniqueName": "/Lotus/Weapons/Tenno/Melee/Swords/PrimeOkina/PrimeOkina",
+      "codexSecret": false,
+      "damagePerShot": [
+        9.1999998,
+        64.400002,
+        110.4,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "totalDamage": 184,
+      "description": "研ぎ澄まされた釵の刃で権威を示そう。",
+      "criticalChance": 0.30000001,
+      "criticalMultiplier": 2.5999999,
+      "procChance": 0.24000001,
+      "fireRate": 1.1666667,
+      "masteryReq": 12,
+      "productCategory": "Melee",
+      "slot": 5,
+      "masteryReq": 12, // なぜか重複している
+      "omegaAttenuation": 0.69999999,
+      "blockingAngle": 50,
+      "comboDuration": 5,
+      "followThrough": 0.80000001,
+      "range": 1.7,
+      "slamAttack": 368,
+      "slamRadialDamage": 368,
+      "slamRadius": 6,
+      "slideAttack": 368,
+      "heavyAttackDamage": 368,
+      "heavySlamAttack": 736,
+      "heavySlamRadialDamage": 552,
+      "heavySlamRadius": 7,
+      "windUp": 0.5
+    }
+  ]
+}

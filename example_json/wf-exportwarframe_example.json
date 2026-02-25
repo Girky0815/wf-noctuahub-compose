@@ -1,0 +1,47 @@
+{
+  "ExportWarframes": [
+    {
+      "uniqueName": "/Lotus/Powersuits/Pagemaster/Pagemaster",
+      "name": "Dante",
+      "parentName": "/Lotus/Powersuits/Pagemaster/PagemasterBaseSuit",
+      "description": "知識の探求者。歴史の守り手。レベリアンの伝承への果断な探究者。Danteは味方を支援し、敵を壊滅させるために神秘の物語を構成する。",
+      "health": 300,
+      "shield": 150,
+      "armor": 145,
+      "stamina": 3,
+      "power": 200,
+      "codexSecret": false,
+      "masteryReq": 0,
+      "sprintSpeed": 1.15,
+      "passiveDescription": "Noctua はターゲットをスキャンし、コーデックスの情報を記録する。スキャンがコンプリートされたターゲットへの状態異常率は |CHANCE|％ 増加する。 ",
+      "exalted": [
+        "/Lotus/Powersuits/Pagemaster/ExaltedBook"
+      ],
+      "abilities": [
+        {
+          "abilityUniqueName": "/Lotus/Powersuits/PowersuitAbilities/PagemasterBookAbility",
+          "abilityName": "Noctua",
+          "description": "DanteのExalted TomeたるNoctuaを開き、災いの物語を敵へ解き放つ。"
+        },
+        {
+          "abilityUniqueName": "/Lotus/Powersuits/PowersuitAbilities/PagemasterLifeAbility",
+          "abilityName": "Light Verse",
+          "description": "Danteの活力を与える一節は、彼と仲間にオーバーガードを与え、ヘルスを増加する。"
+        },
+        {
+          "abilityUniqueName": "/Lotus/Powersuits/PowersuitAbilities/PagemasterDeathAbility",
+          "abilityName": "Dark Verse",
+          "description": "Danteの一節は近くの敵から血を引き出し、敵に切断ダメージを与える。"
+        },
+        {
+          "abilityUniqueName": "/Lotus/Powersuits/PowersuitAbilities/PagemasterFinalChapterAbility",
+          "abilityName": "Final Verse",
+          "description":"DanteがFinal Verseを唱えるには、先にLight VerseかDark Verseを2つ唱える必要がある。\r\n\r\nTRIUMPH：Light Verseを2回唱えると仲間のヘルスを強化しオーバーガードを付与する。キルとアシストでオーバーガードを回復できる。
+DanteがFinal Verseを唱えるには、先にLight VerseかDark Verseを2つ唱える必要がある。\r\n\r\nTRAGEDY：Dark Verseを2回唱えると敵を攻撃する。切断、火炎、毒状態異常による時間経過ダメージは1つの爆破としてダメージを与える。
+DanteがFinal Verseを唱えるには、先にLight VerseかDark Verseを2つ唱える必要がある。\r\n\r\nWORDWARDEN：Light VerseからDark Verseを唱えると仲間をNoctuaを模写でサポートする。模写は仲間の攻撃に合わせ攻撃を行う。
+DanteがFinal Verseを唱えるには、先にLight VerseかDark Verseを2つ唱える必要がある。\r\n\r\nPAGEFLIGHT：Dark VerseからLight Verseを唱えると敵に飛び掛かるパラグリムを召喚し、敵の状態異常率と状態異常ダメージ耐性を下げ、注意を引きつける。"}],"productCategory": "Suits"
+        },
+      ]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "ExportFlavour": [
+    {
+      "uniqueName": "/Lotus/Interface/Graphics/CustomUI/Cursors/ControllerA",
+      "name": "",
+      "description": "コントローラー使用時のカーソルタイプ。",
+      "codexSecret": false,
+      "excludeFromCodex": true
+    },
+    {
+      "uniqueName": "/Lotus/Types/Items/Titles/SentientFriendTitle",
+      "name": "ホノリア", // 正しくは "センティエントのともだち" と思われる。おそらく正式名称が取得できていない
+      "description": "プロフィール用のホノリア。",
+      "codexSecret": false,
+      "excludeFromCodex": true
+    }
+  ]
+}

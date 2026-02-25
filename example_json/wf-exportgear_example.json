@@ -1,0 +1,11 @@
+{
+  "ExportGear": [
+    {
+      "uniqueName": "/Lotus/Types/Game/FishBait/Infested/InfestedFishBaitA",
+      "name": "Fassの残余",
+      "description": "カンビオン荒地で爆散した後に集められた、Fass竜の断片。Vomeが見守っている間に地上のホットスポットで使うとグラティノクスを引き寄せる。Fassが見守っている間に地上のホットスポットで使うとオスティマイアを、Fass・Vomeのどちらが見守っている間でも洞窟で使うとビトレオスピーナを引き寄せる。\r\n\r\n場所：Vomeが見守っている間のカンビオン荒地（ダイモス）",
+      "codexSecret": false,
+      "parentName": "/Lotus/Types/Game/FishBait/Infested/BaseInfestedFishBait"
+    }
+  ]
+}
