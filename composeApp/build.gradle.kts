@@ -49,6 +49,8 @@ kotlin {
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.jna)
             implementation(libs.jna.platform)
+            implementation(libs.tukaani.xz)
+            implementation(libs.kotlinx.datetime)
         }
     }
 }
@@ -82,6 +84,7 @@ android {
 
 dependencies {
     debugImplementation(libs.compose.uiTooling)
+    implementation(libs.tukaani.xz)
 }
 
 compose.desktop {

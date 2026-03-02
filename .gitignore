@@ -18,4 +18,5 @@ captures
 **/xcshareddata/WorkspaceSettings.xcsettings
 node_modules/
 
-
+# Gemini が生成したログ等のファイル群
+temp/
