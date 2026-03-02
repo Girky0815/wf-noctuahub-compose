@@ -79,17 +79,19 @@ fun StatusPage(
 
         // Zariman や Duviri はAPIの SyndicateMissions 等から抽出してここで表示予定 (一旦保留)
 
-        Spacer(modifier = Modifier.height(8.dp))
+        // Zariman や Duviri はAPIの SyndicateMissions 等から抽出してここで表示予定 (一旦保留)
 
         // アラート
-        SectionTitle("アラート")
-        AlertList(alerts = worldState.alerts, onLocalize = onLocalize)
-
-        Spacer(modifier = Modifier.height(8.dp))
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            SectionTitle("アラート")
+            AlertList(alerts = worldState.alerts, onLocalize = onLocalize)
+        }
 
         // 侵略
-        SectionTitle("侵略")
-        InvasionList(invasions = worldState.invasions, onLocalize = onLocalize)
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            SectionTitle("侵略")
+            InvasionList(invasions = worldState.invasions, onLocalize = onLocalize)
+        }
         
         Spacer(modifier = Modifier.height(32.dp)) // ボトムナビゲーション用の余白想定
     }

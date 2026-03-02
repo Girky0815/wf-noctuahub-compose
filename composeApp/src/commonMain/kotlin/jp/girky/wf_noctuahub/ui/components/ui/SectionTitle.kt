@@ -21,6 +21,6 @@ fun SectionTitle(
         style = MaterialTheme.typography.titleMedium,
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.primary, // セクション名はPrimaryで強調（React版に基づく）
-        modifier = modifier.padding(vertical = 8.dp, horizontal = 4.dp)
+        modifier = modifier.padding(horizontal = 4.dp)
     )
 }
