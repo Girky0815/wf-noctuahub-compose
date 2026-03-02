@@ -14,11 +14,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.dp
 import jp.girky.wf_noctuahub.data.api.WarframeApiClient
 import jp.girky.wf_noctuahub.data.repository.WarframeRepository
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Dashboard
+import androidx.compose.material.icons.filled.Settings
+import jp.girky.wf_noctuahub.ui.pages.SettingsPage
 import jp.girky.wf_noctuahub.ui.pages.StatusPage
 import jp.girky.wf_noctuahub.ui.theme.AppTheme
 import jp.girky.wf_noctuahub.ui.theme.getAccentColor
 import jp.girky.wf_noctuahub.ui.viewmodel.FetchState
 import jp.girky.wf_noctuahub.ui.viewmodel.MainViewModel
+
+enum class Screen(val route: String, val icon: androidx.compose.ui.graphics.vector.ImageVector, val label: String) {
+    Status("status", Icons.Default.Dashboard, "ステータス"),
+    Settings("settings", Icons.Default.Settings, "設定")
+}
 
 @Composable
 @Preview
@@ -39,30 +48,48 @@ fun App() {
         viewModel.loadInitialData(coroutineScope)
     }
 
+    var currentScreen by remember { mutableStateOf(Screen.Status) }
+
     AppTheme(darkTheme = isDark, seedColor = seedColor) {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.surfaceContainerHigh) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                // デモ用ヘッダー・テーマ切り替え (後でSettingsへ移行予定)
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text("Dark Mode", style = MaterialTheme.typography.bodyLarge)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Switch(checked = isDark, onCheckedChange = { isDark = it })
-                    Spacer(modifier = Modifier.width(16.dp))
-                    
-                    Button(onClick = { seedColor = Color(0xFFE53935) }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE53935))) { Text("Red") }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Button(onClick = { seedColor = Color(0xFF1E88E5) }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1E88E5))) { Text("Blue") }
+            Scaffold(
+                containerColor = Color.Transparent,
+                bottomBar = {
+                    NavigationBar {
+                        Screen.values().forEach { screen ->
+                            NavigationBarItem(
+                                icon = { Icon(screen.icon, contentDescription = screen.label) },
+                                label = { Text(screen.label) },
+                                selected = currentScreen == screen,
+                                onClick = { currentScreen = screen }
+                            )
+                        }
+                    }
                 }
-
+            ) { innerPadding ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                ) {
                 when (fetchState) {
                     FetchState.SUCCESS -> {
-                        StatusPage(
-                            worldState = worldState,
-                            onLocalize = { viewModel.localize(it) }
-                        )
+                        when (currentScreen) {
+                            Screen.Status -> {
+                                StatusPage(
+                                    worldState = worldState,
+                                    onLocalize = { viewModel.localize(it) }
+                                )
+                            }
+                            Screen.Settings -> {
+                                SettingsPage(
+                                    isDark = isDark,
+                                    onDarkThemeChange = { isDark = it },
+                                    seedColor = seedColor,
+                                    onSeedColorChange = { seedColor = it }
+                                )
+                            }
+                        }
                     }
                     FetchState.ERROR -> {
                         Box(modifier = Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
@@ -82,4 +109,5 @@ fun App() {
             }
         }
     }
+}
 }
