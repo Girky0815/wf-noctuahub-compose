@@ -12,12 +12,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import jp.girky.wf_noctuahub.ui.theme.AppTheme
+import jp.girky.wf_noctuahub.ui.theme.getAccentColor
 
 @Composable
 @Preview
 fun App() {
     var isDark by remember { mutableStateOf(true) }
-    var seedColor by remember { mutableStateOf(Color.White) }
+    var seedColor by remember { mutableStateOf(getAccentColor() ?: Color.White) }
 
     AppTheme(darkTheme = isDark, seedColor = seedColor) {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
@@ -37,7 +38,7 @@ fun App() {
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(onClick = { seedColor = Color(0xFF1E88E5) }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1E88E5))) { Text("Blue") }
                     Spacer(modifier = Modifier.width(8.dp))
-                    Button(onClick = { seedColor = Color.White }) { Text("Default") }
+                    Button(onClick = { seedColor = getAccentColor() ?: Color.White }) { Text("OS Accent/Default") }
                 }
                 
                 Spacer(modifier = Modifier.height(24.dp))
