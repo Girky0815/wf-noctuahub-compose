@@ -17,7 +17,7 @@ object LocalCycles {
     private const val CETUS_CYCLE_MS = 150 * 60 * 1000L // 150 minutes
     
     private const val VALLIS_EPOCH = 1767688801000L
-    private const val VALLIS_CYCLE_MS = 1600 * 1000L // 26m 40s
+    private const val VALLIS_CYCLE_MS = 30 * 60 * 1000L // 30 mins
     
     private const val CAMBION_EPOCH = CETUS_EPOCH
     private const val CAMBION_CYCLE_MS = 150 * 60 * 1000L
@@ -50,19 +50,20 @@ object LocalCycles {
     }
 
     /**
-     * Orb Vallis: Warm 6m 40s -> Cold 20m
+     * Orb Vallis: Cold 24m -> Warm 6m
      */
     fun getVallisCycle(nowMs: Long): CycleState {
         val elapsed = nowMs - VALLIS_EPOCH
         val cycleTime = elapsed % VALLIS_CYCLE_MS
-        val warmDuration = 400 * 1000L
+        val coldDuration = 24 * 60 * 1000L
         
-        val isWarm = cycleTime < warmDuration
-        val timeLeft = if (isWarm) (warmDuration - cycleTime) else (VALLIS_CYCLE_MS - cycleTime)
+        val isCold = cycleTime < coldDuration
+        val timeLeft = if (isCold) (coldDuration - cycleTime) else (VALLIS_CYCLE_MS - cycleTime)
         
         val expiryTime = nowMs + timeLeft
-        val activationTime = expiryTime - if (isWarm) warmDuration else (VALLIS_CYCLE_MS - warmDuration)
+        val activationTime = expiryTime - if (isCold) coldDuration else (VALLIS_CYCLE_MS - coldDuration)
         
+        val isWarm = !isCold
         return CycleState(
             id = "vallis-local-$expiryTime",
             activation = Instant.fromEpochMilliseconds(activationTime),

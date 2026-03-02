@@ -23,7 +23,7 @@ import jp.girky.wf_noctuahub.ui.viewmodel.MainViewModel
 @Composable
 @Preview
 fun App() {
-    var isDark by remember { mutableStateOf(true) }
+    var isDark by remember { mutableStateOf(false) }
     var seedColor by remember { mutableStateOf(getAccentColor() ?: Color.White) }
     val coroutineScope = rememberCoroutineScope()
     

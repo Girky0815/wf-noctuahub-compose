@@ -24,8 +24,8 @@ fun ListGroup(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(24.dp), // Tomato風の大きめの角丸
         colors = CardDefaults.cardColors(
-            // ギャップ部分の色として表示される背景色 (React版の bg-surface-container)
-            containerColor = MaterialTheme.colorScheme.surfaceContainer
+            // ギャップ部分を透明にし、アプリの背景色を直接透けさせる
+            containerColor = androidx.compose.ui.graphics.Color.Transparent
         ),
         elevation = CardDefaults.cardElevation(0.dp)
     ) {

@@ -3,6 +3,7 @@ package jp.girky.wf_noctuahub.ui.components.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,7 +27,7 @@ fun ListTile(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(containerColor)
+            .background(containerColor, shape = RoundedCornerShape(2.dp))
             .clickable(enabled = onClick != null) { onClick?.invoke() }
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -85,7 +86,7 @@ fun ListItem(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(containerColor)
+            .background(containerColor, shape = RoundedCornerShape(2.dp))
             .let { if (onClick != null) it.clickable { onClick() } else it }
             .padding(horizontal = 16.dp, vertical = 14.dp),
         content = content

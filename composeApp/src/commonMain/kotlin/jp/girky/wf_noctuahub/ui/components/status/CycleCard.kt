@@ -1,6 +1,8 @@
 package jp.girky.wf_noctuahub.ui.components.status
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -8,9 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import jp.girky.wf_noctuahub.ui.components.ui.EtaText
-import jp.girky.wf_noctuahub.ui.components.ui.ListGroup
-import jp.girky.wf_noctuahub.ui.components.ui.ListTile
-import jp.girky.wf_noctuahub.ui.components.ui.SectionTitle
 
 /**
  * 地球、シータス、カンビオン荒地などの
@@ -24,22 +23,30 @@ fun CycleCard(
     modifier: Modifier = Modifier,
     stateColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onSurface
 ) {
-    ListGroup(modifier = modifier) {
-        ListTile(
-            title = title,
-            subtitle = null,
-            trailingContent = {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = stateText,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = stateColor,
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                    EtaText(expiryString = expiryString)
-                }
-            }
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surfaceBright, shape = RoundedCornerShape(2.dp))
+            .padding(16.dp)
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+        Spacer(modifier = Modifier.height(4.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = stateText,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                color = stateColor
+            )
+            EtaText(expiryString = expiryString)
+        }
     }
 }
