@@ -11,14 +11,38 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import jp.girky.wf_noctuahub.data.api.WarframeApiClient
 import jp.girky.wf_noctuahub.ui.theme.AppTheme
 import jp.girky.wf_noctuahub.ui.theme.getAccentColor
+import kotlinx.coroutines.launch
 
 @Composable
 @Preview
 fun App() {
     var isDark by remember { mutableStateOf(true) }
     var seedColor by remember { mutableStateOf(getAccentColor() ?: Color.White) }
+    var apiResultText by remember { mutableStateOf("Fetching API...") }
+    val coroutineScope = rememberCoroutineScope()
+    
+    LaunchedEffect(Unit) {
+        coroutineScope.launch {
+            try {
+                val client = WarframeApiClient()
+                val ws = client.fetchWorldState()
+                val msg = "Success!\nWorldSeed: ${ws.worldSeed}\n" +
+                        "Alerts: ${ws.alerts?.size ?: 0}\n" +
+                        "Sorties: ${ws.sorties?.size ?: 0}\n" +
+                        "Invasions: ${ws.invasions?.size ?: 0}\n" +
+                        "Fissures: ${ws.activeMissions?.size ?: 0}"
+                println("API FETCH RESULT: $msg")
+                apiResultText = msg
+            } catch (e: Exception) {
+                println("API FETCH ERROR: ${e.message}")
+                e.printStackTrace()
+                apiResultText = "Error: ${e.message}"
+            }
+        }
+    }
 
     AppTheme(darkTheme = isDark, seedColor = seedColor) {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
@@ -41,6 +65,11 @@ fun App() {
                     Button(onClick = { seedColor = getAccentColor() ?: Color.White }) { Text("OS Accent/Default") }
                 }
                 
+                Spacer(modifier = Modifier.height(16.dp))
+                Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
+                    Text(text = apiResultText, modifier = Modifier.padding(16.dp), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onPrimaryContainer)
+                }
+
                 Spacer(modifier = Modifier.height(24.dp))
                 
                 val colorDefinitions = listOf(
