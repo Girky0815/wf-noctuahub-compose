@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontVariation
 import org.jetbrains.compose.resources.Font
 import noctuahub.composeapp.generated.resources.Res
 import noctuahub.composeapp.generated.resources.google_sans_flex
@@ -13,8 +14,62 @@ import noctuahub.composeapp.generated.resources.noto_sans_jp
 @Composable
 fun getAppFontFamily(): FontFamily {
     return FontFamily(
-        Font(Res.font.google_sans_flex, weight = FontWeight.Normal, style = FontStyle.Normal),
-        Font(Res.font.noto_sans_jp, weight = FontWeight.Normal, style = FontStyle.Normal)
+        // Normal
+        Font(
+            resource = Res.font.google_sans_flex,
+            weight = FontWeight.Normal,
+            style = FontStyle.Normal,
+            variationSettings = FontVariation.Settings(
+                FontVariation.weight(FontWeight.Normal.weight),
+                FontVariation.Setting("ROND", 100f) // カスタム丸み
+            )
+        ),
+        Font(
+            resource = Res.font.noto_sans_jp,
+            weight = FontWeight.Normal,
+            style = FontStyle.Normal,
+            variationSettings = FontVariation.Settings(
+                FontVariation.weight(FontWeight.Normal.weight)
+            )
+        ),
+        
+        // Medium
+        Font(
+            resource = Res.font.google_sans_flex,
+            weight = FontWeight.Medium,
+            style = FontStyle.Normal,
+            variationSettings = FontVariation.Settings(
+                FontVariation.weight(FontWeight.Medium.weight),
+                FontVariation.Setting("ROND", 100f)
+            )
+        ),
+        Font(
+            resource = Res.font.noto_sans_jp,
+            weight = FontWeight.Medium,
+            style = FontStyle.Normal,
+            variationSettings = FontVariation.Settings(
+                FontVariation.weight(FontWeight.Medium.weight)
+            )
+        ),
+        
+        // Bold
+        Font(
+            resource = Res.font.google_sans_flex,
+            weight = FontWeight.Bold,
+            style = FontStyle.Normal,
+            variationSettings = FontVariation.Settings(
+                FontVariation.weight(FontWeight.Bold.weight),
+                FontVariation.Setting("ROND", 100f)
+            )
+        ),
+        Font(
+            resource = Res.font.noto_sans_jp,
+            weight = FontWeight.Bold,
+            style = FontStyle.Normal,
+            variationSettings = FontVariation.Settings(
+                FontVariation.weight(FontWeight.Bold.weight)
+            )
+        )
     )
 }
 
