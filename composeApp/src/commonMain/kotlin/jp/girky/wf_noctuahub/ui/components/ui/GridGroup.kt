@@ -26,7 +26,7 @@ fun GridGroup(
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp), // Tomato風の大きめの角丸
+        shape = RoundedCornerShape(20.dp), // Tomato風の大きめの角丸
         colors = CardDefaults.cardColors(
             containerColor = androidx.compose.ui.graphics.Color.Transparent
         ),
