@@ -1,5 +1,6 @@
 package jp.girky.wf_noctuahub.ui.viewmodel
 
+import jp.girky.wf_noctuahub.data.api.model.ExportRegion
 import jp.girky.wf_noctuahub.data.api.model.WorldStateResponse
 import jp.girky.wf_noctuahub.data.repository.WarframeRepository
 import kotlinx.coroutines.CoroutineScope
@@ -29,8 +30,13 @@ class MainViewModel(val repository: WarframeRepository) {
      * 内部ID（uniqueName）を日本語に変換する
      */
     fun localize(uniqueName: String?): String {
-        if (uniqueName.isNullOrBlank()) return "不明なノード"
+        if (uniqueName == null) return ""
         return repository.localize(uniqueName)
+    }
+
+    fun getRegionInfo(uniqueName: String?): ExportRegion? {
+        if (uniqueName == null) return null
+        return repository.getRegionInfo(uniqueName)
     }
 
     /**

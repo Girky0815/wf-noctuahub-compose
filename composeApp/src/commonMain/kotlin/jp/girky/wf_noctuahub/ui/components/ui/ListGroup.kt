@@ -30,6 +30,7 @@ fun ListGroup(
         elevation = CardDefaults.cardElevation(0.dp)
     ) {
         Column(
+          // グループリストのギャップ
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(2.dp),
             content = content

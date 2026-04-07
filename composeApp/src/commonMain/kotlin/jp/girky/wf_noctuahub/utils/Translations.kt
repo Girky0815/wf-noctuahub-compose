@@ -83,6 +83,18 @@ object Translations {
         "Anarch" to "アナーク"
     )
 
+    // ExportRegions の factionIndex のマッピング
+    val factionIndices = mapOf(
+        0 to "Grineer",
+        1 to "Corpus",
+        2 to "Infested",
+        3 to "Corrupted",
+        4 to "Orokin",
+        7 to "The Murmur",
+        8 to "Scaldra",
+        9 to "Techrot"
+    )
+
     // 惑星の日本語訳
     val planetNames = mapOf(
         "Mercury" to "水星",
@@ -139,6 +151,41 @@ object Translations {
 
     fun translateMissionType(type: String): String = missionTypes[type] ?: type
 
+    // 内部ミッションタイプ（MT_XXX）とのマッピング
+    val internalMissionTypes = mapOf(
+        "MT_ARENA" to "アリーナ",
+        "MT_ARTIFACT" to "分裂",
+        "MT_ASSAULT" to "突撃",
+        "MT_ASSASSINATION" to "抹殺",
+        "MT_CAPTURE" to "確保",
+        "MT_CORRUPTION" to "Void Flood",
+        "MT_DEFENSE" to "防衛",
+        "MT_DISRUPTION" to "分裂",
+        "MT_EVACUATION" to "脱出",
+        "MT_EXCAVATE" to "発掘",
+        "MT_EXTERMINATION" to "掃滅",
+        "MT_HIVE" to "駆除",
+        "MT_INTEL" to "潜入",
+        "MT_LANDSCAPE" to "自由行動",
+        "MT_MOBILE_DEFENSE" to "機動防衛",
+        "MT_PVP" to "コンクレーブ",
+        "MT_RESCUE" to "救出",
+        "MT_RETRIEVAL" to "ハイジャック",
+        "MT_SABOTAGE" to "妨害",
+        "MT_SECTOR" to "Dark Sector",
+        "MT_SURVIVAL" to "耐久",
+        "MT_TERRITORY" to "傍受",
+        "MT_VOID_CASCADE" to "カスケード",
+        "MT_ASCENSION" to "昇天",
+        "MT_ALCHEMY" to "錬金術",
+        "MT_ENDLESS_CAPTURE" to "レガサイト収穫"
+    )
+
+    fun translateInternalMissionType(raw: String): String {
+        internalMissionTypes[raw]?.let { return it }
+        return translateMissionType(raw)
+    }
+
     fun translateResource(type: String): String {
         resourceTypes[type]?.let { return it }
 
@@ -165,6 +212,10 @@ object Translations {
             }
         }
         return factionTypes[faction] ?: faction
+    }
+
+    fun translateFactionIndex(index: Int?): String {
+        return translateFaction(factionIndices[index] ?: return "不明")
     }
 
     fun translateNode(node: String?): String {

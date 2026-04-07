@@ -20,5 +20,3 @@ echo.
 
 echo ビルドおよびアプリを起動しています...
 call gradlew.bat :composeApp:run
-
-pause

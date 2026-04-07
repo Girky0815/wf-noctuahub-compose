@@ -17,7 +17,11 @@ data class ExportResourcesResponse(
 data class ExportRegion(
     @SerialName("uniqueName") val uniqueName: String,
     @SerialName("name") val name: String,
-    @SerialName("systemName") val systemName: String? = null
+    @SerialName("systemName") val systemName: String? = null,
+    @SerialName("missionIndex") val missionIndex: Int? = null,
+    @SerialName("factionIndex") val factionIndex: Int? = null,
+    @SerialName("minEnemyLevel") val minEnemyLevel: Int? = null,
+    @SerialName("maxEnemyLevel") val maxEnemyLevel: Int? = null
 )
 
 @Serializable

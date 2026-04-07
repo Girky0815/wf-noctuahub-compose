@@ -2,6 +2,7 @@ package jp.girky.wf_noctuahub.data.repository
 
 import jp.girky.wf_noctuahub.data.api.WarframeApiClient
 import jp.girky.wf_noctuahub.data.api.model.ExportCustomsResponse
+import jp.girky.wf_noctuahub.data.api.model.ExportRegion
 import jp.girky.wf_noctuahub.data.api.model.ExportRegionsResponse
 import jp.girky.wf_noctuahub.data.api.model.WorldStateResponse
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,6 +16,9 @@ class WarframeRepository(private val apiClient: WarframeApiClient) {
 
     // Public Export の uniqueName (e.g. /Lotus/Language/...) と日本語名のマッピング辞書
     private val localizationDict = mutableMapOf<String, String>()
+    
+    // リージョンの詳細情報をそのまま引き出せる辞書 (勢力やレベル帯などを得るため)
+    private val regionDict = mutableMapOf<String, ExportRegion>()
 
     /**
      * WorldState をフェッチして内部状態を更新する
@@ -53,6 +57,7 @@ class WarframeRepository(private val apiClient: WarframeApiClient) {
                     val planet = region.systemName ?: ""
                     val formatted = if (planet.isNotBlank()) "${region.name} ($planet)" else region.name
                     localizationDict[region.uniqueName] = formatted
+                    regionDict[region.uniqueName] = region
                 }
             }
 
@@ -91,5 +96,12 @@ class WarframeRepository(private val apiClient: WarframeApiClient) {
      */
     fun localize(uniqueName: String): String {
         return localizationDict[uniqueName] ?: uniqueName
+    }
+
+    /**
+     * ノード（Region）の詳細な設定情報を取得する
+     */
+    fun getRegionInfo(uniqueName: String): ExportRegion? {
+        return regionDict[uniqueName]
     }
 }

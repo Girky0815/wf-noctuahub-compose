@@ -86,7 +86,7 @@ fun ListItem(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(containerColor, shape = RoundedCornerShape(2.dp))
+            .background(containerColor, shape = RoundedCornerShape(4.dp))
             .let { if (onClick != null) it.clickable { onClick() } else it }
             .padding(horizontal = 16.dp, vertical = 14.dp),
         content = content

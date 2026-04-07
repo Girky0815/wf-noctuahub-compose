@@ -17,8 +17,12 @@ import jp.girky.wf_noctuahub.data.repository.WarframeRepository
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.FlashlightOn
+import androidx.compose.material.icons.filled.Menu
 import jp.girky.wf_noctuahub.ui.pages.SettingsPage
 import jp.girky.wf_noctuahub.ui.pages.StatusPage
+import jp.girky.wf_noctuahub.ui.pages.FissuresPage
+import kotlinx.coroutines.launch
 import jp.girky.wf_noctuahub.ui.theme.AppTheme
 import jp.girky.wf_noctuahub.ui.theme.getAccentColor
 import jp.girky.wf_noctuahub.ui.viewmodel.FetchState
@@ -26,6 +30,7 @@ import jp.girky.wf_noctuahub.ui.viewmodel.MainViewModel
 
 enum class Screen(val route: String, val icon: androidx.compose.ui.graphics.vector.ImageVector, val label: String) {
     Status("status", Icons.Default.Dashboard, "ステータス"),
+    Fissures("fissures", Icons.Default.FlashlightOn, "亀裂"),
     Settings("settings", Icons.Default.Settings, "設定")
 }
 
@@ -51,9 +56,50 @@ fun App() {
     var currentScreen by remember { mutableStateOf(Screen.Status) }
 
     AppTheme(darkTheme = isDark, seedColor = seedColor) {
+        val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.surfaceContainerHigh) {
+            ModalNavigationDrawer(
+                drawerState = drawerState,
+                drawerContent = {
+                    ModalDrawerSheet {
+                        Text(
+                            text = "Noctua Hub",
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                        HorizontalDivider()
+                        Screen.values().forEach { screen ->
+                            NavigationDrawerItem(
+                                label = { Text(screen.label) },
+                                icon = { Icon(screen.icon, contentDescription = screen.label) },
+                                selected = currentScreen == screen,
+                                onClick = {
+                                    currentScreen = screen
+                                    coroutineScope.launch { drawerState.close() }
+                                },
+                                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                            )
+                        }
+                    }
+                }
+            ) {
             Scaffold(
                 containerColor = Color.Transparent,
+                topBar = {
+                    @OptIn(ExperimentalMaterial3Api::class)
+                    TopAppBar(
+                        title = { Text(currentScreen.label) },
+                        navigationIcon = {
+                            IconButton(onClick = { coroutineScope.launch { drawerState.open() } }) {
+                                Icon(Icons.Default.Menu, contentDescription = "Menu")
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = Color.Transparent
+                        )
+                    )
+                },
                 bottomBar = {
                     NavigationBar {
                         Screen.values().forEach { screen ->
@@ -81,6 +127,13 @@ fun App() {
                                     onLocalize = { viewModel.localize(it) }
                                 )
                             }
+                            Screen.Fissures -> {
+                                FissuresPage(
+                                    worldState = worldState,
+                                    onLocalize = { viewModel.localize(it) },
+                                    onGetRegionInfo = { viewModel.getRegionInfo(it) }
+                                )
+                            }
                             Screen.Settings -> {
                                 SettingsPage(
                                     isDark = isDark,
@@ -106,6 +159,7 @@ fun App() {
                         }
                     }
                 }
+            }
             }
         }
     }

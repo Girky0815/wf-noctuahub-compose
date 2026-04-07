@@ -98,7 +98,8 @@ data class WsActiveMission(
     @SerialName("MissionType") val missionType: String? = null, // might not exist
     @SerialName("Modifier") val modifier: String? = null, // "VoidT1", "VoidT2" etc
     @SerialName("Region") val region: Int? = null,
-    @SerialName("Seed") val seed: Int? = null
+    @SerialName("Seed") val seed: Int? = null,
+    @SerialName("Hard") val hard: Boolean? = false
 )
 
 @Serializable
