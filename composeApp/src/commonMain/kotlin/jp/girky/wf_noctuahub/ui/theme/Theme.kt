@@ -92,6 +92,7 @@ private val darkScheme = darkColorScheme(
 fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     seedColor: Color = Color.White,
+    useDynamicColor: Boolean = true,
     blackTheme: Boolean = false,
     content: @Composable () -> Unit
 ) {
@@ -99,19 +100,27 @@ fun AppTheme(
 
     CustomColors.black = blackTheme && darkTheme
 
+    val platformAccent = getAccentColor()
+    val finalSeedColor = if (useDynamicColor && platformAccent != null) {
+        platformAccent
+    } else if (seedColor != Color.White) {
+        seedColor
+    } else {
+        colorScheme.primary
+    }
+
     val dynamicColorScheme = rememberDynamicColorScheme(
-        seedColor = when (seedColor) {
-            Color.White -> colorScheme.primary
-            else -> seedColor
-        },
+        seedColor = finalSeedColor,
         isDark = darkTheme,
         specVersion =  ColorSpec.SpecVersion.SPEC_2025,
         isAmoled = blackTheme && darkTheme
     )
 
-    val scheme =
-        if (seedColor == Color.White && !(blackTheme && darkTheme)) colorScheme
-        else dynamicColorScheme
+    val scheme = if (useDynamicColor || seedColor != Color.White || (blackTheme && darkTheme)) {
+        dynamicColorScheme
+    } else {
+        colorScheme
+    }
 
     MaterialExpressiveTheme(
         colorScheme = scheme,

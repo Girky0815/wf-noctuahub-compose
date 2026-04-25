@@ -7,6 +7,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.ColorLens
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,6 +38,7 @@ fun SettingsPage(
 
     val themeMode by appSettings.themeModeFlow.collectAsState(ThemeMode.SYSTEM_DEFAULT)
     val seedColorArgb by appSettings.seedColorFlow.collectAsState(0xFF6750A4.toInt())
+    val useDynamicColor by appSettings.isDynamicColorFlow.collectAsState(true)
 
     Column(
         modifier = modifier
@@ -55,37 +58,87 @@ fun SettingsPage(
                     ThemeMode.SYSTEM_DEFAULT -> "システム設定に従う"
                 },
                 leadingIcon = { Icon(Icons.Default.Palette, contentDescription = null) },
-                onClick = { /* TODO: Show dialog */ }
+                onClick = { /* TODO: Show dialog? Currently chips below */ }
             )
             
-            // 簡易的なテーマ切り替え(テスト用)
-            Row(modifier = Modifier.padding(16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 ThemeMode.entries.forEach { mode ->
                     FilterChip(
                         selected = themeMode == mode,
                         onClick = { coroutineScope.launch { appSettings.setThemeMode(mode) } },
-                        label = { Text(mode.name.lowercase().replace("_", " ")) }
+                        label = { Text(when(mode) {
+                            ThemeMode.LIGHT -> "ライト"
+                            ThemeMode.DARK -> "ダーク"
+                            ThemeMode.AMOLED_BLACK -> "AMOLED ブラック"
+                            ThemeMode.SYSTEM_DEFAULT -> "システム"
+                        }) }
                     )
                 }
             }
 
-            SectionTitle(title = "配色設定")
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                val colors = listOf(
-                    Color(0xFFE53935) to "Red",
-                    Color(0xFF1E88E5) to "Blue",
-                    Color(0xFF43A047) to "Green",
-                    Color(0xFF8E24AA) to "Purple",
-                    Color(0xFFFFB300) to "Amber"
+            ListTile(
+                title = "ダイナミックカラー",
+                subtitle = if (useDynamicColor) "OSの配色を使用する" else "固定色を使用する",
+                leadingIcon = { Icon(Icons.Default.ColorLens, contentDescription = null) },
+                trailingContent = {
+                    Switch(
+                        checked = useDynamicColor,
+                        onCheckedChange = { coroutineScope.launch { appSettings.setDynamicColor(it) } },
+                        thumbContent = {
+                            if (useDynamicColor) {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(SwitchDefaults.IconSize)
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(SwitchDefaults.IconSize)
+                                )
+                            }
+                        }
+                    )
+                },
+                onClick = { coroutineScope.launch { appSettings.setDynamicColor(!useDynamicColor) } }
+            )
+
+            if (!useDynamicColor) {
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = MaterialTheme.colorScheme.outlineVariant)
+                Text(
+                    "カスタム配色",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
-                colors.forEach { (color, label) ->
-                    Button(
-                        onClick = { coroutineScope.launch { appSettings.setSeedColor(color.toArgb()) } },
-                        colors = ButtonDefaults.buttonColors(containerColor = color)
-                    ) { Text(label, color = Color.White) }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .padding(bottom = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    val colors = listOf(
+                        Color(0xFFE53935) to "Red",
+                        Color(0xFF1E88E5) to "Blue",
+                        Color(0xFF43A047) to "Green",
+                        Color(0xFF8E24AA) to "Purple",
+                        Color(0xFFFFB300) to "Amber",
+                        Color(0xFF6750A4) to "Default"
+                    )
+                    colors.forEach { (color, _) ->
+                        Surface(
+                            modifier = Modifier.size(40.dp),
+                            shape = MaterialTheme.shapes.small,
+                            color = color,
+                            onClick = { coroutineScope.launch { appSettings.setSeedColor(color.toArgb()) } },
+                            border = if (seedColorArgb == color.toArgb()) androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.onSurface) else null
+                        ) {}
+                    }
                 }
             }
         }
@@ -126,9 +179,9 @@ fun SettingsPage(
                 )
                 ListTile(
                     leadingIcon = { Icon(Icons.Default.Info, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
-                    title = "Warframe Wiki (英語)",
-                    subtitle = "公式のデータを参照する",
-                    onClick = { uriHandler.openUri("https://warframe.fandom.com/wiki/WARFRAME_Wiki") }
+                    title = "Warframe Wiki (日本語)",
+                    subtitle = "日本語Wikiを参照する",
+                    onClick = { uriHandler.openUri("https://wikiwiki.jp/warframe") }
                 )
             }
         }

@@ -61,6 +61,7 @@ fun App() {
   
   val themeMode by appSettings.themeModeFlow.collectAsState(jp.girky.wf_noctuahub.utils.ThemeMode.SYSTEM_DEFAULT)
   val seedColorArgb by appSettings.seedColorFlow.collectAsState(0xFF6750A4.toInt())
+  val useDynamicColor by appSettings.isDynamicColorFlow.collectAsState(true)
   val seedColor = Color(seedColorArgb.toLong())
   
   val isDark = when (themeMode) {
@@ -68,7 +69,6 @@ fun App() {
       jp.girky.wf_noctuahub.utils.ThemeMode.DARK, jp.girky.wf_noctuahub.utils.ThemeMode.AMOLED_BLACK -> true
       jp.girky.wf_noctuahub.utils.ThemeMode.SYSTEM_DEFAULT -> androidx.compose.foundation.isSystemInDarkTheme()
   }
-  val isAmoled = themeMode == jp.girky.wf_noctuahub.utils.ThemeMode.AMOLED_BLACK
   
   val apiClient = remember { WarframeApiClient() }
   val repository = remember { WarframeRepository(apiClient) }
@@ -84,7 +84,12 @@ fun App() {
 
   var currentScreen by remember { mutableStateOf(Screen.Status) }
 
-  AppTheme(darkTheme = isDark, seedColor = seedColor, blackTheme = isAmoled) {
+  AppTheme(
+    darkTheme = isDark,
+    seedColor = seedColor,
+    useDynamicColor = useDynamicColor,
+    blackTheme = themeMode == jp.girky.wf_noctuahub.utils.ThemeMode.AMOLED_BLACK
+  ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.surfaceContainerHigh) {
