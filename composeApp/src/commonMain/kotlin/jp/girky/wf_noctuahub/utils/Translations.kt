@@ -198,7 +198,7 @@ object Translations {
     //"HackTerminals" to "端末ハッキング" // 仮の例です。ゲーム内の表記に合わせて書き換えてください。
     "DT_PRESURE_GAUGE" to "圧力鍋(錬金術: 圧力制御フェーズ)",
     "DT_SABOTAGE_HIVE" to "ハイブ",
-    "DT_PROTOFRAME" to "Protoframe",
+    "DT_PROTOFRAME" to "チェックポイント",
     "DT_EXCAVATION" to "発掘",
     "DT_MIMICS" to "略奪ルーレット",
     "DT_BREAK_TARGETS" to "ホログローブ破壊",

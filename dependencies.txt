@@ -1,0 +1,36 @@
+Reusing configuration cache.
+
+> Task :composeApp:dependencies
+
+------------------------------------------------------------
+Project ':composeApp'
+------------------------------------------------------------
+
+commonMainImplementation (n)
++--- org.jetbrains.compose.runtime:runtime:1.10.0 (n)
++--- org.jetbrains.compose.foundation:foundation:1.10.0 (n)
++--- org.jetbrains.compose.material3:material3:1.11.0-alpha07 (n)
++--- org.jetbrains.compose.ui:ui:1.10.0 (n)
++--- org.jetbrains.compose.components:components-resources:1.10.0 (n)
++--- org.jetbrains.compose.ui:ui-tooling-preview:1.10.0 (n)
++--- org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0 (n)
++--- org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.10.0 (n)
++--- io.ktor:ktor-client-core:3.4.3 (n)
++--- io.ktor:ktor-client-cio:3.4.3 (n)
++--- io.ktor:ktor-client-content-negotiation:3.4.3 (n)
++--- io.ktor:ktor-serialization-kotlinx-json:3.4.3 (n)
++--- org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0 (n)
++--- org.jetbrains.kotlinx:kotlinx-datetime:0.7.1 (n)
++--- com.materialkolor:material-kolor:4.1.1 (n)
++--- org.jetbrains.compose.material:material-icons-extended:1.7.3 (n)
++--- com.russhwolf:multiplatform-settings:1.3.0 (n)
++--- com.russhwolf:multiplatform-settings-coroutines:1.3.0 (n)
+\--- net.mamoe.yamlkt:yamlkt:0.13.0 (n)
+
+(n) - A dependency or dependency configuration that cannot be resolved.
+
+A web-based, searchable dependency report is available by adding the --scan option.
+
+BUILD SUCCESSFUL in 899ms
+1 actionable task: 1 executed
+Configuration cache entry reused.

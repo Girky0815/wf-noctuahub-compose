@@ -1,0 +1,31 @@
+Calculating task graph as no cached configuration is available for tasks: :composeApp:dependencies --configuration androidDebugImplementation
+Type-safe project accessors is an incubating feature.
+
+> Configure project :composeApp
+w: [33m[1mThe 'org.jetbrains.kotlin.multiplatform' plugin deprecated compatibility with Android Gradle plugin: 'com.android.application'[0m[0m
+The 'org.jetbrains.kotlin.multiplatform' plugin will not be compatible with 'com.android.application' starting with Android Gradle Plugin 9.0.0.
+
+Please change the structure of the your project and move the usage of 'com.android.application' into a separate subproject. The new subproject should add a dependency on this KMP subproject.
+
+Read more: https://kotl.in/kmp-project-structure-migration
+[32m[1mSolution:[0m[0m
+[32m[3mPlease change the structure of your project and move the usage of 'com.android.application' into a separate subproject.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-new-kmp[0m[36m for more details.[0m
+
+
+> Task :composeApp:dependencies
+
+------------------------------------------------------------
+Project ':composeApp'
+------------------------------------------------------------
+
+androidDebugImplementation (n)
+No dependencies
+
+A web-based, searchable dependency report is available by adding the --scan option.
+
+[Incubating] Problems report is available at: file:///C:/Users/kirby/app/Noctua%20Hub/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 2s
+1 actionable task: 1 executed
+Configuration cache entry stored.

@@ -41,6 +41,9 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.materialKolor)
             implementation(compose.materialIconsExtended)
+            implementation(libs.multiplatform.settings)
+            implementation(libs.multiplatform.settings.coroutines)
+            implementation(libs.yamlkt)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

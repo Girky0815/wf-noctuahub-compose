@@ -11,6 +11,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import jp.girky.wf_noctuahub.ui.components.ui.ListGroup
+import jp.girky.wf_noctuahub.ui.components.ui.ListTile
+import androidx.compose.material.icons.filled.Palette
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.dp
@@ -24,6 +28,9 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Adjust
 import androidx.compose.material.icons.filled.Explore
 import jp.girky.wf_noctuahub.ui.pages.SettingsPage
+import jp.girky.wf_noctuahub.data.repository.AppSettings
+import com.russhwolf.settings.ObservableSettings
+import com.russhwolf.settings.Settings
 import jp.girky.wf_noctuahub.ui.pages.StatusPage
 import jp.girky.wf_noctuahub.ui.pages.FissuresPage
 import jp.girky.wf_noctuahub.ui.pages.ArchonHuntPage
@@ -33,8 +40,6 @@ import jp.girky.wf_noctuahub.ui.theme.AppTheme
 import jp.girky.wf_noctuahub.ui.theme.getAccentColor
 import jp.girky.wf_noctuahub.ui.viewmodel.FetchState
 import jp.girky.wf_noctuahub.ui.viewmodel.MainViewModel
-import jp.girky.wf_noctuahub.ui.components.ui.ListGroup
-import jp.girky.wf_noctuahub.ui.components.ui.ListTile
 import jp.girky.wf_noctuahub.ui.components.ui.SectionTitle
 
 enum class Screen(val route: String, val icon: androidx.compose.ui.graphics.vector.ImageVector, val label: String) {
@@ -48,9 +53,22 @@ enum class Screen(val route: String, val icon: androidx.compose.ui.graphics.vect
 @Composable
 @Preview
 fun App() {
-  var isDark by remember { mutableStateOf(false) }
-  var seedColor by remember { mutableStateOf(getAccentColor() ?: Color.White) }
   val coroutineScope = rememberCoroutineScope()
+  val appSettings = remember { 
+      val s = jp.girky.wf_noctuahub.data.repository.createSettings()
+      jp.girky.wf_noctuahub.data.repository.AppSettings(s) 
+  }
+  
+  val themeMode by appSettings.themeModeFlow.collectAsState(jp.girky.wf_noctuahub.utils.ThemeMode.SYSTEM_DEFAULT)
+  val seedColorArgb by appSettings.seedColorFlow.collectAsState(0xFF6750A4.toInt())
+  val seedColor = Color(seedColorArgb.toLong())
+  
+  val isDark = when (themeMode) {
+      jp.girky.wf_noctuahub.utils.ThemeMode.LIGHT -> false
+      jp.girky.wf_noctuahub.utils.ThemeMode.DARK, jp.girky.wf_noctuahub.utils.ThemeMode.AMOLED_BLACK -> true
+      jp.girky.wf_noctuahub.utils.ThemeMode.SYSTEM_DEFAULT -> androidx.compose.foundation.isSystemInDarkTheme()
+  }
+  val isAmoled = themeMode == jp.girky.wf_noctuahub.utils.ThemeMode.AMOLED_BLACK
   
   val apiClient = remember { WarframeApiClient() }
   val repository = remember { WarframeRepository(apiClient) }
@@ -66,7 +84,7 @@ fun App() {
 
   var currentScreen by remember { mutableStateOf(Screen.Status) }
 
-  AppTheme(darkTheme = isDark, seedColor = seedColor) {
+  AppTheme(darkTheme = isDark, seedColor = seedColor, blackTheme = isAmoled) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.surfaceContainerHigh) {
@@ -199,10 +217,7 @@ fun App() {
               }
               Screen.Settings -> {
                 SettingsPage(
-                  isDark = isDark,
-                  onDarkThemeChange = { isDark = it },
-                  seedColor = seedColor,
-                  onSeedColorChange = { seedColor = it }
+                  appSettings = appSettings
                 )
               }
             }
