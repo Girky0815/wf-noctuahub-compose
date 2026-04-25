@@ -90,9 +90,18 @@ fun ArchimedeaCard(
                 val modifierName = jp.girky.wf_noctuahub.utils.Translations.translateDescendiaModifier(modifierRaw)
                 val missionIndex = (challenge.index ?: 0) + 1
                 
+                val subtitleText = buildString {
+                    append(modifierName)
+                    val aurasRaw = challenge.auras ?: emptyList()
+                    if (aurasRaw.isNotEmpty()) {
+                        val afflictions = aurasRaw.joinToString(", ") { jp.girky.wf_noctuahub.utils.Translations.translateDescendiaModifier(it) }
+                        append("\n$afflictions")
+                    }
+                }
+                
                 ListTile(
-                    title = "ミッション: $type",
-                    subtitle = "モディファイア: $modifierName",
+                    title = type,
+                    subtitle = subtitleText,
                     leadingIcon = {
                         Text(
                             text = "$missionIndex",

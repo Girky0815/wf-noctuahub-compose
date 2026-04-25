@@ -20,88 +20,101 @@ import androidx.compose.material.icons.filled.Warning
 
 @Composable
 fun DescendiaPage(
-    worldState: WorldStateResponse?,
-    onLocalize: (String) -> String
+  worldState: WorldStateResponse?,
+  onLocalize: (String) -> String
 ) {
-    if (worldState == null) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
-            CircularProgressIndicator()
-        }
-        return
+  if (worldState == null) {
+  Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
+    CircularProgressIndicator()
+  }
+  return
+  }
+
+  // worldState.time は秒単位のUNIX時間と推測されるためミリ秒化。未取得の場合は 0L とする。
+  val now = (worldState.time ?: 0L) * 1000L
+  val activeDescents = worldState.descents?.filter { descent ->
+  val start = descent.activation?.epochMillis ?: 0L
+  val end = descent.expiry?.epochMillis ?: Long.MAX_VALUE
+  now in start..end
+  } ?: emptyList()
+
+  LazyColumn(
+  modifier = Modifier.fillMaxSize().padding(16.dp)
+  ) {
+  item {
+    Text(
+    text = "ディセンディア",
+    style = MaterialTheme.typography.displaySmall,
+    color = MaterialTheme.colorScheme.onSurface,
+    modifier = Modifier.padding(bottom = 16.dp)
+    )
+    Text(
+    text = "21のチャレンジを次々にクリアしていくミッション。",
+    style = MaterialTheme.typography.bodyMedium,
+    color = MaterialTheme.colorScheme.onSurfaceVariant,
+    modifier = Modifier.padding(bottom = 24.dp)
+    )
+  }
+
+  if (activeDescents.isEmpty()) {
+    item {
+    Text(
+      text = "現在アクティブなディセンディアはありません",
+      color = MaterialTheme.colorScheme.onSurfaceVariant,
+      style = MaterialTheme.typography.bodyLarge
+    )
     }
-
-    // worldState.time は秒単位のUNIX時間と推測されるためミリ秒化。未取得の場合は 0L とする。
-    val now = (worldState.time ?: 0L) * 1000L
-    val activeDescents = worldState.descents?.filter { descent ->
-        val start = descent.activation?.epochMillis ?: 0L
-        val end = descent.expiry?.epochMillis ?: Long.MAX_VALUE
-        now in start..end
-    } ?: emptyList()
-
-    LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(16.dp)
-    ) {
-        item {
-            Text(
-                text = "ディセンディア",
-                style = MaterialTheme.typography.displaySmall,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-            Text(
-                text = "1999のマップで遂行される高難易度ミッション。",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(bottom = 24.dp)
-            )
-        }
-
-        if (activeDescents.isEmpty()) {
-            item {
-                Text(
-                    text = "現在アクティブなディセンディアはありません",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
-        } else {
-            items(activeDescents) { descent ->
-                DescendiaCard(descent = descent, onLocalize = onLocalize)
-                Spacer(modifier = Modifier.height(24.dp))
-            }
-        }
+  } else {
+    items(activeDescents) { descent ->
+    DescendiaCard(descent = descent, onLocalize = onLocalize)
+    Spacer(modifier = Modifier.height(24.dp))
     }
+  }
+  }
 }
 
 @Composable
 fun DescendiaCard(
-    descent: WsDescent,
-    onLocalize: (String) -> String
+  descent: WsDescent,
+  onLocalize: (String) -> String
 ) {
-    val challenges = descent.challenges ?: emptyList()
+  val challenges = descent.challenges ?: emptyList()
+  
+  Column {
+  SectionTitle(title = "現在のローテーション", modifier = Modifier.padding(bottom = 8.dp))
+  ListGroup {
+    challenges.forEach { challenge ->
+    val typeRaw = challenge.type ?: "不明"
+    val type = jp.girky.wf_noctuahub.utils.Translations.translateDescendiaMissionType(typeRaw)
+    val modifierRaw = challenge.challenge ?: "不明"
+    val modifierName = jp.girky.wf_noctuahub.utils.Translations.translateDescendiaModifier(modifierRaw)
+    val missionIndex = (challenge.index ?: 0)
     
-    Column {
-        SectionTitle(title = "現在のローテーション", modifier = Modifier.padding(bottom = 8.dp))
-        ListGroup {
-            challenges.forEach { challenge ->
-                val typeRaw = challenge.type ?: "不明"
-                val type = jp.girky.wf_noctuahub.utils.Translations.translateDescendiaMissionType(typeRaw)
-                val modifierRaw = challenge.challenge ?: "不明"
-                val modifierName = jp.girky.wf_noctuahub.utils.Translations.translateDescendiaModifier(modifierRaw)
-                val missionIndex = (challenge.index ?: 0) + 1
-                
-                ListTile(
-                    title = "ミッション: $type",
-                    subtitle = "モディファイア: $modifierName",
-                    leadingIcon = {
-                        Text(
-                            text = "$missionIndex",
-                            style = MaterialTheme.typography.titleLarge,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                )
-            }
-        }
+    val subtitleText = buildString {
+      append(modifierName)
+      val aurasRaw = challenge.auras ?: emptyList()
+      if (aurasRaw.isNotEmpty()) {
+      val aurasTranslated = aurasRaw.map { jp.girky.wf_noctuahub.utils.Translations.translateDescendiaModifier(it) }.distinct()
+      val uniqueAuras = aurasTranslated.filter { it != modifierName }
+      if (uniqueAuras.isNotEmpty()) {
+        append("\n")
+        append(uniqueAuras.joinToString(", "))
+      }
+      }
     }
+    
+    ListTile(
+      title = type,
+      subtitle = subtitleText,
+      leadingIcon = {
+      Text(
+        text = "$missionIndex",
+        style = MaterialTheme.typography.titleLarge,
+        color = MaterialTheme.colorScheme.onSurface
+      )
+      }
+    )
+    }
+  }
+  }
 }

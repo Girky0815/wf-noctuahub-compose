@@ -38,193 +38,193 @@ import jp.girky.wf_noctuahub.ui.components.ui.ListTile
 import jp.girky.wf_noctuahub.ui.components.ui.SectionTitle
 
 enum class Screen(val route: String, val icon: androidx.compose.ui.graphics.vector.ImageVector, val label: String) {
-    Status("status", Icons.Default.Dashboard, "ステータス"),
-    Fissures("fissures", Icons.Default.FlashlightOn, "亀裂"),
-    ArchonHunt("archon", Icons.Default.Adjust, "アルコン争奪戦"),
-    Archimedea("archimedea", Icons.Default.Explore, "ディセンディア"),
-    Settings("settings", Icons.Default.Settings, "設定")
+  Status("status", Icons.Default.Dashboard, "ステータス"),
+  Fissures("fissures", Icons.Default.FlashlightOn, "亀裂"),
+  ArchonHunt("archon", Icons.Default.Adjust, "アルコン争奪戦"),
+  Archimedea("archimedea", Icons.Default.Explore, "ディセンディア"),
+  Settings("settings", Icons.Default.Settings, "設定")
 }
 
 @Composable
 @Preview
 fun App() {
-    var isDark by remember { mutableStateOf(false) }
-    var seedColor by remember { mutableStateOf(getAccentColor() ?: Color.White) }
-    val coroutineScope = rememberCoroutineScope()
-    
-    val apiClient = remember { WarframeApiClient() }
-    val repository = remember { WarframeRepository(apiClient) }
-    val viewModel = remember { MainViewModel(repository) }
+  var isDark by remember { mutableStateOf(false) }
+  var seedColor by remember { mutableStateOf(getAccentColor() ?: Color.White) }
+  val coroutineScope = rememberCoroutineScope()
+  
+  val apiClient = remember { WarframeApiClient() }
+  val repository = remember { WarframeRepository(apiClient) }
+  val viewModel = remember { MainViewModel(repository) }
 
-    val fetchState by viewModel.fetchState.collectAsState()
-    val errorMessage by viewModel.errorMessage.collectAsState()
-    val worldState by viewModel.worldState.collectAsState()
-    
-    LaunchedEffect(Unit) {
-        viewModel.loadInitialData(coroutineScope)
-    }
+  val fetchState by viewModel.fetchState.collectAsState()
+  val errorMessage by viewModel.errorMessage.collectAsState()
+  val worldState by viewModel.worldState.collectAsState()
+  
+  LaunchedEffect(Unit) {
+    viewModel.loadInitialData(coroutineScope)
+  }
 
-    var currentScreen by remember { mutableStateOf(Screen.Status) }
+  var currentScreen by remember { mutableStateOf(Screen.Status) }
 
-    AppTheme(darkTheme = isDark, seedColor = seedColor) {
-        val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+  AppTheme(darkTheme = isDark, seedColor = seedColor) {
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
-        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.surfaceContainerHigh) {
-            ModalNavigationDrawer(
-                drawerState = drawerState,
-                drawerContent = {
-                    ModalDrawerSheet {
-                        Text(
-                            text = "Noctua Hub",
-                            style = MaterialTheme.typography.titleLarge,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                        HorizontalDivider()
-                        
-                        Column(
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp)
-                                .verticalScroll(rememberScrollState())
-                        ) {
-                            SectionTitle(title = "一般情報", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
-                            ListGroup {
-                                listOf(Screen.Status, Screen.Fissures).forEach { screen ->
-                                    ListTile(
-                                        title = screen.label,
-                                        leadingIcon = { Icon(screen.icon, contentDescription = screen.label) },
-                                        containerColor = if (currentScreen == screen) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
-                                        onClick = {
-                                            currentScreen = screen
-                                            coroutineScope.launch { drawerState.close() }
-                                        }
-                                    )
-                                }
-                            }
-
-                            SectionTitle(title = "中級者向け", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
-                            ListGroup {
-                                listOf(Screen.ArchonHunt, Screen.Archimedea).forEach { screen ->
-                                    ListTile(
-                                        title = screen.label,
-                                        leadingIcon = { Icon(screen.icon, contentDescription = null) },
-                                        containerColor = if (currentScreen == screen) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
-                                        onClick = {
-                                            currentScreen = screen
-                                            coroutineScope.launch { drawerState.close() }
-                                        }
-                                    )
-                                }
-                            }
-
-                            SectionTitle(title = "システム", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
-                            ListGroup {
-                                ListTile(
-                                    title = Screen.Settings.label,
-                                    leadingIcon = { Icon(Screen.Settings.icon, contentDescription = null) },
-                                    containerColor = if (currentScreen == Screen.Settings) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
-                                    onClick = {
-                                        currentScreen = Screen.Settings
-                                        coroutineScope.launch { drawerState.close() }
-                                    }
-                                )
-                            }
-                            
-                            Spacer(modifier = Modifier.height(24.dp))
-                        }
-                    }
-                }
+    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.surfaceContainerHigh) {
+      ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+          ModalDrawerSheet {
+            Text(
+              text = "Noctua Hub",
+              style = MaterialTheme.typography.titleLarge,
+              modifier = Modifier.padding(16.dp)
+            )
+            HorizontalDivider()
+            
+            Column(
+              modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState())
             ) {
-            Scaffold(
-                containerColor = Color.Transparent,
-                topBar = {
-                    @OptIn(ExperimentalMaterial3Api::class)
-                    TopAppBar(
-                        title = { Text(currentScreen.label) },
-                        navigationIcon = {
-                            IconButton(onClick = { coroutineScope.launch { drawerState.open() } }) {
-                                Icon(Icons.Default.Menu, contentDescription = "Menu")
-                            }
-                        },
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color.Transparent
-                        )
-                    )
-                },
-                bottomBar = {
-                    NavigationBar {
-                        listOf(Screen.Status, Screen.Fissures, Screen.Settings).forEach { screen ->
-                            NavigationBarItem(
-                                icon = { Icon(screen.icon, contentDescription = screen.label) },
-                                label = { Text(screen.label) },
-                                selected = currentScreen == screen,
-                                onClick = { currentScreen = screen }
-                            )
-                        }
+              SectionTitle(title = "一般情報", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
+              ListGroup {
+                listOf(Screen.Status, Screen.Fissures).forEach { screen ->
+                  ListTile(
+                    title = screen.label,
+                    leadingIcon = { Icon(screen.icon, contentDescription = screen.label) },
+                    containerColor = if (currentScreen == screen) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
+                    onClick = {
+                      currentScreen = screen
+                      coroutineScope.launch { drawerState.close() }
                     }
+                  )
                 }
-            ) { innerPadding ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                ) {
-                when (fetchState) {
-                    FetchState.SUCCESS -> {
-                        when (currentScreen) {
-                            Screen.Status -> {
-                                StatusPage(
-                                    worldState = worldState,
-                                    onLocalize = { viewModel.localize(it) }
-                                )
-                            }
-                            Screen.Fissures -> {
-                                FissuresPage(
-                                    worldState = worldState,
-                                    onLocalize = { viewModel.localize(it) },
-                                    onGetRegionInfo = { viewModel.getRegionInfo(it) }
-                                )
-                            }
-                            Screen.ArchonHunt -> {
-                                ArchonHuntPage(
-                                    worldState = worldState,
-                                    onLocalize = { viewModel.localize(it) },
-                                    onGetRegionInfo = { viewModel.getRegionInfo(it) }
-                                )
-                            }
-                            Screen.Archimedea -> {
-                                DescendiaPage(
-                                    worldState = worldState,
-                                    onLocalize = { viewModel.localize(it) }
-                                )
-                            }
-                            Screen.Settings -> {
-                                SettingsPage(
-                                    isDark = isDark,
-                                    onDarkThemeChange = { isDark = it },
-                                    seedColor = seedColor,
-                                    onSeedColorChange = { seedColor = it }
-                                )
-                            }
-                        }
+              }
+
+              SectionTitle(title = "中級者向け", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
+              ListGroup {
+                listOf(Screen.ArchonHunt, Screen.Archimedea).forEach { screen ->
+                  ListTile(
+                    title = screen.label,
+                    leadingIcon = { Icon(screen.icon, contentDescription = null) },
+                    containerColor = if (currentScreen == screen) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
+                    onClick = {
+                      currentScreen = screen
+                      coroutineScope.launch { drawerState.close() }
                     }
-                    FetchState.ERROR -> {
-                        Box(modifier = Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
-                            Text(text = "エラー: $errorMessage", color = MaterialTheme.colorScheme.error)
-                        }
-                    }
-                    else -> {
-                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                CircularProgressIndicator()
-                                Spacer(modifier = Modifier.height(16.dp))
-                                Text(text = "データを取得中...", color = MaterialTheme.colorScheme.onBackground)
-                            }
-                        }
-                    }
+                  )
                 }
+              }
+
+              SectionTitle(title = "システム", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
+              ListGroup {
+                ListTile(
+                  title = Screen.Settings.label,
+                  leadingIcon = { Icon(Screen.Settings.icon, contentDescription = null) },
+                  containerColor = if (currentScreen == Screen.Settings) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
+                  onClick = {
+                    currentScreen = Screen.Settings
+                    coroutineScope.launch { drawerState.close() }
+                  }
+                )
+              }
+              
+              Spacer(modifier = Modifier.height(24.dp))
             }
-            }
+          }
         }
+      ) {
+      Scaffold(
+        containerColor = Color.Transparent,
+        topBar = {
+          @OptIn(ExperimentalMaterial3Api::class)
+          TopAppBar(
+            title = { Text(currentScreen.label) },
+            navigationIcon = {
+              IconButton(onClick = { coroutineScope.launch { drawerState.open() } }) {
+                Icon(Icons.Default.Menu, contentDescription = "Menu")
+              }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(
+              containerColor = Color.Transparent
+            )
+          )
+        },
+        bottomBar = {
+          NavigationBar {
+            listOf(Screen.Status, Screen.Fissures, Screen.Settings).forEach { screen ->
+              NavigationBarItem(
+                icon = { Icon(screen.icon, contentDescription = screen.label) },
+                label = { Text(screen.label) },
+                selected = currentScreen == screen,
+                onClick = { currentScreen = screen }
+              )
+            }
+          }
+        }
+      ) { innerPadding ->
+        Column(
+          modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+        ) {
+        when (fetchState) {
+          FetchState.SUCCESS -> {
+            when (currentScreen) {
+              Screen.Status -> {
+                StatusPage(
+                  worldState = worldState,
+                  onLocalize = { viewModel.localize(it) }
+                )
+              }
+              Screen.Fissures -> {
+                FissuresPage(
+                  worldState = worldState,
+                  onLocalize = { viewModel.localize(it) },
+                  onGetRegionInfo = { viewModel.getRegionInfo(it) }
+                )
+              }
+              Screen.ArchonHunt -> {
+                ArchonHuntPage(
+                  worldState = worldState,
+                  onLocalize = { viewModel.localize(it) },
+                  onGetRegionInfo = { viewModel.getRegionInfo(it) }
+                )
+              }
+              Screen.Archimedea -> {
+                DescendiaPage(
+                  worldState = worldState,
+                  onLocalize = { viewModel.localize(it) }
+                )
+              }
+              Screen.Settings -> {
+                SettingsPage(
+                  isDark = isDark,
+                  onDarkThemeChange = { isDark = it },
+                  seedColor = seedColor,
+                  onSeedColorChange = { seedColor = it }
+                )
+              }
+            }
+          }
+          FetchState.ERROR -> {
+            Box(modifier = Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
+              Text(text = "エラー: $errorMessage", color = MaterialTheme.colorScheme.error)
+            }
+          }
+          else -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+              Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                CircularProgressIndicator()
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(text = "データを取得中...", color = MaterialTheme.colorScheme.onBackground)
+              }
+            }
+          }
+        }
+      }
+      }
     }
+  }
 }
 }
