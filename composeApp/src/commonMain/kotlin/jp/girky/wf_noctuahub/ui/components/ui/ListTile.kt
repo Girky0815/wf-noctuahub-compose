@@ -35,7 +35,7 @@ fun ListTile(
         if (leadingIcon != null) {
             Box(
                 modifier = Modifier
-                    .size(40.dp)
+                    .defaultMinSize(minWidth = 32.dp)
                     .padding(end = 16.dp),
                 contentAlignment = Alignment.Center
             ) {

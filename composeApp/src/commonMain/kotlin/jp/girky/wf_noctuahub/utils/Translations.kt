@@ -235,7 +235,7 @@ object Translations {
     "PoisonGas" to "化学兵器",
     "Wisp" to "Marie のサンクチュアリ",
     "Harrow" to "Lyon のサンクチュアリ",
-    "Devil" to "Roathe の苦悩",
+    // "Devil" to "Roathe の苦悩",
     "BasicMimics" to "",
     "FieryTrail" to "炎の軌跡",
     "UnseenFoes" to "隠れた脅威",
