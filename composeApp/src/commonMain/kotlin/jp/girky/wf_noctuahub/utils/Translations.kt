@@ -206,7 +206,7 @@ object Translations {
     "DT_UNIQUE" to "時の難題(レース)",
     "DT_NETRACELLS" to "標的排除(ネクロマイトドローン)",
     "DT_COLLECTION" to "バイトブラスト収集",
-    "DT_SABOTAGE_DEFENSE" to "防衛" // 時のゆりかご
+    "DT_SABOTAGE_DEFENSE" to "防衛", // 時のゆりかご
     "DT_LOOT_CREATURES" to "グラズリング排除"
   )
 
