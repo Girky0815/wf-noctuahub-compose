@@ -19,7 +19,9 @@ data class WorldStateResponse(
     @SerialName("VoidTraders") val voidTraders: List<WsVoidTrader>? = emptyList(),
     @SerialName("DailyDeals") val dailyDeals: List<WsDailyDeal>? = emptyList(),
     // For Earth/Cetus clock, we might rely on specific keys or calculation based on epoch time if not directly provided
-    @SerialName("ProjectPct") val projectPct: List<Double>? = emptyList() // Fomorian/Razorback progress
+    @SerialName("ProjectPct") val projectPct: List<Double>? = emptyList(), // Fomorian/Razorback progress
+    @SerialName("LiteSorties") val liteSorties: List<WsSortie>? = emptyList(),
+    @SerialName("Descents") val descents: List<WsDescent>? = emptyList()
 )
 
 @Serializable
@@ -152,4 +154,22 @@ data class WsDailyDeal(
     @SerialName("SalePrice") val salePrice: Int? = null,
     @SerialName("AmountTotal") val amountTotal: Int? = null,
     @SerialName("AmountSold") val amountSold: Int? = null
+)
+
+@Serializable
+data class WsDescent(
+    @SerialName("Activation") val activation: MongoDate? = null,
+    @SerialName("Expiry") val expiry: MongoDate? = null,
+    @SerialName("RandSeed") val randSeed: Long? = null,
+    @SerialName("Challenges") val challenges: List<WsDescentChallenge>? = emptyList()
+)
+
+@Serializable
+data class WsDescentChallenge(
+    @SerialName("Index") val index: Int? = null,
+    @SerialName("Type") val type: String? = null,
+    @SerialName("Challenge") val challenge: String? = null,
+    @SerialName("Level") val level: String? = null,
+    @SerialName("Specs") val specs: List<String>? = emptyList(),
+    @SerialName("Auras") val auras: List<String>? = emptyList()
 )

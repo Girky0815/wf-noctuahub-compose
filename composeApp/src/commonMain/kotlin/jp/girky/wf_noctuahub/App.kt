@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,18 +21,27 @@ import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.FlashlightOn
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Adjust
+import androidx.compose.material.icons.filled.Explore
 import jp.girky.wf_noctuahub.ui.pages.SettingsPage
 import jp.girky.wf_noctuahub.ui.pages.StatusPage
 import jp.girky.wf_noctuahub.ui.pages.FissuresPage
+import jp.girky.wf_noctuahub.ui.pages.ArchonHuntPage
+import jp.girky.wf_noctuahub.ui.pages.ArchimedeaPage
 import kotlinx.coroutines.launch
 import jp.girky.wf_noctuahub.ui.theme.AppTheme
 import jp.girky.wf_noctuahub.ui.theme.getAccentColor
 import jp.girky.wf_noctuahub.ui.viewmodel.FetchState
 import jp.girky.wf_noctuahub.ui.viewmodel.MainViewModel
+import jp.girky.wf_noctuahub.ui.components.ui.ListGroup
+import jp.girky.wf_noctuahub.ui.components.ui.ListTile
+import jp.girky.wf_noctuahub.ui.components.ui.SectionTitle
 
 enum class Screen(val route: String, val icon: androidx.compose.ui.graphics.vector.ImageVector, val label: String) {
     Status("status", Icons.Default.Dashboard, "ステータス"),
     Fissures("fissures", Icons.Default.FlashlightOn, "亀裂"),
+    ArchonHunt("archon", Icons.Default.Adjust, "アルコン争奪戦"),
+    Archimedea("archimedea", Icons.Default.Explore, "アルキメデア"),
     Settings("settings", Icons.Default.Settings, "設定")
 }
 
@@ -69,17 +80,67 @@ fun App() {
                             modifier = Modifier.padding(16.dp)
                         )
                         HorizontalDivider()
-                        Screen.values().forEach { screen ->
-                            NavigationDrawerItem(
-                                label = { Text(screen.label) },
-                                icon = { Icon(screen.icon, contentDescription = screen.label) },
-                                selected = currentScreen == screen,
-                                onClick = {
-                                    currentScreen = screen
-                                    coroutineScope.launch { drawerState.close() }
-                                },
-                                modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                            )
+                        
+                        Column(
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp)
+                                .verticalScroll(rememberScrollState())
+                        ) {
+                            SectionTitle(title = "一般情報", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
+                            ListGroup {
+                                listOf(Screen.Status, Screen.Fissures).forEach { screen ->
+                                    ListTile(
+                                        title = screen.label,
+                                        leadingIcon = { Icon(screen.icon, contentDescription = screen.label) },
+                                        containerColor = if (currentScreen == screen) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
+                                        onClick = {
+                                            currentScreen = screen
+                                            coroutineScope.launch { drawerState.close() }
+                                        }
+                                    )
+                                }
+                            }
+
+                            SectionTitle(title = "中級者向け", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
+                            ListGroup {
+                                ListTile(
+                                    title = Screen.ArchonHunt.label,
+                                    leadingIcon = { Icon(Screen.ArchonHunt.icon, contentDescription = null) },
+                                    containerColor = if (currentScreen == Screen.ArchonHunt) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
+                                    onClick = {
+                                        currentScreen = Screen.ArchonHunt
+                                        coroutineScope.launch { drawerState.close() }
+                                    }
+                                )
+                            }
+
+                            SectionTitle(title = "上級者向け", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
+                            ListGroup {
+                                ListTile(
+                                    title = Screen.Archimedea.label,
+                                    leadingIcon = { Icon(Screen.Archimedea.icon, contentDescription = null) },
+                                    containerColor = if (currentScreen == Screen.Archimedea) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
+                                    onClick = {
+                                        currentScreen = Screen.Archimedea
+                                        coroutineScope.launch { drawerState.close() }
+                                    }
+                                )
+                            }
+
+                            SectionTitle(title = "システム", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
+                            ListGroup {
+                                ListTile(
+                                    title = Screen.Settings.label,
+                                    leadingIcon = { Icon(Screen.Settings.icon, contentDescription = null) },
+                                    containerColor = if (currentScreen == Screen.Settings) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
+                                    onClick = {
+                                        currentScreen = Screen.Settings
+                                        coroutineScope.launch { drawerState.close() }
+                                    }
+                                )
+                            }
+                            
+                            Spacer(modifier = Modifier.height(24.dp))
                         }
                     }
                 }
@@ -102,7 +163,7 @@ fun App() {
                 },
                 bottomBar = {
                     NavigationBar {
-                        Screen.values().forEach { screen ->
+                        listOf(Screen.Status, Screen.Fissures, Screen.Settings).forEach { screen ->
                             NavigationBarItem(
                                 icon = { Icon(screen.icon, contentDescription = screen.label) },
                                 label = { Text(screen.label) },
@@ -132,6 +193,19 @@ fun App() {
                                     worldState = worldState,
                                     onLocalize = { viewModel.localize(it) },
                                     onGetRegionInfo = { viewModel.getRegionInfo(it) }
+                                )
+                            }
+                            Screen.ArchonHunt -> {
+                                ArchonHuntPage(
+                                    worldState = worldState,
+                                    onLocalize = { viewModel.localize(it) },
+                                    onGetRegionInfo = { viewModel.getRegionInfo(it) }
+                                )
+                            }
+                            Screen.Archimedea -> {
+                                ArchimedeaPage(
+                                    worldState = worldState,
+                                    onLocalize = { viewModel.localize(it) }
                                 )
                             }
                             Screen.Settings -> {

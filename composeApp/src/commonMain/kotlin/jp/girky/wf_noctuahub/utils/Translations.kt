@@ -92,7 +92,8 @@ object Translations {
         4 to "Orokin",
         7 to "The Murmur",
         8 to "Scaldra",
-        9 to "Techrot"
+        9 to "Techrot",
+        10 to "Anarch"
     )
 
     // 惑星の日本語訳
@@ -168,6 +169,7 @@ object Translations {
         "MT_INTEL" to "潜入",
         "MT_LANDSCAPE" to "自由行動",
         "MT_MOBILE_DEFENSE" to "機動防衛",
+        "MT_INFESTED_SALVAGE" to "感染回収",
         "MT_PVP" to "コンクレーブ",
         "MT_RESCUE" to "救出",
         "MT_RETRIEVAL" to "ハイジャック",
@@ -176,14 +178,58 @@ object Translations {
         "MT_SURVIVAL" to "耐久",
         "MT_TERRITORY" to "傍受",
         "MT_VOID_CASCADE" to "カスケード",
+        "MT_SHRINE_DEFENSE" to "祭壇防衛",
         "MT_ASCENSION" to "昇天",
         "MT_ALCHEMY" to "錬金術",
         "MT_ENDLESS_CAPTURE" to "レガサイト収穫"
     )
 
     fun translateInternalMissionType(raw: String): String {
-        internalMissionTypes[raw]?.let { return it }
+        val normalized = raw.replace("DT_", "MT_")
+        internalMissionTypes[normalized]?.let { return it }
         return translateMissionType(raw)
+    }
+
+    // ----- ディセンディア（1999）専用 ミッション・ミニミッション辞書 -----
+    // 通常のミッション(DT_ASSASSINATION 等)とは異なる独自のミニミッション名や
+    // ディセンディア特有の目標がAPIから返ってきた場合は、ここに追加してください。
+    // 例: "HackTerminals" to "端末ハッキング", "RescueTarget" to "ターゲット救出"
+    val descendiaMiniMissions = mapOf(
+        //"HackTerminals" to "端末ハッキング" // 仮の例です。ゲーム内の表記に合わせて書き換えてください。
+        "DT_PRESSURE_GAUGE" to "圧力鍋(錬金術: 圧力制御フェーズ)",
+        "DT_SABOTAGE_HIVE" to "ハイブ",
+        "DT_PROTOFRAME" to "Protoframe",
+        "DT_EXCAVATION" to "発掘",
+        "DT_MIMICS" to "略奪ルーレット",
+        "DT_BREAK_TARGETS" to "ホログローブ破壊",
+        "DT_BOSS" to "ボス戦",
+        "DT_UNIQUE" to "時の難題(レース)",
+        "DT_NETRACELLS" to "標的排除(ネクロマイトドローン)",
+        "DT_COLLECTION" to "バイトブラスト収集",
+
+
+    )
+
+    /**
+     * ディセンディア用ミッションタイプの翻訳関数。
+     * 1. 最初に descendiaMiniMissions に完全一致するか探す
+     * 2. なければ通常のミッション（MT_ / DT_ 変換）として探す
+     */
+    fun translateDescendiaMissionType(raw: String): String {
+        descendiaMiniMissions[raw]?.let { return it }
+        return translateInternalMissionType(raw)
+    }
+
+    // ディセンディア（1999）用 モディファイア（リスク）辞書
+    val descendiaModifiers = mapOf(
+        "VeryToxic" to "猛毒",
+        "Darkness" to "暗闇",
+        "LowEnergy" to "低エネルギー",
+        "HighDamage" to "被ダメージ増加"
+    )
+
+    fun translateDescendiaModifier(name: String): String {
+        return descendiaModifiers[name] ?: name
     }
 
     fun translateResource(type: String): String {
