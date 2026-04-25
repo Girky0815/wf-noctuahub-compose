@@ -19,7 +19,7 @@ import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Warning
 
 @Composable
-fun ArchimedeaPage(
+fun DescendiaPage(
     worldState: WorldStateResponse?,
     onLocalize: (String) -> String
 ) {
@@ -49,7 +49,7 @@ fun ArchimedeaPage(
                 modifier = Modifier.padding(bottom = 16.dp)
             )
             Text(
-                text = "21階層のミッションを次々とクリアしていくモード。",
+                text = "1999のマップで遂行される高難易度ミッション。",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 24.dp)
@@ -66,7 +66,7 @@ fun ArchimedeaPage(
             }
         } else {
             items(activeDescents) { descent ->
-                ArchimedeaCard(descent = descent, onLocalize = onLocalize)
+                DescendiaCard(descent = descent, onLocalize = onLocalize)
                 Spacer(modifier = Modifier.height(24.dp))
             }
         }
@@ -74,7 +74,7 @@ fun ArchimedeaPage(
 }
 
 @Composable
-fun ArchimedeaCard(
+fun DescendiaCard(
     descent: WsDescent,
     onLocalize: (String) -> String
 ) {

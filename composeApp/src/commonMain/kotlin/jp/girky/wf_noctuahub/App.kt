@@ -27,7 +27,7 @@ import jp.girky.wf_noctuahub.ui.pages.SettingsPage
 import jp.girky.wf_noctuahub.ui.pages.StatusPage
 import jp.girky.wf_noctuahub.ui.pages.FissuresPage
 import jp.girky.wf_noctuahub.ui.pages.ArchonHuntPage
-import jp.girky.wf_noctuahub.ui.pages.ArchimedeaPage
+import jp.girky.wf_noctuahub.ui.pages.DescendiaPage
 import kotlinx.coroutines.launch
 import jp.girky.wf_noctuahub.ui.theme.AppTheme
 import jp.girky.wf_noctuahub.ui.theme.getAccentColor
@@ -41,7 +41,7 @@ enum class Screen(val route: String, val icon: androidx.compose.ui.graphics.vect
     Status("status", Icons.Default.Dashboard, "ステータス"),
     Fissures("fissures", Icons.Default.FlashlightOn, "亀裂"),
     ArchonHunt("archon", Icons.Default.Adjust, "アルコン争奪戦"),
-    Archimedea("archimedea", Icons.Default.Explore, "アルキメデア"),
+    Archimedea("archimedea", Icons.Default.Explore, "ディセンディア"),
     Settings("settings", Icons.Default.Settings, "設定")
 }
 
@@ -103,28 +103,17 @@ fun App() {
 
                             SectionTitle(title = "中級者向け", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
                             ListGroup {
-                                ListTile(
-                                    title = Screen.ArchonHunt.label,
-                                    leadingIcon = { Icon(Screen.ArchonHunt.icon, contentDescription = null) },
-                                    containerColor = if (currentScreen == Screen.ArchonHunt) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
-                                    onClick = {
-                                        currentScreen = Screen.ArchonHunt
-                                        coroutineScope.launch { drawerState.close() }
-                                    }
-                                )
-                            }
-
-                            SectionTitle(title = "上級者向け", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
-                            ListGroup {
-                                ListTile(
-                                    title = Screen.Archimedea.label,
-                                    leadingIcon = { Icon(Screen.Archimedea.icon, contentDescription = null) },
-                                    containerColor = if (currentScreen == Screen.Archimedea) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
-                                    onClick = {
-                                        currentScreen = Screen.Archimedea
-                                        coroutineScope.launch { drawerState.close() }
-                                    }
-                                )
+                                listOf(Screen.ArchonHunt, Screen.Archimedea).forEach { screen ->
+                                    ListTile(
+                                        title = screen.label,
+                                        leadingIcon = { Icon(screen.icon, contentDescription = null) },
+                                        containerColor = if (currentScreen == screen) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
+                                        onClick = {
+                                            currentScreen = screen
+                                            coroutineScope.launch { drawerState.close() }
+                                        }
+                                    )
+                                }
                             }
 
                             SectionTitle(title = "システム", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
@@ -203,7 +192,7 @@ fun App() {
                                 )
                             }
                             Screen.Archimedea -> {
-                                ArchimedeaPage(
+                                DescendiaPage(
                                     worldState = worldState,
                                     onLocalize = { viewModel.localize(it) }
                                 )
