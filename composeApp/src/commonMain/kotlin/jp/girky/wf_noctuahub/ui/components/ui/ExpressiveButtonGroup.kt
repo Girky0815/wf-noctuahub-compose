@@ -1,18 +1,23 @@
 package jp.girky.wf_noctuahub.ui.components.ui
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ButtonGroup
+import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.ToggleButton
+import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 
 data class ExpressiveButtonOption(
     val label: String,
@@ -27,23 +32,30 @@ fun ExpressiveButtonGroup(
     selectedIndex: Int,
     modifier: Modifier = Modifier
 ) {
-    ButtonGroup(modifier = modifier) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween, Alignment.CenterHorizontally)
+    ) {
         options.forEachIndexed { index, option ->
-            val content: @Composable () -> Unit = {
+            ToggleButton(
+                checked = selectedIndex == index,
+                onCheckedChange = { option.onClick() },
+                modifier = Modifier.weight(1f).heightIn(min = 48.dp),
+                shapes = when (index) {
+                    0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                    options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                    else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                }
+            ) {
                 option.icon?.let { icon ->
                     Icon(
                         imageVector = icon,
                         contentDescription = null,
-                        modifier = Modifier.size(ButtonDefaults.IconSize)
+                        modifier = Modifier.size(ToggleButtonDefaults.IconSize)
                     )
-                    Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
+                    Spacer(modifier = Modifier.size(ToggleButtonDefaults.IconSpacing))
                 }
                 Text(option.label)
-            }
-            if (index == selectedIndex) {
-                Button(onClick = option.onClick, content = { content() })
-            } else {
-                FilledTonalButton(onClick = option.onClick, content = { content() })
             }
         }
     }

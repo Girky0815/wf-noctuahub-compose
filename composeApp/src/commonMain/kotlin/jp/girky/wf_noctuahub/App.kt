@@ -203,9 +203,20 @@ fun App() {
         }
       ) { innerPadding ->
         @OptIn(ExperimentalMaterial3Api::class)
+        val pullState = androidx.compose.material3.pulltorefresh.rememberPullToRefreshState()
+        val isRefreshingState = fetchState == FetchState.LOADING_WORLDSTATE || fetchState == FetchState.LOADING_EXPORT
+        @OptIn(ExperimentalMaterial3Api::class)
         androidx.compose.material3.pulltorefresh.PullToRefreshBox(
-          isRefreshing = fetchState == FetchState.LOADING_WORLDSTATE || fetchState == FetchState.LOADING_EXPORT,
+          state = pullState,
+          isRefreshing = isRefreshingState,
           onRefresh = { viewModel.loadInitialData(coroutineScope) },
+          indicator = {
+              jp.girky.wf_noctuahub.ui.components.ui.ExpressivePullToRefreshIndicator(
+                  isRefreshing = isRefreshingState,
+                  state = pullState,
+                  modifier = Modifier.align(Alignment.TopCenter)
+              )
+          },
           modifier = Modifier
             .fillMaxSize()
             .padding(innerPadding)
