@@ -34,6 +34,7 @@ import com.russhwolf.settings.Settings
 import jp.girky.wf_noctuahub.ui.pages.StatusPage
 import jp.girky.wf_noctuahub.ui.pages.FissuresPage
 import jp.girky.wf_noctuahub.ui.pages.ArchonHuntPage
+import jp.girky.wf_noctuahub.ui.pages.DescendiaPage
 import jp.girky.wf_noctuahub.ui.pages.ArchimedeaPage
 import kotlinx.coroutines.launch
 import jp.girky.wf_noctuahub.ui.theme.AppTheme
@@ -49,7 +50,7 @@ enum class Screen(val route: String, val icon: androidx.compose.ui.graphics.vect
   Fissures("fissures", Icons.Default.FlashlightOn, "亀裂"),
   ArchonHunt("archon", Icons.Default.Adjust, "アルコン争奪戦"),
   Descendia("descendia", Icons.Default.Explore, "ディセンディア"),
-  Archimedea("archimedea", Icons.Default.Warning, "アルキメデア"),
+  Archimedea("archimedea", Icons.Default.Explore, "アルキメデア"),
   Settings("settings", Icons.Default.Settings, "設定")
 }
 
@@ -244,13 +245,13 @@ fun App() {
                 )
               }
               Screen.Descendia -> {
-                jp.girky.wf_noctuahub.ui.pages.DescendiaPage(
+                DescendiaPage(
                   worldState = worldState,
                   onLocalize = { viewModel.localize(it) }
                 )
               }
               Screen.Archimedea -> {
-                jp.girky.wf_noctuahub.ui.pages.ArchimedeaPage(
+                ArchimedeaPage(
                   worldState = worldState,
                   onLocalize = { viewModel.localize(it) }
                 )

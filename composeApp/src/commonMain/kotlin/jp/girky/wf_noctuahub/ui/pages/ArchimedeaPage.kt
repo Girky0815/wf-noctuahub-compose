@@ -31,7 +31,7 @@ fun ArchimedeaPage(
     val activeConquests = worldState.conquests?.filter {
         val start = it.activation?.epochMillis ?: 0L
         val end = it.expiry?.epochMillis ?: Long.MAX_VALUE
-        it.type == "CT_LAB" && now in start..end
+        (it.type == "CT_LAB" || it.type == "CT_HEX") && now in start..end
     } ?: emptyList()
 
     LazyColumn(
@@ -39,13 +39,13 @@ fun ArchimedeaPage(
     ) {
         item {
             Text(
-                text = "深淵アルキメデア",
+                text = "アルキメデア",
                 style = MaterialTheme.typography.displaySmall,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
             Text(
-                text = "Albrechtの研究所で高難易度のミッションを連続してクリアするモード。",
+                text = "高難易度のミッションを連続してクリアするモード。",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 24.dp)
@@ -55,7 +55,7 @@ fun ArchimedeaPage(
         if (activeConquests.isEmpty()) {
             item {
                 Text(
-                    text = "現在アクティブな深淵アルキメデアはありません",
+                    text = "現在アクティブなアルキメデアはありません",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyLarge
                 )
@@ -75,9 +75,14 @@ fun ArchimedeaCard(
 ) {
     val missions = conquest.missions ?: emptyList()
     val variables = conquest.variables ?: emptyList()
+    val typeKey = conquest.type ?: "CT_LAB"
+    
+    val title = if (typeKey == "CT_HEX") "次元アルキメデア" else "深淵アルキメデア"
 
     Column {
-        SectionTitle(title = "ミッション", modifier = Modifier.padding(bottom = 8.dp))
+        SectionTitle(title = title, modifier = Modifier.padding(bottom = 8.dp))
+        
+        Text(text = "ミッション", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(bottom = 8.dp))
         ListGroup {
             missions.forEachIndexed { index, mission ->
                 val typeRaw = mission.missionType ?: "不明"
@@ -85,12 +90,20 @@ fun ArchimedeaCard(
                 
                 val hardDifficulty = mission.difficulties?.find { it.type == "CD_HARD" }
                 val normalDifficulty = mission.difficulties?.find { it.type == "CD_NORMAL" }
-                val diff = hardDifficulty ?: normalDifficulty
                 
                 val subtitleText = buildString {
-                    diff?.deviation?.let { append("偏差: ${formatModifierName(it)}\n") }
-                    diff?.risks?.takeIf { it.isNotEmpty() }?.let { risks ->
-                        append("リスク: ${risks.joinToString(", ") { formatModifierName(it) }}")
+                    val deviation = hardDifficulty?.deviation ?: normalDifficulty?.deviation
+                    deviation?.let { append("偏差: ${formatModifierName(it, typeKey)}\n") }
+                    
+                    val normalRisks = normalDifficulty?.risks ?: emptyList()
+                    if (normalRisks.isNotEmpty()) {
+                        append("リスク(通常): ${normalRisks.joinToString(", ") { formatModifierName(it, typeKey) }}\n")
+                    }
+                    
+                    val hardRisks = hardDifficulty?.risks ?: emptyList()
+                    val extraRisks = hardRisks - normalRisks.toSet()
+                    if (extraRisks.isNotEmpty()) {
+                        append("リスク(上級): ${extraRisks.joinToString(", ") { formatModifierName(it, typeKey) }}")
                     }
                 }
 
@@ -110,11 +123,11 @@ fun ArchimedeaCard(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        SectionTitle(title = "パーソナルモディファイア", modifier = Modifier.padding(bottom = 8.dp))
+        Text(text = "パーソナルモディファイア", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(bottom = 8.dp))
         ListGroup {
             variables.forEach { variable ->
                 ListTile(
-                    title = formatModifierName(variable),
+                    title = formatModifierName(variable, typeKey),
                     onClick = null
                 )
             }
@@ -122,7 +135,7 @@ fun ArchimedeaCard(
     }
 }
 
-private fun formatModifierName(raw: String): String {
+private fun formatModifierName(raw: String, typeKey: String): String {
     // CamelCase をスペース区切りにして Translations を通す
     val spaced = raw.replace(Regex("([a-z])([A-Z]+)"), "$1 $2")
     
@@ -145,6 +158,8 @@ private fun formatModifierName(raw: String): String {
     
     directMap[raw]?.let { return it }
     
-    val translated = Translations.translateArchimedeaModifierName(spaced, "C T_ L A B")
+    // typeKey ("CT_LAB" -> "C T_ L A B" の形式を求める Translations.kt のためにフォーマット)
+    val typeFormatted = typeKey.map { it.toString() }.joinToString(" ")
+    val translated = Translations.translateArchimedeaModifierName(spaced, typeFormatted)
     return if (translated != spaced) translated else raw
 }
