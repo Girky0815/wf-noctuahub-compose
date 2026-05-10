@@ -34,19 +34,22 @@ import com.russhwolf.settings.Settings
 import jp.girky.wf_noctuahub.ui.pages.StatusPage
 import jp.girky.wf_noctuahub.ui.pages.FissuresPage
 import jp.girky.wf_noctuahub.ui.pages.ArchonHuntPage
-import jp.girky.wf_noctuahub.ui.pages.DescendiaPage
+import jp.girky.wf_noctuahub.ui.pages.ArchimedeaPage
 import kotlinx.coroutines.launch
 import jp.girky.wf_noctuahub.ui.theme.AppTheme
 import jp.girky.wf_noctuahub.ui.theme.getAccentColor
 import jp.girky.wf_noctuahub.ui.viewmodel.FetchState
 import jp.girky.wf_noctuahub.ui.viewmodel.MainViewModel
 import jp.girky.wf_noctuahub.ui.components.ui.SectionTitle
-
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 enum class Screen(val route: String, val icon: androidx.compose.ui.graphics.vector.ImageVector, val label: String) {
   Status("status", Icons.Default.Dashboard, "ステータス"),
   Fissures("fissures", Icons.Default.FlashlightOn, "亀裂"),
   ArchonHunt("archon", Icons.Default.Adjust, "アルコン争奪戦"),
-  Archimedea("archimedea", Icons.Default.Explore, "ディセンディア"),
+  Descendia("descendia", Icons.Default.Explore, "ディセンディア"),
+  Archimedea("archimedea", Icons.Default.Warning, "アルキメデア"),
   Settings("settings", Icons.Default.Settings, "設定")
 }
 
@@ -126,7 +129,7 @@ fun App() {
 
               SectionTitle(title = "中級者向け", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
               ListGroup {
-                listOf(Screen.ArchonHunt, Screen.Archimedea).forEach { screen ->
+                listOf(Screen.ArchonHunt, Screen.Descendia, Screen.Archimedea).forEach { screen ->
                   ListTile(
                     title = screen.label,
                     leadingIcon = { Icon(screen.icon, contentDescription = null) },
@@ -168,6 +171,18 @@ fun App() {
                 Icon(Icons.Default.Menu, contentDescription = "Menu")
               }
             },
+            actions = {
+              worldState?.time?.let { timeSec ->
+                val dt = kotlinx.datetime.Instant.fromEpochSeconds(timeSec).toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault())
+                val timeStr = "${dt.hour.toString().padStart(2, '0')}:${dt.minute.toString().padStart(2, '0')}:${dt.second.toString().padStart(2, '0')}"
+                val nowSec = jp.girky.wf_noctuahub.utils.currentTimeMillis() / 1000
+                val diffMin = (nowSec - timeSec) / 60
+                Column(horizontalAlignment = Alignment.End, modifier = Modifier.padding(end = 16.dp)) {
+                  Text(text = "最終更新: $timeStr", style = MaterialTheme.typography.labelSmall)
+                  Text(text = "${diffMin}分前", style = MaterialTheme.typography.labelSmall)
+                }
+              }
+            },
             colors = TopAppBarDefaults.topAppBarColors(
               containerColor = Color.Transparent
             )
@@ -186,13 +201,27 @@ fun App() {
           }
         }
       ) { innerPadding ->
-        Column(
+        @OptIn(ExperimentalMaterial3Api::class)
+        androidx.compose.material3.pulltorefresh.PullToRefreshBox(
+          isRefreshing = fetchState == FetchState.LOADING_WORLDSTATE || fetchState == FetchState.LOADING_EXPORT,
+          onRefresh = { viewModel.loadInitialData(coroutineScope) },
           modifier = Modifier
             .fillMaxSize()
             .padding(innerPadding)
         ) {
-        when (fetchState) {
-          FetchState.SUCCESS -> {
+          if (fetchState == FetchState.ERROR) {
+            Box(modifier = Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
+              Text(text = "エラー: $errorMessage", color = MaterialTheme.colorScheme.error)
+            }
+          } else if (worldState == null) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+              Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                CircularProgressIndicator()
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(text = "データを取得中...", color = MaterialTheme.colorScheme.onBackground)
+              }
+            }
+          } else {
             when (currentScreen) {
               Screen.Status -> {
                 StatusPage(
@@ -214,35 +243,29 @@ fun App() {
                   onGetRegionInfo = { viewModel.getRegionInfo(it) }
                 )
               }
+              Screen.Descendia -> {
+                jp.girky.wf_noctuahub.ui.pages.DescendiaPage(
+                  worldState = worldState,
+                  onLocalize = { viewModel.localize(it) }
+                )
+              }
               Screen.Archimedea -> {
-                DescendiaPage(
+                jp.girky.wf_noctuahub.ui.pages.ArchimedeaPage(
                   worldState = worldState,
                   onLocalize = { viewModel.localize(it) }
                 )
               }
               Screen.Settings -> {
                 SettingsPage(
-                  appSettings = appSettings
+                  appSettings = appSettings,
+                  worldState = worldState,
+                  errorMessage = errorMessage,
+                  fetchState = fetchState
                 )
               }
             }
           }
-          FetchState.ERROR -> {
-            Box(modifier = Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
-              Text(text = "エラー: $errorMessage", color = MaterialTheme.colorScheme.error)
-            }
-          }
-          else -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-              Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                CircularProgressIndicator()
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(text = "データを取得中...", color = MaterialTheme.colorScheme.onBackground)
-              }
-            }
-          }
         }
-      }
       }
     }
   }

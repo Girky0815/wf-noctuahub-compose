@@ -57,33 +57,33 @@ fun FissuresPage(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        // Toggle Buttons (Steel Path / Void Storm)
-        Row(
+        // Toggle Buttons (SegmentedButton)
+        SingleChoiceSegmentedButtonRow(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
-            FilterChip(
-                selected = filterMode == "hard",
-                onClick = {
-                    filterMode = if (filterMode == "hard") "normal" else "hard"
-                },
-                label = { Text("鋼の道のり") },
-                leadingIcon = {
-                    Icon(Icons.Default.ModeStandby, contentDescription = null, modifier = Modifier.size(18.dp))
-                }
+            SegmentedButton(
+                shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3),
+                onClick = { filterMode = "normal" },
+                selected = filterMode == "normal",
+                label = { Text("通常") }
             )
-
-            FilterChip(
+            
+            SegmentedButton(
+                shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3),
+                onClick = { filterMode = "hard" },
+                selected = filterMode == "hard",
+                label = { Text("鋼の道のり") },
+                icon = { Icon(Icons.Default.ModeStandby, contentDescription = null, modifier = Modifier.size(18.dp)) }
+            )
+            
+            SegmentedButton(
+                shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3),
+                onClick = { filterMode = "storm" },
                 selected = filterMode == "storm",
-                onClick = {
-                    filterMode = if (filterMode == "storm") "normal" else "storm"
-                },
                 label = { Text("Void嵐") },
-                leadingIcon = {
-                    Icon(Icons.Default.RocketLaunch, contentDescription = null, modifier = Modifier.size(18.dp))
-                }
+                icon = { Icon(Icons.Default.RocketLaunch, contentDescription = null, modifier = Modifier.size(18.dp)) }
             )
         }
 

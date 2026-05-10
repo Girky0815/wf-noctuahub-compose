@@ -21,7 +21,8 @@ data class WorldStateResponse(
     // For Earth/Cetus clock, we might rely on specific keys or calculation based on epoch time if not directly provided
     @SerialName("ProjectPct") val projectPct: List<Double>? = emptyList(), // Fomorian/Razorback progress
     @SerialName("LiteSorties") val liteSorties: List<WsSortie>? = emptyList(),
-    @SerialName("Descents") val descents: List<WsDescent>? = emptyList()
+    @SerialName("Descents") val descents: List<WsDescent>? = emptyList(),
+    @SerialName("Conquests") val conquests: List<WsConquest>? = emptyList()
 )
 
 @Serializable
@@ -172,4 +173,28 @@ data class WsDescentChallenge(
     @SerialName("Level") val level: String? = null,
     @SerialName("Specs") val specs: List<String>? = emptyList(),
     @SerialName("Auras") val auras: List<String>? = emptyList()
+)
+
+@Serializable
+data class WsConquest(
+    @SerialName("Activation") val activation: MongoDate? = null,
+    @SerialName("Expiry") val expiry: MongoDate? = null,
+    @SerialName("Type") val type: String? = null,
+    @SerialName("Missions") val missions: List<WsConquestMission>? = emptyList(),
+    @SerialName("Variables") val variables: List<String>? = emptyList(),
+    @SerialName("RandomSeed") val randomSeed: Long? = null
+)
+
+@Serializable
+data class WsConquestMission(
+    @SerialName("faction") val faction: String? = null,
+    @SerialName("missionType") val missionType: String? = null,
+    @SerialName("difficulties") val difficulties: List<WsConquestDifficulty>? = emptyList()
+)
+
+@Serializable
+data class WsConquestDifficulty(
+    @SerialName("type") val type: String? = null,
+    @SerialName("deviation") val deviation: String? = null,
+    @SerialName("risks") val risks: List<String>? = emptyList()
 )

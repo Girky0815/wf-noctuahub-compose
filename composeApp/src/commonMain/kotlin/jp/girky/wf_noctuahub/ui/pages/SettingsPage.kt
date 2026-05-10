@@ -27,9 +27,20 @@ import jp.girky.wf_noctuahub.ui.components.ui.SectionTitle
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.material.icons.filled.Palette
 
+import jp.girky.wf_noctuahub.data.api.model.WorldStateResponse
+import jp.girky.wf_noctuahub.ui.viewmodel.FetchState
+import androidx.compose.material.icons.filled.Api
+import androidx.compose.material.icons.filled.Update
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+
 @Composable
 fun SettingsPage(
     appSettings: AppSettings,
+    worldState: WorldStateResponse? = null,
+    errorMessage: String? = null,
+    fetchState: FetchState = FetchState.SUCCESS,
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
@@ -159,6 +170,43 @@ fun SettingsPage(
                     }
                     appSettings.importSettingsFromMap(map)
                 }
+            )
+        }
+
+        SectionTitle(title = "API 状態")
+        ListGroup {
+            val statusText = when (fetchState) {
+                FetchState.IDLE -> "待機中"
+                FetchState.SUCCESS -> "接続済み"
+                FetchState.LOADING_WORLDSTATE, FetchState.LOADING_EXPORT -> "更新中"
+                FetchState.ERROR -> "エラー発生"
+            }
+            ListTile(
+                title = "接続状況",
+                subtitle = statusText + if (errorMessage != null) " - $errorMessage" else "",
+                leadingIcon = { Icon(Icons.Default.Api, contentDescription = null) },
+                onClick = null
+            )
+            
+            worldState?.time?.let { timeSec ->
+                val dt = Instant.fromEpochSeconds(timeSec).toLocalDateTime(TimeZone.currentSystemDefault())
+                val timeStr = "${dt.hour.toString().padStart(2, '0')}:${dt.minute.toString().padStart(2, '0')}:${dt.second.toString().padStart(2, '0')}"
+                val nowSec = jp.girky.wf_noctuahub.utils.currentTimeMillis() / 1000
+                val diffMin = (nowSec - timeSec) / 60
+                
+                ListTile(
+                    title = "WorldState 最終更新",
+                    subtitle = "$timeStr (${diffMin}分前)",
+                    leadingIcon = { Icon(Icons.Default.Update, contentDescription = null) },
+                    onClick = null
+                )
+            }
+            
+            ListTile(
+                title = "Public Export JSON",
+                subtitle = "最新です",
+                leadingIcon = { Icon(Icons.Default.Check, contentDescription = null) },
+                onClick = null
             )
         }
 
