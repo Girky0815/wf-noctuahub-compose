@@ -52,10 +52,10 @@ fun SettingsPage(
             ListTile(
                 title = "テーマモード",
                 subtitle = when (themeMode) {
-                    ThemeMode.LIGHT -> "ライト"
-                    ThemeMode.DARK -> "ダーク"
-                    ThemeMode.AMOLED_BLACK -> "AMOLED ブラック"
-                    ThemeMode.SYSTEM_DEFAULT -> "システム設定に従う"
+                    ThemeMode.LIGHT -> "ライトモード"
+                    ThemeMode.DARK -> "ダークモード"
+                    ThemeMode.AMOLED_BLACK -> "AMOLED ブラックモード(現在正常動作しません)"
+                    ThemeMode.SYSTEM_DEFAULT -> "システムのモードに従う"
                 },
                 leadingIcon = { Icon(Icons.Default.Palette, contentDescription = null) },
                 onClick = { /* TODO: Show dialog? Currently chips below */ }
