@@ -217,7 +217,8 @@ fun App() {
           } else if (worldState == null) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
               Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                CircularProgressIndicator()
+                @OptIn(androidx.compose.material3.ExperimentalMaterial3ExpressiveApi::class)
+                androidx.compose.material3.LoadingIndicator()
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(text = "データを取得中...", color = MaterialTheme.colorScheme.onBackground)
               }

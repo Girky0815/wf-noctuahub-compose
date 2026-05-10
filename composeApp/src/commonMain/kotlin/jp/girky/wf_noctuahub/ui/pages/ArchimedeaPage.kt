@@ -21,9 +21,7 @@ fun ArchimedeaPage(
     onLocalize: (String) -> String
 ) {
     if (worldState == null) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
-            CircularProgressIndicator()
-        }
+        jp.girky.wf_noctuahub.ui.components.ui.CenteredLoadingIndicator()
         return
     }
 

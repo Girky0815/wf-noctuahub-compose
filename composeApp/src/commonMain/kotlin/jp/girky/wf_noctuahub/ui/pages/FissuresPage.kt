@@ -22,6 +22,8 @@ import jp.girky.wf_noctuahub.utils.Translations
 import jp.girky.wf_noctuahub.utils.currentTimeMillis
 import kotlinx.coroutines.delay
 
+import jp.girky.wf_noctuahub.ui.components.ui.ExpressiveButtonGroup
+import jp.girky.wf_noctuahub.ui.components.ui.ExpressiveButtonOption
 import jp.girky.wf_noctuahub.data.api.model.ExportRegion
 
 @Composable
@@ -57,35 +59,23 @@ fun FissuresPage(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        // Toggle Buttons (SegmentedButton)
-        SingleChoiceSegmentedButtonRow(
+        // Toggle Buttons (ButtonGroup)
+        ExpressiveButtonGroup(
+            options = listOf(
+                ExpressiveButtonOption(label = "通常", onClick = { filterMode = "normal" }),
+                ExpressiveButtonOption(label = "鋼の道のり", icon = Icons.Default.ModeStandby, onClick = { filterMode = "hard" }),
+                ExpressiveButtonOption(label = "Void嵐", icon = Icons.Default.RocketLaunch, onClick = { filterMode = "storm" })
+            ),
+            selectedIndex = when (filterMode) {
+                "normal" -> 0
+                "hard" -> 1
+                "storm" -> 2
+                else -> 0
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp)
-        ) {
-            SegmentedButton(
-                shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3),
-                onClick = { filterMode = "normal" },
-                selected = filterMode == "normal",
-                label = { Text("通常") }
-            )
-            
-            SegmentedButton(
-                shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3),
-                onClick = { filterMode = "hard" },
-                selected = filterMode == "hard",
-                label = { Text("鋼の道のり") },
-                icon = { Icon(Icons.Default.ModeStandby, contentDescription = null, modifier = Modifier.size(18.dp)) }
-            )
-            
-            SegmentedButton(
-                shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3),
-                onClick = { filterMode = "storm" },
-                selected = filterMode == "storm",
-                label = { Text("Void嵐") },
-                icon = { Icon(Icons.Default.RocketLaunch, contentDescription = null, modifier = Modifier.size(18.dp)) }
-            )
-        }
+        )
 
         val groupedFissures = filteredFissures.groupBy { it.tier }
 

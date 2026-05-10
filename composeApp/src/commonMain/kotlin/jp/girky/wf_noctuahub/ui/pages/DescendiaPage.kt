@@ -24,10 +24,8 @@ fun DescendiaPage(
   onLocalize: (String) -> String
 ) {
   if (worldState == null) {
-  Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
-    CircularProgressIndicator()
-  }
-  return
+    jp.girky.wf_noctuahub.ui.components.ui.CenteredLoadingIndicator()
+    return
   }
 
   // worldState.time は秒単位のUNIX時間と推測されるためミリ秒化。未取得の場合は 0L とする。

@@ -26,9 +26,7 @@ fun ArchonHuntPage(
     onGetRegionInfo: (String) -> jp.girky.wf_noctuahub.data.api.model.ExportRegion?
 ) {
     if (worldState == null) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
-            CircularProgressIndicator()
-        }
+        jp.girky.wf_noctuahub.ui.components.ui.CenteredLoadingIndicator()
         return
     }
 
