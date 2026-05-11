@@ -21,7 +21,10 @@ import jp.girky.wf_noctuahub.utils.ThemeMode
 import jp.girky.wf_noctuahub.platform.BackupRestoreButtons
 import androidx.compose.runtime.*
 import kotlinx.coroutines.launch
+import jp.girky.wf_noctuahub.ui.components.ui.ExpressiveButtonGroup
+import jp.girky.wf_noctuahub.ui.components.ui.ExpressiveButtonOption
 import jp.girky.wf_noctuahub.ui.components.ui.ListGroup
+import jp.girky.wf_noctuahub.ui.components.ui.ListItem
 import jp.girky.wf_noctuahub.ui.components.ui.ListTile
 import jp.girky.wf_noctuahub.ui.components.ui.SectionTitle
 import androidx.compose.ui.platform.LocalUriHandler
@@ -72,22 +75,22 @@ fun SettingsPage(
                 onClick = { /* TODO: Show dialog? Currently chips below */ }
             )
             
-            Row(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                ThemeMode.entries.forEach { mode ->
-                    FilterChip(
-                        selected = themeMode == mode,
-                        onClick = { coroutineScope.launch { appSettings.setThemeMode(mode) } },
-                        label = { Text(when(mode) {
-                            ThemeMode.LIGHT -> "ライト"
-                            ThemeMode.DARK -> "ダーク"
-                            ThemeMode.AMOLED_BLACK -> "AMOLED ブラック"
-                            ThemeMode.SYSTEM_DEFAULT -> "システム"
-                        }) }
-                    )
-                }
+            ListItem {
+                ExpressiveButtonGroup(
+                    options = listOf(
+                        ExpressiveButtonOption(label = "システム", onClick = { coroutineScope.launch { appSettings.setThemeMode(ThemeMode.SYSTEM_DEFAULT) } }),
+                        ExpressiveButtonOption(label = "ライト", onClick = { coroutineScope.launch { appSettings.setThemeMode(ThemeMode.LIGHT) } }),
+                        ExpressiveButtonOption(label = "ダーク", onClick = { coroutineScope.launch { appSettings.setThemeMode(ThemeMode.DARK) } }),
+                        ExpressiveButtonOption(label = "AMOLED", onClick = { coroutineScope.launch { appSettings.setThemeMode(ThemeMode.AMOLED_BLACK) } })
+                    ),
+                    selectedIndex = when (themeMode) {
+                        ThemeMode.SYSTEM_DEFAULT -> 0
+                        ThemeMode.LIGHT -> 1
+                        ThemeMode.DARK -> 2
+                        ThemeMode.AMOLED_BLACK -> 3
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
 
             ListTile(
