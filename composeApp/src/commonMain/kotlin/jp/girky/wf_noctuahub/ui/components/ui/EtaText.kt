@@ -38,7 +38,9 @@ fun EtaText(
     Text(
         text = remainingTimeText,
         modifier = modifier,
-        style = MaterialTheme.typography.bodyMedium,
+        style = MaterialTheme.typography.bodyMedium.copy(
+            fontFeatureSettings = "tnum"
+        ),
         color = color
     )
 }
@@ -67,15 +69,7 @@ private fun calculateEta(expiryString: String): String {
  */
 private fun formatDuration(duration: Duration): String {
     val totalSeconds = duration.inWholeSeconds
-    val days = totalSeconds / (24 * 3600)
-    val hours = (totalSeconds % (24 * 3600)) / 3600
-    val minutes = (totalSeconds % 3600) / 60
-    val seconds = totalSeconds % 60
-
-    return buildString {
-        if (days > 0) append("${days}d ")
-        if (hours > 0 || days > 0) append("${hours}h ")
-        if (minutes > 0 || hours > 0 || days > 0) append("${minutes}m ")
-        append("${seconds}s")
-    }.trim()
+    val m = totalSeconds / 60
+    val s = totalSeconds % 60
+    return "${m.toString().padStart(2, '0')}分${s.toString().padStart(2, '0')}秒"
 }

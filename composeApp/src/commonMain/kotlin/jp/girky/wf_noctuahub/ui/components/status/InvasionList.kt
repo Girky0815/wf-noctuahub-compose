@@ -42,11 +42,12 @@ fun InvasionList(
 
     ListGroup(modifier = modifier) {
         activeInvasions.forEach { invasion ->
-            val nodeName = onLocalize(invasion.node)
-            val desc = Translations.translateInvasionDesc(invasion.locTag.orEmpty())
+            val nodeName = Translations.translateNode(onLocalize(invasion.node))
+            val locTagKey = invasion.locTag?.substringAfterLast("/") ?: ""
+            val desc = Translations.translateInvasionDesc(locTagKey)
             
-            val attackerFaction = Translations.translateFaction(invasion.faction.orEmpty())
-            val defenderFaction = Translations.translateFaction(invasion.defenderFaction.orEmpty())
+            val attackerFaction = Translations.translateFaction(invasion.faction.orEmpty().removePrefix("FC_"))
+            val defenderFaction = Translations.translateFaction(invasion.defenderFaction.orEmpty().removePrefix("FC_"))
             
             val attackerRewardText = buildRewardText(invasion.attackerReward)
             val defenderRewardText = buildRewardText(invasion.defenderReward)
@@ -153,12 +154,12 @@ private fun buildRewardText(reward: Reward?): String {
     
     reward.countedItems?.forEach { item ->
         val itemName = item.itemType?.substringAfterLast("/") ?: "アイテム"
-        parts.add("${Translations.translateResource(itemName)} x${item.itemCount}")
+        parts.add("${Translations.translateInvasionReward(itemName)} x${item.itemCount}")
     }
     
     reward.items?.forEach { item ->
         val itemName = item.substringAfterLast("/")
-        parts.add(Translations.translateResource(itemName))
+        parts.add(Translations.translateInvasionReward(itemName))
     }
     
     return if (parts.isNotEmpty()) parts.joinToString(" + ") else "-"

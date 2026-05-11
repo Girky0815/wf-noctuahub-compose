@@ -64,7 +64,8 @@ object Translations {
     "Chassis" to "シャーシ",
     "Blueprint" to "設計図",
     "Systems Component" to "システム",
-    "Systems" to "システム"
+    "Systems" to "システム",
+    "AscensionEventResourceItem" to "ボラタイル・モート"
   )
 
   // 敵勢力の日本語訳
@@ -134,6 +135,10 @@ object Translations {
 
   // 侵略ミッション種別
   val invasionDescriptions = mapOf(
+    "GrineerInvasionGeneric" to "グリニア 侵攻",
+    "CorpusInvasionGeneric" to "コーパス 進撃",
+    "InfestedInvasionGeneric" to "感染拡大",
+    "InfestedInvasionBoss" to "Phorid 出現",
     "Grineer Offensive" to "グリニア 侵攻",
     "Corpus Siege" to "コーパス 進撃",
     "Infested Outbreak" to "感染拡大",
@@ -278,15 +283,16 @@ object Translations {
   }
 
   fun translateFaction(faction: String, node: String? = null): String {
+    val normalizedFaction = faction.lowercase().replaceFirstChar { it.uppercase() }
     if (node != null) {
-      if (faction == "Corpus" && node.contains("Jupiter")) {
+      if (normalizedFaction == "Corpus" && node.contains("Jupiter")) {
         return "コーパスアマルガム"
       }
-      if (faction == "Grineer" && node.contains("Kuva Fortress")) {
+      if (normalizedFaction == "Grineer" && node.contains("Kuva Fortress")) {
         return "クバグリニア"
       }
     }
-    return factionTypes[faction] ?: faction
+    return factionTypes[normalizedFaction] ?: factionTypes[faction] ?: faction
   }
 
   fun translateFactionIndex(index: Int?): String {
@@ -462,5 +468,75 @@ object Translations {
       return "封鎖装甲"
     }
     return archimedeaModifiers[name] ?: name
+  }
+
+  // ------ 侵略ミッション関連の翻訳 ------
+  val invasionWeapons = mapOf(
+    "SnipetronVandal" to "Snipetron Vandal",
+    "TwinVipersWraith" to "Twin Vipers Wraith",
+    "DeraVandal" to "Dera Vandal",
+    "KarakWraith" to "Karak Wraith",
+    "StrunWraith" to "Strun Wraith",
+    "LatronWraith" to "Latron Wraith",
+    "Sheev" to "Sheev",
+    "GorgonWraith" to "Gorgon Wraith",
+    "IgnisWraith" to "Ignis Wraith"
+  )
+
+  val invasionParts = mapOf(
+    "Receiver" to "レシーバー",
+    "Barrel" to "バレル",
+    "Stock" to "ストック",
+    "Blueprint" to "設計図",
+    "Link" to "リンク",
+    "Pouch" to "ポーチ",
+    "Stars" to "スター",
+    "Blade" to "ブレード",
+    "Hilt" to "ヒルト",
+    "Grip" to "グリップ",
+    "String" to "ストリング",
+    "UpperLimb" to "アッパーリム",
+    "LowerLimb" to "ロアーリム",
+    "Guard" to "ガード"
+  )
+
+  val invasionMaterials = mapOf(
+    "ChemComponent" to "デトナイトインジェクター",
+    "EnergyComponent" to "フィールドロン",
+    "MutagenComponent" to "ミュータジェンマス" 
+  )
+
+  /**
+   * 侵略ミッションの報酬アイテム名を翻訳する
+   * 武器名＋パーツ名（例: SnipetronVandalReceiver）などを分割して翻訳
+   */
+  fun translateInvasionReward(rewardName: String): String {
+    // まず汎用素材等で完全一致するか確認
+    invasionMaterials[rewardName]?.let { return it }
+
+    var translated = rewardName
+
+    // 武器名の置換
+    var matchedWeapon = false
+    invasionWeapons.forEach { (key, value) ->
+      if (translated.startsWith(key)) {
+        translated = translated.replaceFirst(key, "$value ")
+        matchedWeapon = true
+      }
+    }
+
+    // パーツ名の置換
+    invasionParts.forEach { (key, value) ->
+      if (translated.endsWith(key)) {
+        translated = translated.removeSuffix(key) + value
+      }
+    }
+
+    // 通常のリソース名でも一応変換試行
+    if (!matchedWeapon) {
+      translated = translateResource(translated.trim())
+    }
+
+    return translated.trim()
   }
 }

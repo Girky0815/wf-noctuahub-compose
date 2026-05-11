@@ -47,13 +47,13 @@ class MainViewModel(val repository: WarframeRepository) {
 
         scope.launch(Dispatchers.Default) {
             try {
-                // 1. WorldState のフェッチ
-                _fetchState.value = FetchState.LOADING_WORLDSTATE
-                repository.refreshWorldState()
-
-                // 2. Public Export のローカライズ辞書フェッチ
+                // 1. Public Export のローカライズ辞書フェッチ
                 _fetchState.value = FetchState.LOADING_EXPORT
                 repository.initializeLocalization()
+
+                // 2. WorldState のフェッチ
+                _fetchState.value = FetchState.LOADING_WORLDSTATE
+                repository.refreshWorldState()
 
                 _fetchState.value = FetchState.SUCCESS
             } catch (e: Exception) {

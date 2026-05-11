@@ -11,7 +11,16 @@ import jp.girky.wf_noctuahub.ui.components.ui.EtaText
 import jp.girky.wf_noctuahub.ui.components.ui.ListGroup
 import jp.girky.wf_noctuahub.ui.components.ui.ListTile
 import jp.girky.wf_noctuahub.utils.Translations
-import kotlinx.datetime.Instant
+import jp.girky.wf_noctuahub.utils.currentTimeMillis
+import kotlinx.coroutines.delay
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.HourglassBottom
+import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
 
 /**
  * 現在アクティブなアラートミッションのリストを表示するコンポーネント
@@ -22,7 +31,18 @@ fun AlertList(
     onLocalize: (String?) -> String,
     modifier: Modifier = Modifier
 ) {
-    if (alerts.isNullOrEmpty()) {
+    var now by remember { mutableStateOf(currentTimeMillis()) }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(1000)
+            now = currentTimeMillis()
+        }
+    }
+
+    val activeAlerts = alerts?.filter { (it.expiry?.epochMillis ?: 0L) > now }
+
+    if (activeAlerts.isNullOrEmpty()) {
         ListGroup(modifier = modifier) {
             ListTile(
                 title = "アラートミッションなし",
@@ -34,12 +54,12 @@ fun AlertList(
     }
 
     ListGroup(modifier = modifier) {
-        alerts.forEach { alert ->
+        activeAlerts.forEach { alert ->
             val mission = alert.missionInfo
             if (mission != null) {
                 val locationName = onLocalize(mission.location)
-                val missionType = Translations.translateMissionType(mission.missionType.orEmpty())
-                val faction = Translations.translateFaction(mission.faction.orEmpty())
+                val missionType = Translations.translateInternalMissionType(mission.missionType.orEmpty())
+                val faction = Translations.translateFaction(mission.faction.orEmpty().removePrefix("FC_"))
                 val levelRange = "${mission.minEnemyLevel} - ${mission.maxEnemyLevel}"
                 
                 // 報酬テキストの構築
@@ -61,23 +81,42 @@ fun AlertList(
                 }
                 val rewardText = if (rewardParts.isNotEmpty()) rewardParts.joinToString(" + ") else "報酬情報なし"
 
-                val expiryString = alert.expiry?.epochMillis?.let { Instant.fromEpochMilliseconds(it).toString() }
+                val expiryMs = alert.expiry?.epochMillis ?: 0L
 
                 ListTile(
-                    title = "$missionType ($locationName)",
-                    subtitle = "$faction Lv$levelRange\n報酬: $rewardText",
+                    title = locationName,
+                    subtitle = "$missionType | $faction ($levelRange)\n報酬: $rewardText",
                     trailingContent = {
-                        Column(horizontalAlignment = androidx.compose.ui.Alignment.End) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.HourglassBottom,
+                                contentDescription = "残り時間",
+                                modifier = Modifier.size(16.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                             Text(
-                                text = "残り時間",
-                                style = MaterialTheme.typography.labelSmall,
+                                text = formatTimeRemaining(expiryMs, now),
+                                style = MaterialTheme.typography.bodyMedium.copy(
+                                    fontFeatureSettings = "tnum"
+                                ),
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
-                            EtaText(expiryString = expiryString)
                         }
                     }
                 )
             }
         }
     }
+}
+
+private fun formatTimeRemaining(expiryMs: Long, nowMs: Long): String {
+    val remaining = expiryMs - nowMs
+    if (remaining <= 0) return "00分00秒"
+    val totalSeconds = remaining / 1000
+    val m = totalSeconds / 60
+    val s = totalSeconds % 60
+    return "${m.toString().padStart(2, '0')}分${s.toString().padStart(2, '0')}秒"
 }
