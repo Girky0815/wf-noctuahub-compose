@@ -50,7 +50,7 @@ fun StatusPage(
         GridGroup(columns = 2) {
             // 地球サイクル
             CycleCard(
-                title = "地球",
+                title = "地球: 森林タイル",
                 stateText = if (earthCycle.isDay) "昼" else "夜",
                 expiryString = earthCycle.expiry.toString(),
                 stateColor = if (earthCycle.isDay) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary

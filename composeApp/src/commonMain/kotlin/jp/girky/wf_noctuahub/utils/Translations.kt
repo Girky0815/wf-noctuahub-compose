@@ -204,18 +204,21 @@ object Translations {
   // 例: "HackTerminals" to "端末ハッキング", "RescueTarget" to "ターゲット救出"
   val descendiaMiniMissions = mapOf(
     //"HackTerminals" to "端末ハッキング" // 仮の例です。ゲーム内の表記に合わせて書き換えてください。
-    "DT_PRESURE_GAUGE" to "圧力鍋(錬金術: 圧力制御フェーズ)",
+    "DT_PRESURE_GAUGE" to "圧力鍋 (錬金術: 圧力制御フェーズ)",
     "DT_SABOTAGE_HIVE" to "ハイブ",
     "DT_PROTOFRAME" to "チェックポイント",
     "DT_EXCAVATION" to "発掘",
+    "DT_EXTERMINATE" to "掃滅",
+    "DT_INTERCEPTION" to "機動傍受",
     "DT_MIMICS" to "略奪ルーレット",
+    "DT_LOOT" to "略奪 (ボーナス部屋)",
     "DT_BREAK_TARGETS" to "ホログローブ破壊",
     "DT_BOSS" to "ボス戦",
     "DT_UNIQUE" to "時の難題(レース)",
     "DT_NETRACELLS" to "標的排除(ネクロマイトドローン)",
     "DT_COLLECTION" to "バイトブラスト収集",
     "DT_SABOTAGE_DEFENSE" to "防衛", // 時のゆりかご
-    "DT_LOOT_CREATURES" to "グラズリング排除"
+    "DT_LOOT_CREATURES" to "グラズリング排除",
   )
 
   /**
@@ -232,7 +235,7 @@ object Translations {
   val descendiaModifiers = mapOf(
     "RangedArcadiaOnly" to "バブルブラスター",
     "VeryToxic" to "猛毒",
-    "Darkness" to "暗闇",
+    "Darkness" to "ソル追放",
     "LowEnergy" to "低エネルギー",
     "HighDamage" to "被ダメージ増加",
     "FireAndIce" to "エクシマス・カバル(炎と氷)",
@@ -245,6 +248,7 @@ object Translations {
     "Harrow" to "Lyon のサンクチュアリ",
     // "Devil" to "Roathe の苦悩",
     "BasicMimics" to "",
+    "BasicLoot" to "",
     "FieryTrail" to "炎の軌跡",
     "UnseenFoes" to "隠れた脅威",
     "GiantRealm" to "巨人化",
@@ -255,6 +259,14 @@ object Translations {
     "SecuritySpin" to "レーザーリンボ",
     "BasicLootCreatures" to "",
     "RaceHorse" to "バトルケイス",
+    "HorseCombotOnly" to "バトルケイス",
+    
+    // エクシマス・カバル
+    "BlitzLeech" to "エクシマス・カバル: リーチブリッツ",
+
+    // ボス
+    "HyenaPack" to "Hyenaパック",
+    "InfestedBoyBand" to "テクノサイト・コーダ",
 
   )
 
@@ -506,7 +518,8 @@ object Translations {
   val invasionMaterials = mapOf(
     "ChemComponent" to "デトナイトインジェクター",
     "EnergyComponent" to "フィールドロン",
-    "MutagenComponent" to "ミュータジェンマス" 
+    "MutagenComponent" to "ミュータジェンマス",
+    "InfestedAladCoordinate" to "Mutalist Alad V ナビ座標",
   )
 
   /**
