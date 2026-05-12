@@ -58,7 +58,7 @@ fun StatusPage(
     
             // シータスサイクル
             CycleCard(
-                title = "シータス",
+                title = "エイドロンの草原",
                 stateText = if (cetusCycle.isDay) "昼" else "夜",
                 expiryString = cetusCycle.expiry.toString(),
                 stateColor = if (cetusCycle.isDay) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
