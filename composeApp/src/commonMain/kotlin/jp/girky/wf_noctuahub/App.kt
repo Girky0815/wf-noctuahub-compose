@@ -117,10 +117,19 @@ fun App() {
               SectionTitle(title = "一般情報", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
               ListGroup {
                 listOf(Screen.Status, Screen.Fissures).forEach { screen ->
+                  val isSelected = currentScreen == screen
                   ListTile(
                     title = screen.label,
-                    leadingIcon = { Icon(screen.icon, contentDescription = screen.label) },
-                    containerColor = if (currentScreen == screen) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
+                    titleColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                    titleFontWeight = if (isSelected) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Medium,
+                    leadingIcon = { 
+                      Icon(
+                        screen.icon, 
+                        contentDescription = screen.label,
+                        tint = if (isSelected) MaterialTheme.colorScheme.primary else LocalContentColor.current
+                      ) 
+                    },
+                    containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
                     onClick = {
                       currentScreen = screen
                       coroutineScope.launch { drawerState.close() }
@@ -132,10 +141,19 @@ fun App() {
               SectionTitle(title = "中級者向け", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
               ListGroup {
                 listOf(Screen.ArchonHunt, Screen.Descendia, Screen.Archimedea).forEach { screen ->
+                  val isSelected = currentScreen == screen
                   ListTile(
                     title = screen.label,
-                    leadingIcon = { Icon(screen.icon, contentDescription = null) },
-                    containerColor = if (currentScreen == screen) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
+                    titleColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                    titleFontWeight = if (isSelected) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Medium,
+                    leadingIcon = { 
+                      Icon(
+                        screen.icon, 
+                        contentDescription = null,
+                        tint = if (isSelected) MaterialTheme.colorScheme.primary else LocalContentColor.current
+                      ) 
+                    },
+                    containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
                     onClick = {
                       currentScreen = screen
                       coroutineScope.launch { drawerState.close() }
@@ -146,10 +164,19 @@ fun App() {
 
               SectionTitle(title = "システム", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
               ListGroup {
+                val isSelected = currentScreen == Screen.Settings
                 ListTile(
                   title = Screen.Settings.label,
-                  leadingIcon = { Icon(Screen.Settings.icon, contentDescription = null) },
-                  containerColor = if (currentScreen == Screen.Settings) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
+                  titleColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                  titleFontWeight = if (isSelected) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Medium,
+                  leadingIcon = { 
+                    Icon(
+                      Screen.Settings.icon, 
+                      contentDescription = null,
+                      tint = if (isSelected) MaterialTheme.colorScheme.primary else LocalContentColor.current
+                    ) 
+                  },
+                  containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
                   onClick = {
                     currentScreen = Screen.Settings
                     coroutineScope.launch { drawerState.close() }
@@ -191,11 +218,23 @@ fun App() {
         bottomBar = {
           NavigationBar {
             listOf(Screen.Status, Screen.Fissures, Screen.Settings).forEach { screen ->
+              val isSelected = currentScreen == screen
               NavigationBarItem(
                 icon = { Icon(screen.icon, contentDescription = screen.label) },
-                label = { Text(screen.label) },
-                selected = currentScreen == screen,
-                onClick = { currentScreen = screen }
+                label = { 
+                  Text(
+                    text = screen.label,
+                    fontWeight = if (isSelected) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Normal
+                  ) 
+                },
+                selected = isSelected,
+                onClick = { currentScreen = screen },
+                colors = androidx.compose.material3.NavigationBarItemDefaults.colors(
+                  selectedIconColor = MaterialTheme.colorScheme.primary,
+                  selectedTextColor = MaterialTheme.colorScheme.primary,
+                  unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                  unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant
+                )
               )
             }
           }

@@ -22,7 +22,9 @@ fun ListTile(
     trailingContent: @Composable (() -> Unit)? = null,
     onClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
-    containerColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.surfaceBright
+    containerColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.surfaceBright,
+    titleColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onSurface,
+    titleFontWeight: FontWeight = FontWeight.Medium
 ) {
     Row(
         modifier = modifier
@@ -50,8 +52,8 @@ fun ListTile(
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onSurface
+                fontWeight = titleFontWeight,
+                color = titleColor
             )
             if (subtitle != null) {
                 Text(
