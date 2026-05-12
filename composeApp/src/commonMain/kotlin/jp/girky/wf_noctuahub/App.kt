@@ -21,12 +21,13 @@ import androidx.compose.ui.unit.dp
 import jp.girky.wf_noctuahub.data.api.WarframeApiClient
 import jp.girky.wf_noctuahub.data.repository.WarframeRepository
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Dashboard
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.FlashlightOn
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Adjust
-import androidx.compose.material.icons.filled.Explore
+import androidx.compose.material.icons.rounded.Dashboard
+import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.Bolt
+import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material.icons.rounded.Adjust
+import androidx.compose.material.icons.rounded.Castle
+import androidx.compose.material.icons.rounded.Science
 import jp.girky.wf_noctuahub.ui.pages.SettingsPage
 import jp.girky.wf_noctuahub.data.repository.AppSettings
 import com.russhwolf.settings.ObservableSettings
@@ -46,12 +47,12 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 enum class Screen(val route: String, val icon: androidx.compose.ui.graphics.vector.ImageVector, val label: String) {
-  Status("status", Icons.Default.Dashboard, "ステータス"),
-  Fissures("fissures", Icons.Default.FlashlightOn, "亀裂"),
-  ArchonHunt("archon", Icons.Default.Adjust, "アルコン討伐戦"),
-  Descendia("descendia", Icons.Default.Explore, "ディセンディア"),
-  Archimedea("archimedea", Icons.Default.Explore, "アルキメデア"),
-  Settings("settings", Icons.Default.Settings, "設定")
+  Status("status", Icons.Rounded.Dashboard, "ステータス"),
+  Fissures("fissures", Icons.Rounded.Bolt, "亀裂"),
+  ArchonHunt("archon", Icons.Rounded.Adjust, "アルコン討伐戦"),
+  Descendia("descendia", Icons.Rounded.Castle, "ディセンディア"),
+  Archimedea("archimedea", Icons.Rounded.Science, "アルキメデア"),
+  Settings("settings", Icons.Rounded.Settings, "設定")
 }
 
 @Composable
@@ -169,7 +170,7 @@ fun App() {
             title = { Text(currentScreen.label) },
             navigationIcon = {
               IconButton(onClick = { coroutineScope.launch { drawerState.open() } }) {
-                Icon(Icons.Default.Menu, contentDescription = "Menu")
+                Icon(Icons.Rounded.Menu, contentDescription = "Menu")
               }
             },
             actions = {
