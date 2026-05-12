@@ -10,10 +10,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import jp.girky.wf_noctuahub.data.api.model.WorldStateResponse
 import jp.girky.wf_noctuahub.data.api.model.WsConquest
+import jp.girky.wf_noctuahub.ui.components.ui.ExpressiveButtonGroup
+import jp.girky.wf_noctuahub.ui.components.ui.ExpressiveButtonOption
 import jp.girky.wf_noctuahub.ui.components.ui.ListGroup
 import jp.girky.wf_noctuahub.ui.components.ui.ListTile
 import jp.girky.wf_noctuahub.ui.components.ui.SectionTitle
 import jp.girky.wf_noctuahub.utils.Translations
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 
 @Composable
 fun ArchimedeaPage(
@@ -31,6 +37,10 @@ fun ArchimedeaPage(
         val end = it.expiry?.epochMillis ?: Long.MAX_VALUE
         (it.type == "CT_LAB" || it.type == "CT_HEX") && now in start..end
     } ?: emptyList()
+    
+    var selectedTab by remember { mutableStateOf(0) }
+    val targetType = if (selectedTab == 0) "CT_LAB" else "CT_HEX"
+    val filteredConquests = activeConquests.filter { it.type == targetType }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(16.dp)
@@ -50,16 +60,28 @@ fun ArchimedeaPage(
             )
         }
 
-        if (activeConquests.isEmpty()) {
+        item {
+            ExpressiveButtonGroup(
+                options = listOf(
+                    ExpressiveButtonOption(label = "深淵アルキメデア", onClick = { selectedTab = 0 }),
+                    ExpressiveButtonOption(label = "次元アルキメデア", onClick = { selectedTab = 1 })
+                ),
+                selectedIndex = selectedTab,
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+            )
+        }
+
+        if (filteredConquests.isEmpty()) {
             item {
+                val tabName = if (selectedTab == 0) "深淵" else "次元"
                 Text(
-                    text = "現在アクティブなアルキメデアはありません",
+                    text = "現在アクティブな${tabName}アルキメデアはありません",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyLarge
                 )
             }
         } else {
-            items(activeConquests) { conquest ->
+            items(filteredConquests) { conquest ->
                 ArchimedeaCard(conquest = conquest)
                 Spacer(modifier = Modifier.height(24.dp))
             }
@@ -75,12 +97,8 @@ fun ArchimedeaCard(
     val variables = conquest.variables ?: emptyList()
     val typeKey = conquest.type ?: "CT_LAB"
     
-    val title = if (typeKey == "CT_HEX") "次元アルキメデア" else "深淵アルキメデア"
-
     Column {
-        SectionTitle(title = title, modifier = Modifier.padding(bottom = 8.dp))
-        
-        Text(text = "ミッション", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(bottom = 8.dp))
+        SectionTitle(title = "ミッション", modifier = Modifier.padding(bottom = 8.dp))
         ListGroup {
             missions.forEachIndexed { index, mission ->
                 val typeRaw = mission.missionType ?: "不明"
@@ -121,7 +139,7 @@ fun ArchimedeaCard(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(text = "パーソナルモディファイア", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(bottom = 8.dp))
+        SectionTitle(title = "パーソナルモディファイア", modifier = Modifier.padding(bottom = 8.dp))
         ListGroup {
             variables.forEach { variable ->
                 ListTile(
