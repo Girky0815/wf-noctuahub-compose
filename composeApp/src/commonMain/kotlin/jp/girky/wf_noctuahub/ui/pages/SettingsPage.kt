@@ -198,8 +198,9 @@ fun SettingsPage(
                 val diffMin = (nowSec - timeSec) / 60
                 
                 ListTile(
-                    title = "WorldState 最終更新",
-                    subtitle = "$timeStr (${diffMin}分前)",
+                    title = "WorldState タイムスタンプ",
+                    // subtitle = "$timeStr (${diffMin}分前)",
+                    subtitle = "$timeStr",
                     leadingIcon = { Icon(Icons.Default.Update, contentDescription = null) },
                     onClick = null
                 )
