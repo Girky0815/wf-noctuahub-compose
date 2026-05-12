@@ -150,7 +150,10 @@ private fun buildRewardText(reward: Reward?): String {
     if (reward == null) return "-"
     
     val parts = mutableListOf<String>()
-    if (reward.credits > 0) parts.add("${reward.credits}cr")
+    if (reward.credits > 0) {
+        val creditsStr = formatWithCommas(reward.credits)
+        parts.add("${creditsStr}Cr")
+    }
     
     reward.countedItems?.forEach { item ->
         val itemName = item.itemType?.substringAfterLast("/") ?: "アイテム"
@@ -163,4 +166,8 @@ private fun buildRewardText(reward: Reward?): String {
     }
     
     return if (parts.isNotEmpty()) parts.joinToString(" + ") else "-"
+}
+
+private fun formatWithCommas(value: Int): String {
+    return value.toString().reversed().chunked(3).joinToString(",").reversed()
 }

@@ -66,7 +66,8 @@ fun AlertList(
                 val reward = mission.missionReward
                 val rewardParts = mutableListOf<String>()
                 if (reward?.credits != null && reward.credits > 0) {
-                    rewardParts.add("${reward.credits}cr")
+                    val creditsStr = formatWithCommas(reward.credits)
+                    rewardParts.add("${creditsStr}Cr")
                 }
                 reward?.countedItems?.forEach { item ->
                     // 内部パスから最後のアイテム名部分を抽出して翻訳
@@ -119,4 +120,8 @@ private fun formatTimeRemaining(expiryMs: Long, nowMs: Long): String {
     val m = totalSeconds / 60
     val s = totalSeconds % 60
     return "${m.toString().padStart(2, '0')}分${s.toString().padStart(2, '0')}秒"
+}
+
+private fun formatWithCommas(value: Int): String {
+    return value.toString().reversed().chunked(3).joinToString(",").reversed()
 }
