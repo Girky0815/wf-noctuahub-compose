@@ -31,14 +31,19 @@ fun ArchonHuntPage(
     }
 
     // Archon Hunt は API上では LiteSorties として提供される
-    val archonHunts = worldState.liteSorties ?: emptyList()
+    val archonHunts = worldState.liteSorties?.filter { 
+        it.reward?.contains("Archon") == true || 
+        it.boss?.contains("NIRA", ignoreCase = true) == true || 
+        it.boss?.contains("AMAR", ignoreCase = true) == true || 
+        it.boss?.contains("BOREAL", ignoreCase = true) == true 
+    } ?: emptyList()
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(16.dp)
     ) {
         item {
             Text(
-                text = "アルコン争奪戦",
+                text = "アルコン討伐戦",
                 style = MaterialTheme.typography.displaySmall,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(bottom = 16.dp)
@@ -54,7 +59,7 @@ fun ArchonHuntPage(
         if (archonHunts.isEmpty()) {
             item {
                 Text(
-                    text = "現在アクティブなアルコン争奪戦はありません",
+                    text = "現在アクティブなアルコン討伐戦はありません",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodyLarge
                 )
@@ -74,30 +79,38 @@ fun ArchonHuntCard(
     onLocalize: (String) -> String,
     onGetRegionInfo: (String) -> jp.girky.wf_noctuahub.data.api.model.ExportRegion?
 ) {
-    val bossName = hunt.boss?.let { onLocalize(it) } ?: "不明"
-    val missions = hunt.variants ?: emptyList()
+    val bossRaw = hunt.boss ?: "不明"
+    val bossName = jp.girky.wf_noctuahub.utils.Translations.translateBoss(bossRaw)
+    val missions = hunt.missions ?: emptyList()
 
     Column {
         SectionTitle(title = bossName, modifier = Modifier.padding(bottom = 8.dp))
         ListGroup {
             missions.forEachIndexed { index, mission ->
-                val missionType = mission.missionType?.let { onLocalize(it) } ?: "不明"
-                val nodeName = mission.node?.let { onGetRegionInfo(it)?.name } ?: mission.node ?: ""
-                val modifier = mission.modifierType?.let { onLocalize(it) }
+                val typeTranslated = jp.girky.wf_noctuahub.utils.Translations.translateInternalMissionType(mission.missionType ?: "不明")
+                val nodeRaw = mission.node
+                val region = nodeRaw?.let { onGetRegionInfo(it) }
+                val nodeName = region?.let { "${it.name} (${it.systemName})" } ?: nodeRaw ?: "不明"
+                
+                // アルコン討伐戦は勢力とレベルが固定
+                val factionTranslated = "ナルメル"
+                val levelRange = when (index) {
+                    0 -> "130 - 135"
+                    1 -> "135 - 140"
+                    2 -> "145 - 150"
+                    else -> "130 - 150"
+                }
+                
+                val subtitleText = "$typeTranslated | $factionTranslated ($levelRange)"
                 
                 ListTile(
-                    title = "ミッション ${index + 1}: $missionType",
-                    subtitle = buildString {
-                        append(nodeName)
-                        if (modifier != null) {
-                            append(" - $modifier")
-                        }
-                    },
+                    title = nodeName,
+                    subtitle = subtitleText,
                     leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Adjust,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary
+                        Text(
+                            text = "${index + 1}",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 )

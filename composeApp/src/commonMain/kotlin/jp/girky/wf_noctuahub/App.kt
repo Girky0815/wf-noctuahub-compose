@@ -48,7 +48,7 @@ import kotlinx.datetime.toLocalDateTime
 enum class Screen(val route: String, val icon: androidx.compose.ui.graphics.vector.ImageVector, val label: String) {
   Status("status", Icons.Default.Dashboard, "ステータス"),
   Fissures("fissures", Icons.Default.FlashlightOn, "亀裂"),
-  ArchonHunt("archon", Icons.Default.Adjust, "アルコン争奪戦"),
+  ArchonHunt("archon", Icons.Default.Adjust, "アルコン討伐戦"),
   Descendia("descendia", Icons.Default.Explore, "ディセンディア"),
   Archimedea("archimedea", Icons.Default.Explore, "アルキメデア"),
   Settings("settings", Icons.Default.Settings, "設定")
@@ -176,11 +176,11 @@ fun App() {
               worldState?.time?.let { timeSec ->
                 val dt = kotlinx.datetime.Instant.fromEpochSeconds(timeSec).toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault())
                 val timeStr = "${dt.hour.toString().padStart(2, '0')}:${dt.minute.toString().padStart(2, '0')}:${dt.second.toString().padStart(2, '0')}"
-                val nowSec = jp.girky.wf_noctuahub.utils.currentTimeMillis() / 1000
-                val diffMin = (nowSec - timeSec) / 60
+                // val nowSec = jp.girky.wf_noctuahub.utils.currentTimeMillis() / 1000
+                // val diffMin = (nowSec - timeSec) / 60
                 Column(horizontalAlignment = Alignment.End, modifier = Modifier.padding(end = 16.dp)) {
-                  Text(text = "最終更新: $timeStr", style = MaterialTheme.typography.labelSmall)
-                  Text(text = "${diffMin}分前", style = MaterialTheme.typography.labelSmall)
+                  Text(text = "最終更新: $timeStr", style = MaterialTheme.typography.bodySmall)
+                  // Text(text = "${diffMin}分前", style = MaterialTheme.typography.labelSmall)
                 }
               }
             },

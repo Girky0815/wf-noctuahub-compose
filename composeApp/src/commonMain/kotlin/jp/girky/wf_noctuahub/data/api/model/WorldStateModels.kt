@@ -72,7 +72,8 @@ data class WsSortie(
     @SerialName("Expiry") val expiry: MongoDate? = null,
     @SerialName("Reward") val reward: String? = null, // e.g., "/Lotus/Types/Game/SortieRewards/SortieRewardTable"
     @SerialName("Boss") val boss: String? = null,
-    @SerialName("Variants") val variants: List<WsSortieVariant>? = emptyList()
+    @SerialName("Variants") val variants: List<WsSortieVariant>? = emptyList(),
+    @SerialName("Missions") val missions: List<WsSortieVariant>? = emptyList()
 )
 
 @Serializable

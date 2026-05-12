@@ -130,7 +130,10 @@ object Translations {
     "Ropalolyst" to "ロパロリスト",
     "Phorid" to "Phorid",
     "Lephantis" to "Lephantis",
-    "Vay Hek" to "Vay Hek"
+    "Vay Hek" to "Vay Hek",
+    "SORTIE_BOSS_NIRA" to "アルコン Nira",
+    "SORTIE_BOSS_AMAR" to "アルコン Amar",
+    "SORTIE_BOSS_BOREAL" to "アルコン Boreal"
   )
 
   // 侵略ミッション種別
