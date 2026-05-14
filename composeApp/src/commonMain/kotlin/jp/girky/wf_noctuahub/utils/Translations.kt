@@ -518,8 +518,9 @@ object Translations {
   val invasionMaterials = mapOf(
     "ChemComponent" to "デトナイトインジェクター",
     "EnergyComponent" to "フィールドロン",
-    "MutagenComponent" to "ミュータジェンマス",
+    "BioComponent" to "ミュータジェンマス",
     "InfestedAladCoordinate" to "Mutalist Alad V ナビ座標",
+    "UtilityUnlocker" to "Warframe エクシラスアダプター"
   )
 
   /**
