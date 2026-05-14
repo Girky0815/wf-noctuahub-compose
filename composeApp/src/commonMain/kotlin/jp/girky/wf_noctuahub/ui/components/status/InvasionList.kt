@@ -98,8 +98,8 @@ fun InvasionList(
                                 text = attackerRewardText,
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.secondary,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+                                softWrap = true,
+                                maxLines = Int.MAX_VALUE
                             )
                         }
 
@@ -118,8 +118,9 @@ fun InvasionList(
                                 text = defenderRewardText,
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.primary,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+                                textAlign = androidx.compose.ui.text.style.TextAlign.End,
+                                softWrap = true,
+                                maxLines = Int.MAX_VALUE
                             )
                         }
                     }

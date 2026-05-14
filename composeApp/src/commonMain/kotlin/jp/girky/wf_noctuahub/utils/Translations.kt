@@ -532,13 +532,23 @@ object Translations {
     invasionMaterials[rewardName]?.let { return it }
 
     var translated = rewardName
+    var matched = false
+
+    // 汎用素材等の前方一致置換（例: UtilityUnlockerBlueprint -> Warframe エクシラスアダプターBlueprint）
+    invasionMaterials.forEach { (key, value) ->
+      if (translated.startsWith(key)) {
+        translated = translated.replaceFirst(key, value)
+        matched = true
+      }
+    }
 
     // 武器名の置換
-    var matchedWeapon = false
-    invasionWeapons.forEach { (key, value) ->
-      if (translated.startsWith(key)) {
-        translated = translated.replaceFirst(key, "$value ")
-        matchedWeapon = true
+    if (!matched) {
+      invasionWeapons.forEach { (key, value) ->
+        if (translated.startsWith(key)) {
+          translated = translated.replaceFirst(key, "$value ")
+          matched = true
+        }
       }
     }
 
@@ -550,7 +560,7 @@ object Translations {
     }
 
     // 通常のリソース名でも一応変換試行
-    if (!matchedWeapon) {
+    if (!matched) {
       translated = translateResource(translated.trim())
     }
 
