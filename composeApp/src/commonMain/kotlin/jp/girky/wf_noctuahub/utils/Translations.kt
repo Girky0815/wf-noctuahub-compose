@@ -520,6 +520,7 @@ object Translations {
     "EnergyComponent" to "フィールドロン",
     "BioComponent" to "ミュータジェンマス",
     "InfestedAladCoordinate" to "Mutalist Alad V ナビ座標",
+    "WeaponUtilityUnlocker" to "武器エクシラスアダプター",
     "UtilityUnlocker" to "Warframe エクシラスアダプター"
   )
 
