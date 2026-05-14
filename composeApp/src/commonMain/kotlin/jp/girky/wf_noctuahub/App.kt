@@ -206,7 +206,12 @@ fun App() {
                 val timeStr = "${dt.monthNumber}/${dt.dayOfMonth} ${dt.hour.toString().padStart(2, '0')}:${dt.minute.toString().padStart(2, '0')}:${dt.second.toString().padStart(2, '0')}"
                 Column(horizontalAlignment = Alignment.End, modifier = Modifier.padding(end = 16.dp)) {
                   Text(text = "タイムスタンプ", style = MaterialTheme.typography.bodyMedium)
-                  Text(text = timeStr, style = MaterialTheme.typography.bodyMedium)
+                  Text(
+                    text = timeStr, 
+                    style = jp.girky.wf_noctuahub.ui.theme.getAppTypographyCondensed().bodyMedium.copy(
+                        fontFeatureSettings = "tnum"
+                    )
+                  )
                 }
               }
             },

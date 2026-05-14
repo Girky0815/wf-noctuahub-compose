@@ -38,46 +38,38 @@ fun StatusPage(
             return@Column
         }
 
-        val nowMs = currentTimeMillis()
-
-        // サイクル計算
-        val earthCycle = LocalCycles.getEarthCycle(nowMs)
-        val cetusCycle = LocalCycles.getCetusCycle(nowMs)
-        val vallisCycle = LocalCycles.getVallisCycle(nowMs)
-        val cambionCycle = LocalCycles.getCambionCycle(nowMs)
-
         // ワールドサイクル (2列グリッド)
         GridGroup(columns = 2) {
             // 地球サイクル
             CycleCard(
                 title = "地球: 森林タイル",
-                stateText = if (earthCycle.isDay) "昼" else "夜",
-                expiryString = earthCycle.expiry.toString(),
-                stateColor = if (earthCycle.isDay) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+                cycleGenerator = { LocalCycles.getEarthCycle(it) },
+                stateTextFormatter = { if (it.isDay) "昼" else "夜" },
+                stateColorFormatter = { if (it.isDay) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary }
             )
     
             // シータスサイクル
             CycleCard(
                 title = "エイドロンの草原",
-                stateText = if (cetusCycle.isDay) "昼" else "夜",
-                expiryString = cetusCycle.expiry.toString(),
-                stateColor = if (cetusCycle.isDay) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+                cycleGenerator = { LocalCycles.getCetusCycle(it) },
+                stateTextFormatter = { if (it.isDay) "昼" else "夜" },
+                stateColorFormatter = { if (it.isDay) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary }
             )
     
             // オーブ峡谷サイクル
             CycleCard(
                 title = "オーブ峡谷",
-                stateText = if (vallisCycle.state == "warm") "温暖" else "寒冷",
-                expiryString = vallisCycle.expiry.toString(),
-                stateColor = if (vallisCycle.state == "warm") MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.tertiary
+                cycleGenerator = { LocalCycles.getVallisCycle(it) },
+                stateTextFormatter = { if (it.state == "warm") "温暖" else "寒冷" },
+                stateColorFormatter = { if (it.state == "warm") MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.tertiary }
             )
     
             // カンビオン荒地サイクル
             CycleCard(
                 title = "カンビオン荒地",
-                stateText = if (cambionCycle.isDay) "Fass" else "Vome",
-                expiryString = cambionCycle.expiry.toString(),
-                stateColor = if (cambionCycle.isDay) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+                cycleGenerator = { LocalCycles.getCambionCycle(it) },
+                stateTextFormatter = { if (it.isDay) "Fass" else "Vome" },
+                stateColorFormatter = { if (it.isDay) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary }
             )
         }
 

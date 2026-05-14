@@ -51,7 +51,7 @@ fun FissureCard(fissure: FissureItem) {
                 )
                 Text(
                     text = formatTimeRemaining(fissure.expiry, now),
-                    style = MaterialTheme.typography.bodyMedium.copy(
+                    style = jp.girky.wf_noctuahub.ui.theme.getAppTypographyCondensed().bodyMedium.copy(
                         fontFeatureSettings = "tnum"
                     ),
                     color = MaterialTheme.colorScheme.onSurfaceVariant

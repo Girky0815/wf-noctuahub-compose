@@ -38,7 +38,7 @@ fun EtaText(
     Text(
         text = remainingTimeText,
         modifier = modifier,
-        style = MaterialTheme.typography.bodyMedium.copy(
+        style = jp.girky.wf_noctuahub.ui.theme.getAppTypographyCondensed().bodyMedium.copy(
             fontFeatureSettings = "tnum"
         ),
         color = color
