@@ -44,6 +44,7 @@ fun SettingsPage(
     worldState: WorldStateResponse? = null,
     errorMessage: String? = null,
     fetchState: FetchState = FetchState.SUCCESS,
+    onNavigateToUpdate: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
@@ -217,11 +218,20 @@ fun SettingsPage(
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             SectionTitle(title = "概要")
             ListGroup {
+                val appUpdater = remember { jp.girky.wf_noctuahub.platform.getAppUpdater() }
+                val currentVersionName = remember { appUpdater.getAppVersionName() }
+
                 ListTile(
                     leadingIcon = { Icon(Icons.Default.Info, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
-                    title = "Noctua Hub (Compose Desktop)",
-                    subtitle = "バージョン: 1.0.0-dev",
+                    title = "Noctua Hub",
+                    subtitle = "バージョン: $currentVersionName",
                     onClick = {}
+                )
+                ListTile(
+                    leadingIcon = { Icon(Icons.Default.Update, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
+                    title = "アップデートを確認",
+                    subtitle = "新バージョンを確認して適用します",
+                    onClick = onNavigateToUpdate
                 )
                 ListTile(
                     leadingIcon = { Icon(Icons.Default.Code, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },

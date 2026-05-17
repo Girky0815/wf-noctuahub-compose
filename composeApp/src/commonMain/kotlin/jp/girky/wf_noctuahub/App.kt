@@ -14,6 +14,8 @@ import androidx.compose.ui.graphics.Color
 import jp.girky.wf_noctuahub.ui.components.ui.ListGroup
 import jp.girky.wf_noctuahub.ui.components.ui.ListTile
 import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Update
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -75,7 +77,8 @@ enum class Screen(val route: String, val icon: androidx.compose.ui.graphics.vect
   ArchonHunt("archon", Icons.Rounded.Adjust, "アルコン討伐戦"),
   Descendia("descendia", Icons.Rounded.Castle, "ディセンディア"),
   Archimedea("archimedea", Icons.Rounded.Science, "アルキメデア"),
-  Settings("settings", Icons.Rounded.Settings, "設定")
+  Settings("settings", Icons.Rounded.Settings, "設定"),
+  Update("update", Icons.Default.Update, "更新")
 }
 
 @Composable
@@ -230,8 +233,14 @@ fun App() {
           TopAppBar(
             title = { Text(currentScreen.label) },
             navigationIcon = {
-              IconButton(onClick = { coroutineScope.launch { drawerState.open() } }) {
-                Icon(Icons.Rounded.Menu, contentDescription = "Menu")
+              if (currentScreen == Screen.Update) {
+                IconButton(onClick = { currentScreen = Screen.Settings }) {
+                  Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                }
+              } else {
+                IconButton(onClick = { coroutineScope.launch { drawerState.open() } }) {
+                  Icon(Icons.Rounded.Menu, contentDescription = "Menu")
+                }
               }
             },
             actions = {
@@ -255,26 +264,28 @@ fun App() {
           )
         },
         bottomBar = {
-          NavigationBar {
-            listOf(Screen.Status, Screen.Events, Screen.Fissures, Screen.Settings).forEach { screen ->
-              val isSelected = currentScreen == screen
-              NavigationBarItem(
-                icon = { Icon(screen.icon, contentDescription = screen.label) },
-                label = { 
-                  Text(
-                    text = screen.label,
-                    fontWeight = if (isSelected) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Normal
-                  ) 
-                },
-                selected = isSelected,
-                onClick = { currentScreen = screen },
-                colors = androidx.compose.material3.NavigationBarItemDefaults.colors(
-                  selectedIconColor = MaterialTheme.colorScheme.primary,
-                  selectedTextColor = MaterialTheme.colorScheme.primary,
-                  unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                  unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant
+          if (currentScreen != Screen.Update) {
+            NavigationBar {
+              listOf(Screen.Status, Screen.Events, Screen.Fissures, Screen.Settings).forEach { screen ->
+                val isSelected = currentScreen == screen
+                NavigationBarItem(
+                  icon = { Icon(screen.icon, contentDescription = screen.label) },
+                  label = { 
+                    Text(
+                      text = screen.label,
+                      fontWeight = if (isSelected) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Normal
+                    ) 
+                  },
+                  selected = isSelected,
+                  onClick = { currentScreen = screen },
+                  colors = androidx.compose.material3.NavigationBarItemDefaults.colors(
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant
+                  )
                 )
-              )
+              }
             }
           }
         }
@@ -398,7 +409,13 @@ fun App() {
                   appSettings = appSettings,
                   worldState = worldState,
                   errorMessage = errorMessage,
-                  fetchState = fetchState
+                  fetchState = fetchState,
+                  onNavigateToUpdate = { currentScreen = Screen.Update }
+                )
+              }
+              Screen.Update -> {
+                jp.girky.wf_noctuahub.ui.pages.UpdatePage(
+                  onBack = { currentScreen = Screen.Settings }
                 )
               }
             }
