@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import jp.girky.wf_noctuahub.data.api.model.Reward
 import jp.girky.wf_noctuahub.data.api.model.WsInvasion
+import jp.girky.wf_noctuahub.data.api.model.WsReward
 import jp.girky.wf_noctuahub.ui.components.ui.ListGroup
 import jp.girky.wf_noctuahub.ui.components.ui.ListItem
 import jp.girky.wf_noctuahub.ui.components.ui.ListTile
@@ -147,18 +147,20 @@ fun InvasionList(
     }
 }
 
-private fun buildRewardText(reward: Reward?): String {
+private fun buildRewardText(reward: WsReward?): String {
     if (reward == null) return "-"
     
     val parts = mutableListOf<String>()
-    if (reward.credits > 0) {
-        val creditsStr = formatWithCommas(reward.credits)
+    val credits = reward.credits ?: 0
+    if (credits > 0) {
+        val creditsStr = formatWithCommas(credits)
         parts.add("${creditsStr}Cr")
     }
     
     reward.countedItems?.forEach { item ->
         val itemName = item.itemType?.substringAfterLast("/") ?: "アイテム"
-        parts.add("${Translations.translateInvasionReward(itemName)} x${item.itemCount}")
+        val count = item.itemCount ?: 0
+        parts.add("${Translations.translateInvasionReward(itemName)} x$count")
     }
     
     reward.items?.forEach { item ->

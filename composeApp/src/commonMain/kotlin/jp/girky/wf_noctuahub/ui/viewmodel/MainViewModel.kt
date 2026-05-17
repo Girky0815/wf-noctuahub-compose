@@ -20,9 +20,17 @@ class MainViewModel(val repository: WarframeRepository) {
     private val _fetchState = MutableStateFlow(FetchState.IDLE)
     val fetchState: StateFlow<FetchState> = _fetchState.asStateFlow()
 
+    // 初回初期化完了フラグ（Public Exportのロードまで完了したか）
+    private val _isInitialized = MutableStateFlow(false)
+    val isInitialized: StateFlow<Boolean> = _isInitialized.asStateFlow()
+
     // 最後に発生したエラー
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
+
+    // 詳細な進捗メッセージ
+    private val _loadingMessage = MutableStateFlow<String?>("初期化中...")
+    val loadingMessage: StateFlow<String?> = _loadingMessage.asStateFlow()
 
     val worldState: StateFlow<WorldStateResponse?> = repository.worldState
 
@@ -47,18 +55,22 @@ class MainViewModel(val repository: WarframeRepository) {
 
         scope.launch(Dispatchers.Default) {
             try {
-                // 1. Public Export のローカライズ辞書フェッチ
-                _fetchState.value = FetchState.LOADING_EXPORT
-                repository.initializeLocalization()
-
-                // 2. WorldState のフェッチ
+                // 1. WorldState のフェッチ (軽量)
+                _loadingMessage.value = "最新のゲーム状況を取得中..."
                 _fetchState.value = FetchState.LOADING_WORLDSTATE
                 repository.refreshWorldState()
 
+                // 2. Public Export のローカライズ辞書フェッチ (重量)
+                _loadingMessage.value = "翻訳データをダウンロード中 (これには時間がかかる場合があります)..."
+                _fetchState.value = FetchState.LOADING_EXPORT
+                repository.initializeLocalization()
+
+                _loadingMessage.value = null
                 _fetchState.value = FetchState.SUCCESS
+                _isInitialized.value = true
             } catch (e: Exception) {
                 e.printStackTrace()
-                _errorMessage.value = e.message ?: "Unknown error"
+                _errorMessage.value = "エラーが発生しました: ${e.message}\n${e.stackTraceToString().take(200)}..."
                 _fetchState.value = FetchState.ERROR
             }
         }

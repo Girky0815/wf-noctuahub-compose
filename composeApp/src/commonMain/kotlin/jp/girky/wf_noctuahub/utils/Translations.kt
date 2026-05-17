@@ -494,6 +494,8 @@ object Translations {
     "StrunWraith" to "Strun Wraith",
     "LatronWraith" to "Latron Wraith",
     "Sheev" to "Sheev",
+    "GrineerCombatKnifeSortie" to "Sheev",
+    "GrineerCombatKnife" to "Sheev",
     "GorgonWraith" to "Gorgon Wraith",
     "IgnisWraith" to "Ignis Wraith"
   )
@@ -512,7 +514,8 @@ object Translations {
     "String" to "ストリング",
     "UpperLimb" to "アッパーリム",
     "LowerLimb" to "ロアーリム",
-    "Guard" to "ガード"
+    "Guard" to "ガード",
+    "Heatsink" to "ヒートシンク"
   )
 
   val invasionMaterials = mapOf(
@@ -567,4 +570,108 @@ object Translations {
 
     return translated.trim()
   }
+
+  // ------ Nightwave 関連の翻訳 ------
+  val nightwaveChallenges = mapOf(
+    // デイリー 属性キル系
+    "SeasonDailyKillEnemiesWithViral" to Pair("バズれ", "敵を150体感染属性で倒す"),
+    "SeasonDailyKillEnemiesWithCorrosive" to Pair("メルトダウン", "敵を150体腐食属性で倒す"),
+    "SeasonDailyKillEnemiesWithBlast" to Pair("爆弾魔", "敵を150体爆発属性で倒す"),
+    "SeasonDailyKillEnemiesWithCold" to Pair("急速冷凍", "敵を150体冷気属性で倒す"),
+    "SeasonDailyKillEnemiesWithElectric" to Pair("回路のショート", "敵を150体電気属性で倒す"),
+    "SeasonDailyKillEnemiesWithFire" to Pair("放火魔", "敵を150体火炎属性で倒す"),
+    "SeasonDailyKillEnemiesWithToxin" to Pair("毒殺者", "敵を150体毒属性で倒す"),
+    "SeasonDailyKillEnemiesWithMagnetic" to Pair("引き寄せる力", "敵を150体磁気属性で倒す"),
+    "SeasonDailyKillEnemiesWithRadiation" to Pair("原子炉", "敵を150体放射線属性で倒す"),
+
+    // デイリー
+    "SeasonDailyAimGlide" to Pair("グライダー", "エイムグライドで敵を15体倒す"),
+    "SeasonDailyKillEnemiesWithFinishers" to Pair("フィニッシャーによる撃破", "フィニッシャーで敵を10体倒す"),
+
+    // ウィークリー (末尾の数字は関数側で動的に抽出するためキーからは除外)
+    "SeasonWeeklyPermanentCompleteMissions" to Pair("ミッション完了", "ミッションを15回完了する"),
+    "SeasonWeeklyPermanentKillEximus" to Pair("エクシマス駆逐者", "エクシマスを30体倒す"),
+    "SeasonWeeklyPermanentKillEnemies" to Pair("これは警告ではない", "敵を500体倒す"),
+
+    "SeasonWeeklyCompleteClemMission" to Pair("良き友", "Clemの週ミッションを完了する"),
+    "SeasonWeeklyBoardingPartyNoDamage" to Pair("パーフェクト", "レールジャックに突撃した敵をノーダメージで撃破する"),
+    "SeasonWeeklyHardKillEnemiesSteelPath" to Pair("冷徹", "鋼の道のりミッションで敵を1,000体倒す"),
+    "SeasonWeeklyHardFriendsDefense" to Pair("防衛", "防衛ミッションを最低12ウェーブまで進めてクリアする")
+  )
+
+  fun translateNightwaveChallenge(challenge: String): Pair<String, String> {
+    val key = challenge.substringAfterLast("/")
+    
+    // 末尾の数字を抽出
+    val matchResult = Regex("""^(SeasonWeeklyPermanent[A-Za-z]+)(\d+)$""").matchEntire(key)
+    if (matchResult != null) {
+      val baseKey = matchResult.groupValues[1]
+      val weekNum = matchResult.groupValues[2]
+      val translation = nightwaveChallenges[baseKey]
+      if (translation != null) {
+        // 課題名の後ろに「 週数」を付与して表示
+        return Pair("${translation.first} $weekNum", translation.second)
+      }
+    }
+
+    return nightwaveChallenges[key] ?: Pair(key, "")
+  }
+
+  // ------ 1999 Calendar 関連の翻訳 ------
+  val calendarEventTypes = mapOf(
+    "CET_CHALLENGE" to "課題",
+    "CET_REWARD" to "報酬",
+    "CET_UPGRADE" to "バフ"
+  )
+
+  val calendarSeasons = mapOf(
+    "CST_SPRING" to "春",
+    "CST_SUMMER" to "夏",
+    "CST_AUTUMN" to "秋",
+    "CST_WINTER" to "冬"
+  )
+
+  fun translateCalendarType(type: String): String = calendarEventTypes[type] ?: type
+  fun translateCalendarSeason(season: String): String = calendarSeasons[season] ?: season
+
+  // ------ サーキット関連の翻訳 ------
+  val circuitCategories = mapOf(
+    "EXC_NORMAL" to "通常",
+    "EXC_HARD" to "鋼の道のり"
+  )
+
+  fun translateCircuitCategory(category: String): String = circuitCategories[category] ?: category
+
+  // ------ イベント関連の翻訳 ------
+  val eventNames = mapOf(
+    "JadeShadows" to "獣の巣窟作戦",
+    "JadeShadowsEventName" to "獣の巣窟作戦",
+    "BellyOfBeast" to "アトラメンタム作戦",
+    "Belly" to "アトラメンタム作戦",
+    "Ghoul" to "グール粛清",
+    "GhoulPurge" to "グール粛清",
+    "HeatFissures" to "サーミアの裂け目",
+    "HeatFissuresEventName" to "サーミアの裂け目",
+    "Razorback" to "Razorback Armada",
+    "RazorbackArmada" to "Razorback Armada",
+    "Fomorian" to "バロール・フォーモリアン",
+    "BalorFomorian" to "バロール・フォーモリアン"
+  )
+
+  fun translateEvent(eventDescOrTag: String): String {
+    val key = eventDescOrTag.substringAfterLast("/")
+    eventNames[key]?.let { return it }
+
+    // 部分一致のチェック
+    val lower = eventDescOrTag.lowercase()
+    if (lower.contains("jadeshadows")) return "獣の巣窟作戦"
+    if (lower.contains("belly")) return "アトラメンタム作戦"
+    if (lower.contains("ghoul")) return "グール粛清"
+    if (lower.contains("heatfissures")) return "サーミアの裂け目"
+    if (lower.contains("razorback")) return "Razorback Armada"
+    if (lower.contains("fomorian")) return "バロール・フォーモリアン"
+
+    return eventDescOrTag
+  }
 }
+

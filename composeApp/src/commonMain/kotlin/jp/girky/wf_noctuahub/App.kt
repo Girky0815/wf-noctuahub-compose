@@ -28,6 +28,13 @@ import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Adjust
 import androidx.compose.material.icons.rounded.Castle
 import androidx.compose.material.icons.rounded.Science
+import androidx.compose.material.icons.rounded.Event
+import androidx.compose.material.icons.rounded.Radio
+import androidx.compose.material.icons.rounded.FormatListBulleted
+import androidx.compose.material.icons.rounded.Storefront
+import androidx.compose.material.icons.rounded.Sync
+import androidx.compose.material.icons.rounded.CalendarToday
+import androidx.compose.material.icons.rounded.Repeat
 import jp.girky.wf_noctuahub.ui.pages.SettingsPage
 import jp.girky.wf_noctuahub.data.repository.AppSettings
 import com.russhwolf.settings.ObservableSettings
@@ -37,6 +44,14 @@ import jp.girky.wf_noctuahub.ui.pages.FissuresPage
 import jp.girky.wf_noctuahub.ui.pages.ArchonHuntPage
 import jp.girky.wf_noctuahub.ui.pages.DescendiaPage
 import jp.girky.wf_noctuahub.ui.pages.ArchimedeaPage
+import jp.girky.wf_noctuahub.ui.pages.NightwavePage
+import jp.girky.wf_noctuahub.ui.pages.SortiePage
+import jp.girky.wf_noctuahub.ui.pages.BaroPage
+import jp.girky.wf_noctuahub.ui.pages.ResurgencePage
+import jp.girky.wf_noctuahub.ui.pages.Calendar1999Page
+import jp.girky.wf_noctuahub.ui.pages.CircuitPage
+import jp.girky.wf_noctuahub.ui.pages.EventsPage
+import jp.girky.wf_noctuahub.utils.Translations
 import kotlinx.coroutines.launch
 import jp.girky.wf_noctuahub.ui.theme.AppTheme
 import jp.girky.wf_noctuahub.ui.theme.getAccentColor
@@ -46,9 +61,17 @@ import jp.girky.wf_noctuahub.ui.components.ui.SectionTitle
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+
 enum class Screen(val route: String, val icon: androidx.compose.ui.graphics.vector.ImageVector, val label: String) {
   Status("status", Icons.Rounded.Dashboard, "ステータス"),
+  Events("events", Icons.Rounded.Event, "イベント"),
   Fissures("fissures", Icons.Rounded.Bolt, "亀裂"),
+  Nightwave("nightwave", Icons.Rounded.Radio, "Nightwave"),
+  Sortie("sortie", Icons.Rounded.FormatListBulleted, "ソーティー"),
+  Baro("baro", Icons.Rounded.Storefront, "Baro Ki'Teer"),
+  Resurgence("resurgence", Icons.Rounded.Sync, "Prime Resurgence"),
+  Calendar1999("calendar1999", Icons.Rounded.CalendarToday, "1999 Calendar"),
+  Circuit("circuit", Icons.Rounded.Repeat, "サーキット"),
   ArchonHunt("archon", Icons.Rounded.Adjust, "アルコン討伐戦"),
   Descendia("descendia", Icons.Rounded.Castle, "ディセンディア"),
   Archimedea("archimedea", Icons.Rounded.Science, "アルキメデア"),
@@ -81,7 +104,9 @@ fun App() {
 
   val fetchState by viewModel.fetchState.collectAsState()
   val errorMessage by viewModel.errorMessage.collectAsState()
+  val loadingMessage by viewModel.loadingMessage.collectAsState()
   val worldState by viewModel.worldState.collectAsState()
+  val isInitialized by viewModel.isInitialized.collectAsState()
   
   LaunchedEffect(Unit) {
     viewModel.loadInitialData(coroutineScope)
@@ -116,7 +141,16 @@ fun App() {
             ) {
               SectionTitle(title = "一般情報", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
               ListGroup {
-                listOf(Screen.Status, Screen.Fissures).forEach { screen ->
+                listOf(
+                  Screen.Status, 
+                  Screen.Events,
+                  Screen.Fissures, 
+                  Screen.Nightwave, 
+                  Screen.Sortie, 
+                  Screen.Baro, 
+                  Screen.Resurgence, 
+                  Screen.Calendar1999
+                ).forEach { screen ->
                   val isSelected = currentScreen == screen
                   ListTile(
                     title = screen.label,
@@ -140,7 +174,7 @@ fun App() {
 
               SectionTitle(title = "中級者向け", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
               ListGroup {
-                listOf(Screen.ArchonHunt, Screen.Descendia, Screen.Archimedea).forEach { screen ->
+                listOf(Screen.Circuit, Screen.ArchonHunt, Screen.Descendia, Screen.Archimedea).forEach { screen ->
                   val isSelected = currentScreen == screen
                   ListTile(
                     title = screen.label,
@@ -222,7 +256,7 @@ fun App() {
         },
         bottomBar = {
           NavigationBar {
-            listOf(Screen.Status, Screen.Fissures, Screen.Settings).forEach { screen ->
+            listOf(Screen.Status, Screen.Events, Screen.Fissures, Screen.Settings).forEach { screen ->
               val isSelected = currentScreen == screen
               NavigationBarItem(
                 icon = { Icon(screen.icon, contentDescription = screen.label) },
@@ -268,13 +302,18 @@ fun App() {
             Box(modifier = Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
               Text(text = "エラー: $errorMessage", color = MaterialTheme.colorScheme.error)
             }
-          } else if (worldState == null) {
+          } else if (worldState == null || !isInitialized) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
               Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 @OptIn(androidx.compose.material3.ExperimentalMaterial3ExpressiveApi::class)
                 androidx.compose.material3.LoadingIndicator()
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(text = "データを取得中...", color = MaterialTheme.colorScheme.onBackground)
+                Text(
+                    text = loadingMessage ?: "データを取得中...", 
+                    color = MaterialTheme.colorScheme.onBackground,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 32.dp)
+                )
               }
             }
           } else {
@@ -285,11 +324,54 @@ fun App() {
                   onLocalize = { viewModel.localize(it) }
                 )
               }
+              Screen.Events -> {
+                EventsPage(
+                  worldState = worldState,
+                  onLocalize = { viewModel.localize(it) }
+                )
+              }
               Screen.Fissures -> {
                 FissuresPage(
                   worldState = worldState,
                   onLocalize = { viewModel.localize(it) },
                   onGetRegionInfo = { viewModel.getRegionInfo(it) }
+                )
+              }
+              Screen.Nightwave -> {
+                NightwavePage(
+                  worldState = worldState,
+                  onTranslateNightwave = { Translations.translateNightwaveChallenge(it) }
+                )
+              }
+              Screen.Sortie -> {
+                SortiePage(
+                  worldState = worldState,
+                  onLocalize = { viewModel.localize(it) },
+                  onGetRegionInfo = { viewModel.getRegionInfo(it) }
+                )
+              }
+              Screen.Baro -> {
+                BaroPage(
+                  worldState = worldState,
+                  onLocalize = { viewModel.localize(it) }
+                )
+              }
+              Screen.Resurgence -> {
+                ResurgencePage(
+                  worldState = worldState,
+                  onLocalize = { viewModel.localize(it) }
+                )
+              }
+              Screen.Calendar1999 -> {
+                Calendar1999Page(
+                  worldState = worldState,
+                  onLocalize = { viewModel.localize(it) }
+                )
+              }
+              Screen.Circuit -> {
+                CircuitPage(
+                  worldState = worldState,
+                  onLocalize = { viewModel.localize(it) }
                 )
               }
               Screen.ArchonHunt -> {

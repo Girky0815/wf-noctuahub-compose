@@ -9,6 +9,7 @@ data class WorldStateResponse(
     @SerialName("Version") val version: Int? = null,
     @SerialName("Time") val time: Long? = null,
     @SerialName("Events") val events: List<WsEvent>? = emptyList(),
+    @SerialName("Goals") val goals: List<WsGoal>? = emptyList(),
     @SerialName("Alerts") val alerts: List<WsAlert>? = emptyList(),
     @SerialName("Sorties") val sorties: List<WsSortie>? = emptyList(),
     @SerialName("SyndicateMissions") val syndicateMissions: List<WsSyndicateMission>? = emptyList(),
@@ -17,10 +18,13 @@ data class WorldStateResponse(
     @SerialName("VoidStorms") val voidStorms: List<WsVoidStorm>? = emptyList(),
     @SerialName("Invasions") val invasions: List<WsInvasion>? = emptyList(),
     @SerialName("VoidTraders") val voidTraders: List<WsVoidTrader>? = emptyList(),
+    @SerialName("PrimeVaultTraders") val primeVaultTraders: List<WsPrimeVaultTrader>? = emptyList(),
     @SerialName("DailyDeals") val dailyDeals: List<WsDailyDeal>? = emptyList(),
-    // For Earth/Cetus clock, we might rely on specific keys or calculation based on epoch time if not directly provided
-    @SerialName("ProjectPct") val projectPct: List<Double>? = emptyList(), // Fomorian/Razorback progress
+    @SerialName("EndlessXpChoices") val endlessXpChoices: List<WsEndlessXpChoice>? = emptyList(),
+    @SerialName("ProjectPct") val projectPct: List<Double>? = emptyList(),
     @SerialName("LiteSorties") val liteSorties: List<WsSortie>? = emptyList(),
+    @SerialName("SeasonInfo") val seasonInfo: WsSeasonInfo? = null,
+    @SerialName("KnownCalendarSeasons") val calendarSeasons: List<WsCalendarSeason>? = emptyList(),
     @SerialName("Descents") val descents: List<WsDescent>? = emptyList(),
     @SerialName("Conquests") val conquests: List<WsConquest>? = emptyList()
 )
@@ -35,6 +39,21 @@ data class WsEvent(
     @SerialName("Date") val date: MongoDate? = null,
     @SerialName("EventStartDate") val eventStartDate: MongoDate? = null,
     @SerialName("EventEndDate") val eventEndDate: MongoDate? = null
+)
+
+@Serializable
+data class WsGoal(
+    @SerialName("_id") val id: MongoId? = null,
+    @SerialName("Activation") val activation: MongoDate? = null,
+    @SerialName("Expiry") val expiry: MongoDate? = null,
+    @SerialName("Tag") val tag: String? = null,
+    @SerialName("Node") val node: String? = null,
+    @SerialName("Desc") val desc: String? = null,
+    @SerialName("ToolTip") val toolTip: String? = null,
+    @SerialName("Count") val count: Int? = 0,
+    @SerialName("Goal") val goal: Int? = 0,
+    @SerialName("HealthPct") val healthPct: Double? = 1.0,
+    @SerialName("Reward") val reward: WsReward? = null
 )
 
 @Serializable
@@ -62,7 +81,7 @@ data class WsMissionInfo(
     @SerialName("maxEnemyLevel") val maxEnemyLevel: Int = 0,
     @SerialName("difficulty") val difficulty: Double = 0.0,
     @SerialName("seed") val seed: Int = 0,
-    @SerialName("missionReward") val missionReward: Reward? = null
+    @SerialName("missionReward") val missionReward: WsReward? = null
 )
 
 @Serializable
@@ -70,8 +89,9 @@ data class WsSortie(
     @SerialName("_id") val id: MongoId? = null,
     @SerialName("Activation") val activation: MongoDate? = null,
     @SerialName("Expiry") val expiry: MongoDate? = null,
-    @SerialName("Reward") val reward: String? = null, // e.g., "/Lotus/Types/Game/SortieRewards/SortieRewardTable"
+    @SerialName("Reward") val reward: String? = null,
     @SerialName("Boss") val boss: String? = null,
+    @SerialName("Faction") val faction: String? = null,
     @SerialName("Variants") val variants: List<WsSortieVariant>? = emptyList(),
     @SerialName("Missions") val missions: List<WsSortieVariant>? = emptyList()
 )
@@ -89,7 +109,7 @@ data class WsSyndicateMission(
     @SerialName("_id") val id: MongoId? = null,
     @SerialName("Activation") val activation: MongoDate? = null,
     @SerialName("Expiry") val expiry: MongoDate? = null,
-    @SerialName("Tag") val tag: String? = null, // e.g., "CetusSyndicate", "SolarisSyndicate", "EntratiSyndicate", "ZarimanSyndicate"
+    @SerialName("Tag") val tag: String? = null,
     @SerialName("Nodes") val nodes: List<String>? = emptyList()
 )
 
@@ -99,8 +119,8 @@ data class WsActiveMission(
     @SerialName("Activation") val activation: MongoDate? = null,
     @SerialName("Expiry") val expiry: MongoDate? = null,
     @SerialName("Node") val node: String? = null,
-    @SerialName("MissionType") val missionType: String? = null, // might not exist
-    @SerialName("Modifier") val modifier: String? = null, // "VoidT1", "VoidT2" etc
+    @SerialName("MissionType") val missionType: String? = null,
+    @SerialName("Modifier") val modifier: String? = null,
     @SerialName("Region") val region: Int? = null,
     @SerialName("Seed") val seed: Int? = null,
     @SerialName("Hard") val hard: Boolean? = false
@@ -133,8 +153,8 @@ data class WsInvasion(
     @SerialName("Goal") val goal: Int? = null,
     @SerialName("LocTag") val locTag: String? = null,
     @SerialName("Completed") val completed: Boolean? = null,
-    @SerialName("AttackerReward") val attackerReward: Reward? = null,
-    @SerialName("DefenderReward") val defenderReward: Reward? = null
+    @SerialName("AttackerReward") val attackerReward: WsReward? = null,
+    @SerialName("DefenderReward") val defenderReward: WsReward? = null
 )
 
 @Serializable
@@ -143,7 +163,23 @@ data class WsVoidTrader(
     @SerialName("Activation") val activation: MongoDate? = null,
     @SerialName("Expiry") val expiry: MongoDate? = null,
     @SerialName("Character") val character: String? = null,
-    @SerialName("Node") val node: String? = null
+    @SerialName("Node") val node: String? = null,
+    @SerialName("Manifest") val manifest: List<WsVoidTraderItem>? = emptyList()
+)
+
+@Serializable
+data class WsVoidTraderItem(
+    @SerialName("ItemType") val itemType: String? = null,
+    @SerialName("PrimePrice") val primePrice: Int? = null,
+    @SerialName("RegularPrice") val regularPrice: Int? = null
+)
+
+@Serializable
+data class WsPrimeVaultTrader(
+    @SerialName("_id") val id: MongoId? = null,
+    @SerialName("Activation") val activation: MongoDate? = null,
+    @SerialName("Expiry") val expiry: MongoDate? = null,
+    @SerialName("Manifest") val manifest: List<WsVoidTraderItem>? = emptyList()
 )
 
 @Serializable
@@ -156,6 +192,52 @@ data class WsDailyDeal(
     @SerialName("SalePrice") val salePrice: Int? = null,
     @SerialName("AmountTotal") val amountTotal: Int? = null,
     @SerialName("AmountSold") val amountSold: Int? = null
+)
+
+@Serializable
+data class WsEndlessXpChoice(
+    @SerialName("Category") val circuitCategory: String? = null, // "EXC_NORMAL", "EXC_HARD"
+    @SerialName("Choices") val choices: List<String>? = emptyList()
+)
+
+@Serializable
+data class WsSeasonInfo(
+    @SerialName("_id") val id: MongoId? = null,
+    @SerialName("Activation") val activation: MongoDate? = null,
+    @SerialName("Expiry") val expiry: MongoDate? = null,
+    @SerialName("Season") val season: Int? = null,
+    @SerialName("ActiveChallenges") val activeChallenges: List<WsNightwaveChallenge>? = emptyList()
+)
+
+@Serializable
+data class WsNightwaveChallenge(
+    @SerialName("_id") val id: MongoId? = null,
+    @SerialName("Activation") val activation: MongoDate? = null,
+    @SerialName("Expiry") val expiry: MongoDate? = null,
+    @SerialName("Challenge") val challenge: String? = null,
+    @SerialName("Daily") val daily: Boolean? = false
+)
+
+@Serializable
+data class WsCalendarSeason(
+    @SerialName("Activation") val activation: MongoDate? = null,
+    @SerialName("Expiry") val expiry: MongoDate? = null,
+    @SerialName("Season") val season: String? = null, // "CST_SPRING" etc
+    @SerialName("Days") val days: List<WsCalendarDay>? = emptyList()
+)
+
+@Serializable
+data class WsCalendarDay(
+    @SerialName("day") val day: Int? = null,
+    @SerialName("events") val events: List<WsCalendarEvent>? = emptyList()
+)
+
+@Serializable
+data class WsCalendarEvent(
+    @SerialName("type") val type: String? = null, // "CET_CHALLENGE", "CET_REWARD", "CET_UPGRADE"
+    @SerialName("challenge") val challenge: String? = null,
+    @SerialName("reward") val reward: String? = null,
+    @SerialName("upgrade") val upgrade: String? = null
 )
 
 @Serializable
@@ -199,3 +281,4 @@ data class WsConquestDifficulty(
     @SerialName("deviation") val deviation: String? = null,
     @SerialName("risks") val risks: List<String>? = emptyList()
 )
+

@@ -67,9 +67,18 @@ private fun calculateEta(expiryString: String): String {
 /**
  * 期間を "3d 12h 5m 30s" 形式（0の単位は省略）でフォーマットする
  */
-private fun formatDuration(duration: Duration): String {
+private fun formatDuration(duration: kotlin.time.Duration): String {
     val totalSeconds = duration.inWholeSeconds
-    val m = totalSeconds / 60
+    if (totalSeconds < 0) return "終了"
+
+    val d = totalSeconds / (24 * 3600)
+    val h = (totalSeconds % (24 * 3600)) / 3600
+    val m = (totalSeconds % 3600) / 60
     val s = totalSeconds % 60
-    return "${m.toString().padStart(2, '0')}分${s.toString().padStart(2, '0')}秒"
+
+    return buildString {
+        if (d > 0) append("${d}日")
+        if (h > 0 || d > 0) append("${h}時間")
+        append("${m.toString().padStart(2, '0')}分${s.toString().padStart(2, '0')}秒")
+    }
 }
