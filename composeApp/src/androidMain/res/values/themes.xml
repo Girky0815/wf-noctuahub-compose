@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Noctua" parent="android:Theme.DeviceDefault.NoActionBar">
+        <!-- システムのステータスバーとナビゲーションバーをCompose側から柔軟に制御可能にする透過設定 -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+</resources>
