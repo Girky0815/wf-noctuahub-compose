@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -270,10 +271,10 @@ fun UpdatePage(
             ) {
                 Icon(
                     imageVector = when (status) {
-                        UpdateStatus.UP_TO_DATE -> Icons.Default.CheckCircle
-                        UpdateStatus.ERROR -> Icons.Default.Error
-                        UpdateStatus.READY_TO_INSTALL -> Icons.Default.FileDownloadDone
-                        else -> Icons.Default.SystemUpdate
+                        UpdateStatus.UP_TO_DATE -> Icons.Rounded.CheckCircle
+                        UpdateStatus.ERROR -> Icons.Rounded.Error
+                        UpdateStatus.READY_TO_INSTALL -> Icons.Rounded.FileDownloadDone
+                        else -> Icons.Rounded.SystemUpdate
                     },
                     contentDescription = null,
                     modifier = Modifier.size(64.dp),
@@ -287,7 +288,7 @@ fun UpdatePage(
             Text(
                 text = when (status) {
                     UpdateStatus.CHECKING -> "アップデートを確認しています..."
-                    UpdateStatus.UP_TO_DATE -> "お使いのデバイスは最新の状態です"
+                    UpdateStatus.UP_TO_DATE -> "最新の状態です"
                     UpdateStatus.UPDATE_AVAILABLE -> "新しいアップデートが利用可能です"
                     UpdateStatus.DOWNLOADING -> "アップデートをダウンロード中..."
                     UpdateStatus.READY_TO_INSTALL -> "インストールの準備ができました"
