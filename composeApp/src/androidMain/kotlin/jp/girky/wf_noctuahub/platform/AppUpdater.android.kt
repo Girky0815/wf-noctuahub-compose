@@ -1,8 +1,10 @@
 package jp.girky.wf_noctuahub.platform
 
 import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageInstaller
 import android.net.Uri
 import android.os.Build
@@ -66,12 +68,6 @@ class AndroidAppUpdater : AppUpdater {
             val packageInstaller = context.packageManager.packageInstaller
             val params = PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
             
-            val pendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-            } else {
-                PendingIntent.FLAG_UPDATE_CURRENT
-            }
-
             val sessionId = packageInstaller.createSession(params)
             val session = packageInstaller.openSession(sessionId)
 
@@ -86,13 +82,68 @@ class AndroidAppUpdater : AppUpdater {
                 }
             }
 
-            val intent = Intent(context, MainActivity::class.java).apply {
-                action = Intent.ACTION_MAIN
-                addCategory(Intent.CATEGORY_LAUNCHER)
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            // 動的レシーバーによるインストールステータスの監視とシステム確認ダイアログの前面起動
+            val action = "jp.girky.wf_noctuahub.INSTALL_STATUS"
+            val receiver = object : BroadcastReceiver() {
+                override fun onReceive(receiverContext: Context, intent: Intent) {
+                    val status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE)
+                    when (status) {
+                        PackageInstaller.STATUS_PENDING_USER_ACTION -> {
+                            // ユーザー確認（インストールダイアログ）が必要な場合、ダイアログActivityを前面で起動
+                            val confirmIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                intent.getParcelableExtra(Intent.EXTRA_INTENT, Intent::class.java)
+                            } else {
+                                @Suppress("DEPRECATION")
+                                intent.getParcelableExtra(Intent.EXTRA_INTENT)
+                            }
+                            if (confirmIntent != null) {
+                                confirmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                receiverContext.startActivity(confirmIntent)
+                            }
+                        }
+                        PackageInstaller.STATUS_SUCCESS -> {
+                            // インストール成功！自動的にアプリを再起動
+                            val launchIntent = receiverContext.packageManager.getLaunchIntentForPackage(receiverContext.packageName)
+                            if (launchIntent != null) {
+                                launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                receiverContext.startActivity(launchIntent)
+                            }
+                            try {
+                                receiverContext.unregisterReceiver(this)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        }
+                        else -> {
+                            // 失敗またはキャンセル時はレシーバーの登録を解除
+                            try {
+                                receiverContext.unregisterReceiver(this)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 動的レシーバーの登録（Android 14以降のRECEIVER_EXPORTED安全対策を含む）
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                context.registerReceiver(receiver, IntentFilter(action), Context.RECEIVER_EXPORTED)
+            } else {
+                context.registerReceiver(receiver, IntentFilter(action))
+            }
+
+            val intent = Intent(action).apply {
+                setPackage(context.packageName)
             }
             
-            val pendingIntent = PendingIntent.getActivity(
+            val pendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            }
+
+            val pendingIntent = PendingIntent.getBroadcast(
                 context,
                 0,
                 intent,

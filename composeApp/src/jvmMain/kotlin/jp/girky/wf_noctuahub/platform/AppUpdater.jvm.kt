@@ -18,7 +18,8 @@ class JvmAppUpdater : AppUpdater {
         if (!file.exists()) return
 
         try {
-            ProcessBuilder(file.absolutePath).start()
+            // runas 動詞を使用して Windows シェルから管理者権限でインストーラーを安全に起動
+            ProcessBuilder("powershell.exe", "-Command", "Start-Process '${file.absolutePath}' -Verb RunAs").start()
             exitProcess(0)
         } catch (e: Exception) {
             e.printStackTrace()
