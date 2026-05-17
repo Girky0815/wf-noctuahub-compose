@@ -95,7 +95,7 @@ jobs:
         run: |
           $tag = "${{ github.ref_name }}"
           $version = $tag -replace '^v', ''
-          echo "APP_VERSION=$version" >> $env:GITHUB_ENV
+          "APP_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           Write-Output "Calculated Version: $version"
 
       - name: Gradle Propertiesのクリーンアップ（org.gradle.java.homeの削除）
@@ -109,7 +109,7 @@ jobs:
       - name: Windows用exeのビルド
         shell: pwsh
         run: |
-          ./gradlew :composeApp:packageExe -PappVersion=${{ env.APP_VERSION }}
+          ./gradlew :composeApp:packageExe "-PappVersion=${{ env.APP_VERSION }}"
 
       - name: Windows用exeのファイル名の変更
         shell: pwsh
