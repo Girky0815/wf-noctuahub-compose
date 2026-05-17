@@ -587,6 +587,8 @@ object Translations {
     // デイリー
     "SeasonDailyAimGlide" to Pair("グライダー", "エイムグライドで敵を15体倒す"),
     "SeasonDailyKillEnemiesWithFinishers" to Pair("フィニッシャーによる撃破", "フィニッシャーで敵を10体倒す"),
+    "SeasonDailyKillEnemiesWithHeadshots" to Pair("マークスマン", "ヘッドショットで敵を40体倒す"),
+    "SeasonDailyKillEnemiesWhileOnKDrive" to Pair("スリルライダー", "K-ドライブ、ケイス、ベロシポッド、アトミサイクルに乗った状態で敵を20体倒す"),
 
     // ウィークリー (末尾の数字は関数側で動的に抽出するためキーからは除外)
     "SeasonWeeklyPermanentCompleteMissions" to Pair("ミッション完了", "ミッションを15回完了する"),

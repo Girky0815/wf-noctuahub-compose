@@ -29,7 +29,14 @@ fun NightwavePage(
 
     val challenges = seasonInfo.activeChallenges ?: emptyList()
     val daily = challenges.filter { it.daily == true }
-    val weekly = challenges.filter { it.daily == false }
+    
+    // 通常のウィークリーとエリート・ウィークリーの分離
+    val weeklyNormal = challenges.filter { 
+        it.daily == false && !(it.challenge ?: "").contains("Hard") 
+    }
+    val weeklyElite = challenges.filter { 
+        it.daily == false && (it.challenge ?: "").contains("Hard") 
+    }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(16.dp)
@@ -73,23 +80,85 @@ fun NightwavePage(
             }
         }
 
-        if (weekly.isNotEmpty()) {
+        if (weeklyNormal.isNotEmpty()) {
+            val firstChallenge = weeklyNormal.first()
+            val expiryLong = firstChallenge.expiry?.date?.numberLong?.toLongOrNull()
+            val expiryString = expiryLong?.let { Instant.fromEpochMilliseconds(it).toString() }
+
             item {
-                SectionTitle(title = "ウィークリーアクト", modifier = Modifier.padding(bottom = 8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                ) {
+                    SectionTitle(title = "ウィークリーアクト")
+                    if (expiryString != null) {
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                            ),
+                            shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
+                        ) {
+                            Box(modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)) {
+                                EtaText(
+                                    expiryString = expiryString,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
+                            }
+                        }
+                    }
+                }
                 ListGroup {
-                    for (challenge in weekly) {
+                    for (challenge in weeklyNormal) {
                         val (titleText, descText) = onTranslateNightwave(challenge.challenge ?: "")
-                        val expiryLong = challenge.expiry?.date?.numberLong?.toLongOrNull()
-                        val expiryString = expiryLong?.let { Instant.fromEpochMilliseconds(it).toString() }
                         
                         ListTile(
                             title = titleText,
-                            subtitle = if (descText.isNotEmpty()) descText else null,
-                            trailingContent = {
-                                if (expiryString != null) {
-                                    EtaText(expiryString = expiryString)
-                                }
+                            subtitle = if (descText.isNotEmpty()) descText else null
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+        }
+
+        if (weeklyElite.isNotEmpty()) {
+            val firstChallenge = weeklyElite.first()
+            val expiryLong = firstChallenge.expiry?.date?.numberLong?.toLongOrNull()
+            val expiryString = expiryLong?.let { Instant.fromEpochMilliseconds(it).toString() }
+
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+                ) {
+                    SectionTitle(title = "エリート・ウィークリーアクト")
+                    if (expiryString != null) {
+                        Card(
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                            ),
+                            shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
+                        ) {
+                            Box(modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)) {
+                                EtaText(
+                                    expiryString = expiryString,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
                             }
+                        }
+                    }
+                }
+                ListGroup {
+                    for (challenge in weeklyElite) {
+                        val (titleText, descText) = onTranslateNightwave(challenge.challenge ?: "")
+                        
+                        ListTile(
+                            title = titleText,
+                            subtitle = if (descText.isNotEmpty()) descText else null
                         )
                     }
                 }
