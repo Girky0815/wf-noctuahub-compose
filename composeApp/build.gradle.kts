@@ -10,6 +10,9 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
 }
 
+val appVersion = project.findProperty("appVersion")?.toString() ?: "1.0.0"
+val appVersionCode = project.findProperty("appVersionCode")?.toString()?.toIntOrNull() ?: 1
+
 kotlin {
     androidTarget {
         compilerOptions {
@@ -67,8 +70,9 @@ android {
         applicationId = "jp.girky.wf_noctuahub"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = appVersionCode
+        versionName = appVersion
+        manifestPlaceholders["appLabel"] = "Noctua Hub"
     }
     packaging {
         resources {
@@ -78,6 +82,13 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("debug")
+            manifestPlaceholders["appLabel"] = "Noctua Hub"
+        }
+        getByName("debug") {
+            applicationIdSuffix = ".debug"
+            signingConfig = signingConfigs.getByName("debug")
+            manifestPlaceholders["appLabel"] = "Noctua Hub(デバッグ)"
         }
     }
     compileOptions {
@@ -96,9 +107,9 @@ compose.desktop {
         mainClass = "jp.girky.wf_noctuahub.MainKt"
 
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Exe)
             packageName = "jp.girky.wf_noctuahub"
-            packageVersion = "1.0.0"
+            packageVersion = appVersion
         }
     }
 }
