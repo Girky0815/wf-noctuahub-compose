@@ -583,22 +583,32 @@ object Translations {
     "SeasonDailyKillEnemiesWithToxin" to Pair("毒殺者", "敵を150体毒属性で倒す"),
     "SeasonDailyKillEnemiesWithMagnetic" to Pair("引き寄せる力", "敵を150体磁気属性で倒す"),
     "SeasonDailyKillEnemiesWithRadiation" to Pair("原子炉", "敵を150体放射線属性で倒す"),
+    "SeasonDailyKillEnemiesWithGas" to Pair("バイオハザード", "敵を150体ガス属性で倒す"),
 
     // デイリー
     "SeasonDailyAimGlide" to Pair("グライダー", "エイムグライドで敵を15体倒す"),
     "SeasonDailyKillEnemiesWithFinishers" to Pair("フィニッシャーによる撃破", "フィニッシャーで敵を10体倒す"),
     "SeasonDailyKillEnemiesWithHeadshots" to Pair("マークスマン", "ヘッドショットで敵を40体倒す"),
     "SeasonDailyKillEnemiesWhileOnKDrive" to Pair("スリルライダー", "K-ドライブ、ケイス、ベロシポッド、アトミサイクルに乗った状態で敵を20体倒す"),
+    "SeasonDailyKillEnemiesWithSecondary" to Pair("小は大を征す", "セカンダリ武器で敵を150体倒す"),
+
+    "SeasonDailyVisitFeaturedDojo" to Pair("旅行目的", "特選Dojoを訪れる"),
+
 
     // ウィークリー (末尾の数字は関数側で動的に抽出するためキーからは除外)
     "SeasonWeeklyPermanentCompleteMissions" to Pair("ミッション完了", "ミッションを15回完了する"),
     "SeasonWeeklyPermanentKillEximus" to Pair("エクシマス駆逐者", "エクシマスを30体倒す"),
     "SeasonWeeklyPermanentKillEnemies" to Pair("これは警告ではない", "敵を500体倒す"),
+    "SeasonWeeklyLoyalty" to Pair("忠誠心", "任意のシンジケートにて5,000地位を獲得する"),
+
+    "SeasonWeeklyCompleteSpy" to Pair("諜報員", "潜入ミッションを3回クリアする"),
 
     "SeasonWeeklyCompleteClemMission" to Pair("良き友", "Clemの週ミッションを完了する"),
     "SeasonWeeklyBoardingPartyNoDamage" to Pair("パーフェクト", "レールジャックに突撃した敵をノーダメージで撃破する"),
     "SeasonWeeklyHardKillEnemiesSteelPath" to Pair("冷徹", "鋼の道のりミッションで敵を1,000体倒す"),
-    "SeasonWeeklyHardFriendsDefense" to Pair("防衛", "防衛ミッションを最低12ウェーブまで進めてクリアする")
+    "SeasonWeeklyHardFriendsDefense" to Pair("防衛", "防衛ミッションを最低12ウェーブまで進めてクリアする"),
+    "SeasonWeeklyHardRailjackMissions" to Pair("エリート探検者", "レールジャックミッションを8回クリアする"),
+    "SeasonWeeklyHardThePriceOfFreedom" to Pair("自由の代償", "任意の Granum クラウンを使用して、コーパス船タイルに囚われたソラリス民を1人救出する"),
   )
 
   fun translateNightwaveChallenge(challenge: String): Pair<String, String> {
