@@ -75,14 +75,15 @@ fun EventsPage(
                 val descLower = eventGoal.desc?.lowercase() ?: ""
                 val tagLower = eventGoal.tag?.lowercase() ?: ""
 
+                // グール粛清
+                val isGhoulType = descLower.contains("ghoul") || tagLower.contains("ghoul")
+
                 // 進捗を表示するもの
                 val isProgressType = descLower.contains("jadeshadows") || 
                                      descLower.contains("belly") || 
-                                     descLower.contains("ghoul") || 
                                      descLower.contains("heatfissures") || 
                                      tagLower.contains("jadeshadows") || 
                                      tagLower.contains("belly") || 
-                                     tagLower.contains("ghoul") || 
                                      tagLower.contains("heatfissures")
 
                 // 残り耐久力を表示するもの
@@ -123,7 +124,35 @@ fun EventsPage(
                         
                         Spacer(modifier = Modifier.height(12.dp))
 
-                        if (isProgressType) {
+                        if (isGhoulType) {
+                            val activity = (eventGoal.healthPct ?: 1.0).toFloat()
+                            val activityPercent = String.format("%.1f", activity * 100)
+                            
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = "グール活動レベル",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(
+                                    text = "$activityPercent%",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(6.dp))
+                            LinearProgressIndicator(
+                                progress = { activity.coerceIn(0f, 1f) },
+                                modifier = Modifier.fillMaxWidth().height(8.dp),
+                                color = MaterialTheme.colorScheme.error,
+                                trackColor = MaterialTheme.colorScheme.errorContainer,
+                                strokeCap = androidx.compose.ui.graphics.StrokeCap.Round
+                            )
+                        } else if (isProgressType) {
                             val count = eventGoal.count ?: 0
                             val rawGoal = eventGoal.goal
                             val progress = if (rawGoal != null && rawGoal > 0) {
