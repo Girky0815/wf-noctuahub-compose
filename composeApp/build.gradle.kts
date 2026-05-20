@@ -66,6 +66,28 @@ android {
     namespace = "jp.girky.wf_noctuahub"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
+    signingConfigs {
+        create("release") {
+            val keystorePath = System.getenv("ANDROID_KEYSTORE_PATH")
+            val keystorePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
+            val keyAliasStr = System.getenv("ANDROID_KEY_ALIAS")
+            val keyPasswordStr = System.getenv("ANDROID_KEY_PASSWORD")
+
+            if (!keystorePath.isNullOrEmpty()) {
+                storeFile = file(keystorePath)
+                storePassword = keystorePassword
+                keyAlias = keyAliasStr
+                keyPassword = keyPasswordStr
+            } else {
+                val debugConfig = signingConfigs.getByName("debug")
+                storeFile = debugConfig.storeFile
+                storePassword = debugConfig.storePassword
+                keyAlias = debugConfig.keyAlias
+                keyPassword = debugConfig.keyPassword
+            }
+        }
+    }
+
     defaultConfig {
         applicationId = "jp.girky.wf_noctuahub"
         minSdk = libs.versions.android.minSdk.get().toInt()
@@ -82,7 +104,7 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
             manifestPlaceholders["appLabel"] = "Noctua Hub"
         }
         getByName("debug") {

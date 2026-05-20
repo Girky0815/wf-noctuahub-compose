@@ -54,10 +54,20 @@ jobs:
             echo "Removed org.gradle.java.home to avoid path issues on runner."
           fi
 
+      - name: 署名用Keystoreの復元
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > composeApp/release.keystore
+        if: "${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}"
+
       - name: Android用apkのビルド
         run: |
           chmod +x gradlew
           ./gradlew :composeApp:assembleRelease -PappVersion=${{ env.APP_VERSION }} -PappVersionCode=${{ env.APP_VERSION_CODE }}
+        env:
+          ANDROID_KEYSTORE_PATH: "release.keystore"
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
 
       - name: Android用apkのファイル名の変更
         run: |
