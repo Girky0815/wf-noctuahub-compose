@@ -1,21 +1,25 @@
 package jp.girky.wf_noctuahub.platform
 
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageInstaller
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import jp.girky.wf_noctuahub.MainActivity
 import jp.girky.wf_noctuahub.NoctuaApp
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import java.io.File
 import java.io.FileInputStream
 
 class AndroidAppUpdater : AppUpdater {
     override val isAndroid: Boolean = true
+
+    private val _installProgress = MutableStateFlow(InstallProgress.IDLE)
+    override val installProgress: StateFlow<InstallProgress> = _installProgress
+
     private val context: Context
         get() = NoctuaApp.getContext()
 
@@ -65,6 +69,7 @@ class AndroidAppUpdater : AppUpdater {
         if (!file.exists()) return
 
         try {
+            _installProgress.value = InstallProgress.INSTALLING
             val packageInstaller = context.packageManager.packageInstaller
             val params = PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL)
             
@@ -108,8 +113,13 @@ class AndroidAppUpdater : AppUpdater {
             session.commit(pendingIntent.intentSender)
             session.close()
         } catch (e: Exception) {
+            _installProgress.value = InstallProgress.FAILED
             e.printStackTrace()
         }
+    }
+
+    override fun setInstallProgress(progress: InstallProgress) {
+        _installProgress.value = progress
     }
 }
 

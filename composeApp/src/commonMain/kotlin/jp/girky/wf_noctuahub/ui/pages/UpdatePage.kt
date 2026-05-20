@@ -92,6 +92,9 @@ fun UpdatePage(
     // インストール権限の監視State
     var hasInstallPermission by remember { mutableStateOf(appUpdater.checkInstallPermission()) }
 
+    // インストール進捗の監視
+    val installProgressState by appUpdater.installProgress.collectAsState()
+
     // セマンティックバージョンの比較ロジック
     fun isNewerVersion(current: String, latest: String): Boolean {
         val currClean = current.trim().removePrefix("v").removeSuffix("-dev")
@@ -249,6 +252,32 @@ fun UpdatePage(
     LaunchedEffect(status) {
         if (status == UpdateStatus.READY_TO_INSTALL) {
             hasInstallPermission = appUpdater.checkInstallPermission()
+        }
+    }
+
+    // インストール結果のハンドリング用Effect
+    LaunchedEffect(installProgressState) {
+        when (installProgressState) {
+            jp.girky.wf_noctuahub.platform.InstallProgress.CANCELLED -> {
+                if (status == UpdateStatus.INSTALLING) {
+                    status = UpdateStatus.READY_TO_INSTALL
+                    appUpdater.setInstallProgress(jp.girky.wf_noctuahub.platform.InstallProgress.IDLE)
+                }
+            }
+            jp.girky.wf_noctuahub.platform.InstallProgress.FAILED -> {
+                if (status == UpdateStatus.INSTALLING) {
+                    errorMessage = "インストールが失敗したか、キャンセルされました。"
+                    status = UpdateStatus.ERROR
+                    appUpdater.setInstallProgress(jp.girky.wf_noctuahub.platform.InstallProgress.IDLE)
+                }
+            }
+            jp.girky.wf_noctuahub.platform.InstallProgress.SUCCESS -> {
+                if (status == UpdateStatus.INSTALLING) {
+                    status = UpdateStatus.UP_TO_DATE
+                    appUpdater.setInstallProgress(jp.girky.wf_noctuahub.platform.InstallProgress.IDLE)
+                }
+            }
+            else -> {}
         }
     }
 
