@@ -55,9 +55,11 @@ jobs:
           fi
 
       - name: 署名用Keystoreの復元
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
         run: |
-          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > composeApp/release.keystore
-        if: "${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}"
+          echo "$KEYSTORE_BASE64" | base64 -d > composeApp/release.keystore
+        if: env.KEYSTORE_BASE64 != ''
 
       - name: Android用apkのビルド
         run: |
