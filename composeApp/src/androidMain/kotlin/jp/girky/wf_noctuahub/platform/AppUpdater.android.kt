@@ -7,7 +7,6 @@ import android.content.pm.PackageInstaller
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import jp.girky.wf_noctuahub.MainActivity
 import jp.girky.wf_noctuahub.NoctuaApp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -87,15 +86,9 @@ class AndroidAppUpdater : AppUpdater {
                 }
             }
 
-            // システム（フォアグラウンド）権限で「アプリを更新しますか？」ダイアログを自動かつ確実に最前面で起動してもらうため、
-            // commit に渡す PendingIntent を getActivity で作成します。
-            // これにより、バックグラウンドActivity起動制限に引っかからずにプロンプトが表示され、
-            // インストール成功後の自動再起動は静的レシーバー（MyPackageReplacedReceiver）が確実に実行します！
-            val statusIntent = Intent(context, MainActivity::class.java).apply {
-                action = Intent.ACTION_MAIN
-                addCategory(Intent.CATEGORY_LAUNCHER)
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
+            // PackageInstaller からのインストールステータス更新を UpdateStatusReceiver で受信するため、
+            // commit に渡す PendingIntent を getBroadcast で作成します。
+            val statusIntent = Intent(context, UpdateStatusReceiver::class.java)
             
             val pendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
@@ -103,7 +96,7 @@ class AndroidAppUpdater : AppUpdater {
                 PendingIntent.FLAG_UPDATE_CURRENT
             }
 
-            val pendingIntent = PendingIntent.getActivity(
+            val pendingIntent = PendingIntent.getBroadcast(
                 context,
                 0,
                 statusIntent,
