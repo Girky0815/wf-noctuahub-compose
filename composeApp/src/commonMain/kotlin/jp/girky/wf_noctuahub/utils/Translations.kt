@@ -676,8 +676,8 @@ object Translations {
     "HeatFissuresEventName" to "サーミアの裂け目",
     "Razorback" to "Razorback Armada",
     "RazorbackArmada" to "Razorback Armada",
-    "Fomorian" to "バロール・フォーモリアン",
-    "BalorFomorian" to "バロール・フォーモリアン"
+    "Fomorian" to "フォーモリアン戦艦の脅威",
+    "BalorFomorian" to "フォーモリアン戦艦の脅威"
   )
 
   fun translateEvent(eventDescOrTag: String): String {
@@ -691,7 +691,7 @@ object Translations {
     if (lower.contains("ghoul")) return "グール粛清"
     if (lower.contains("heatfissures")) return "サーミアの裂け目"
     if (lower.contains("razorback")) return "Razorback Armada"
-    if (lower.contains("fomorian")) return "バロール・フォーモリアン"
+    if (lower.contains("fomorian")) return "フォーモリアン戦艦の脅威"
 
     return eventDescOrTag
   }
