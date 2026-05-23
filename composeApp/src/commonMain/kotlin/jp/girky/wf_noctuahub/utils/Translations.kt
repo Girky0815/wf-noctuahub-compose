@@ -261,6 +261,7 @@ object Translations {
   "RaceHorse" to "バトルケイス",
   "HorseCombotOnly" to "バトルケイス",
   "VoidAberration" to "バンパイヤ・リミナス",
+  "GenericFortifiedFoesWeakpointAura" to "弱点ハイライト",
   "HordeWeakPoints" to "弱点いっぱい",
   "GrenadesOnly" to "アンフォールに弱い敵",
   "GrenadeSpawnAura" to "アンフォールスポーン",

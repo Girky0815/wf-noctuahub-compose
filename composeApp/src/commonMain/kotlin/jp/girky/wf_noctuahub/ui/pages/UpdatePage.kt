@@ -290,6 +290,7 @@ fun UpdatePage(
       modifier = Modifier
         .fillMaxWidth()
         .align(Alignment.TopCenter)
+        .padding(bottom = 88.dp)
         .verticalScroll(rememberScrollState()),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
