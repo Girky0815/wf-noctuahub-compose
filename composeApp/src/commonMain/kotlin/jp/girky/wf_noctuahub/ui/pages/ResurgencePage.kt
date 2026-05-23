@@ -13,8 +13,10 @@ import jp.girky.wf_noctuahub.data.api.model.WorldStateResponse
 import jp.girky.wf_noctuahub.ui.components.ui.ListGroup
 import jp.girky.wf_noctuahub.ui.components.ui.ListTile
 import jp.girky.wf_noctuahub.ui.components.ui.SectionTitle
+import jp.girky.wf_noctuahub.ui.components.ui.EtaText
 import jp.girky.wf_noctuahub.utils.Translations
 import jp.girky.wf_noctuahub.utils.WikiUtils
+import kotlinx.datetime.Instant
 
 @Composable
 fun ResurgencePage(
@@ -29,6 +31,8 @@ fun ResurgencePage(
         return
     }
 
+    val expiryLong = resurgence.expiry?.date?.numberLong?.toLongOrNull()
+    val expiryString = expiryLong?.let { Instant.fromEpochMilliseconds(it).toString() }
     val manifest = resurgence.manifest ?: emptyList()
     
     // Powersuits を含むものを Prime Warframe として抽出
@@ -47,17 +51,38 @@ fun ResurgencePage(
         modifier = Modifier.fillMaxSize().padding(16.dp)
     ) {
         item {
-            Text(
-                text = "Prime Resurgence",
-                style = MaterialTheme.typography.displaySmall,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Prime Resurgence",
+                    style = MaterialTheme.typography.displaySmall,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                if (expiryString != null) {
+                    Card(
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        ),
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
+                    ) {
+                        Box(modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)) {
+                            EtaText(
+                                expiryString = expiryString,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+                    }
+                }
+            }
             Text(
                 text = "過去の Prime が期間限定で復活。",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(bottom = 24.dp)
+                modifier = Modifier.padding(top = 8.dp, bottom = 24.dp)
             )
         }
 
