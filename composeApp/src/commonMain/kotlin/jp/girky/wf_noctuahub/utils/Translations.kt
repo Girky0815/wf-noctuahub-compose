@@ -238,7 +238,6 @@ object Translations {
     "Darkness" to "ソル追放",
     "LowEnergy" to "低エネルギー",
     "HighDamage" to "被ダメージ増加",
-    "FireAndIce" to "エクシマス・カバル(炎と氷)",
     "Escapist" to "静かなる撤退",
     "JadeGuardian" to "ジェイドガーディアン",
     "NC_SpikeCeiling" to "落下する破片",
@@ -253,6 +252,7 @@ object Translations {
     "UnseenFoes" to "隠れた脅威",
     "GiantRealm" to "巨人化",
     "NC_SlipAndSlide" to "摩擦なし",
+    "SlipAndSlide" to "摩擦なし",
     // "ArbitersNightmareLawyer" to "仲裁ドローン", 
     "ArbitrationDrones" to "仲裁ドローン",
     "HeadShotsOnly" to "弱点のみにダメージ可能(=封鎖装甲)",
@@ -260,13 +260,23 @@ object Translations {
     "BasicLootCreatures" to "",
     "RaceHorse" to "バトルケイス",
     "HorseCombotOnly" to "バトルケイス",
+    "VoidAberration" to "バンパイヤ・リミナス",
+    "HordeWeakPoints" to "弱点いっぱい",
+    "GrenadesOnly" to "アンフォールに弱い敵",
+    "GrenadeSpawnAura" to "アンフォールスポーン",
+    "BasicRace" to "通常",
     
     // エクシマス・カバル
     "BlitzLeech" to "エクシマス・カバル: リーチブリッツ",
+    "ToxicLeech" to "エクシマス・カバル: トキシックリーチ",
+    "FireAndIce" to "エクシマス・カバル: 火と氷",
+    "ToxicFire" to "エクシマス・カバル: トキシックフレイム",
+    "FreezeInShoot" to "エクシマス・カバル: フローズンライト",
 
     // ボス
     "HyenaPack" to "Hyenaパック",
     "InfestedBoyBand" to "テクノサイト・コーダ",
+    "Raptor2" to "Raptors",
 
   )
 
