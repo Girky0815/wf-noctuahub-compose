@@ -119,7 +119,67 @@ class WarframeRepository(private val apiClient: WarframeApiClient) {
     val cleaned = uniqueName.replace("/Lotus/StoreItems/", "/Lotus/")
     localizationDict[cleaned]?.let { return it }
     
-    return localizationDict[uniqueName] ?: uniqueName
+    localizationDict[uniqueName]?.let { return it }
+
+    // もし uniqueName が /Lotus/ で始まらない rawName（例: "CeramicDagger", "Zylok", "Saryn", "Mirage"）の場合
+    if (!uniqueName.startsWith("/Lotus/")) {
+      val suffix = "/$uniqueName"
+      val cleanRaw = uniqueName.replace(" ", "")
+      val cleanSuffix = "/$cleanRaw"
+
+      // 優先順位 1: キーの値 (value) が rawName と大文字小文字無視で完全一致し、
+      // かつキーが /Lotus/Powersuits/ で始まるものを探す (例: "Mirage" -> "/Lotus/Powersuits/Harlequin/Harlequin")
+      val valuePowersuitsMatch = localizationDict.entries.find { (key, value) ->
+        key.startsWith("/Lotus/Powersuits/", ignoreCase = true) && value.equals(uniqueName, ignoreCase = true)
+      }
+      if (valuePowersuitsMatch != null) {
+        return valuePowersuitsMatch.value
+      }
+
+      // 優先順位 2: キーの値 (value) が rawName と大文字小文字無視で完全一致し、
+      // かつキーが /Lotus/Weapons/ で始まるものを探す
+      val valueWeaponsMatch = localizationDict.entries.find { (key, value) ->
+        key.startsWith("/Lotus/Weapons/", ignoreCase = true) && value.equals(uniqueName, ignoreCase = true)
+      }
+      if (valueWeaponsMatch != null) {
+        return valueWeaponsMatch.value
+      }
+
+      // 優先順位 3: Warframe（フレーム）のパスでの末尾一致（例: /Lotus/Powersuits/...）
+      val warframeMatch = localizationDict.entries.find { (key, _) ->
+        key.startsWith("/Lotus/Powersuits/", ignoreCase = true) && 
+        (key.endsWith(suffix, ignoreCase = true) || key.endsWith(cleanSuffix, ignoreCase = true))
+      }
+      if (warframeMatch != null) {
+        return warframeMatch.value
+      }
+
+      // 優先順位 4: Weapon（武器）のパスでの末尾一致（例: /Lotus/Weapons/...）
+      val weaponMatch = localizationDict.entries.find { (key, _) ->
+        key.startsWith("/Lotus/Weapons/", ignoreCase = true) && 
+        (key.endsWith(suffix, ignoreCase = true) || key.endsWith(cleanSuffix, ignoreCase = true))
+      }
+      if (weaponMatch != null) {
+        return weaponMatch.value
+      }
+
+      // 優先順位 5: 一般的な末尾一致
+      val suffixMatch = localizationDict.entries.find { (key, _) ->
+        key.endsWith(suffix, ignoreCase = true)
+      }
+      if (suffixMatch != null) {
+        return suffixMatch.value
+      }
+
+      val cleanSuffixMatch = localizationDict.entries.find { (key, _) ->
+        key.endsWith(cleanSuffix, ignoreCase = true)
+      }
+      if (cleanSuffixMatch != null) {
+        return cleanSuffixMatch.value
+      }
+    }
+    
+    return uniqueName
   }
 
   /**

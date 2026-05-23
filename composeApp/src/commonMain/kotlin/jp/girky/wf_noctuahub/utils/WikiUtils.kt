@@ -5,13 +5,22 @@ package jp.girky.wf_noctuahub.utils
  */
 object WikiUtils {
 
-  // インカーノン武器の内部名（API値）から Wiki 用の英語正式名へのマッピング
   private val incarnonNameMap = mapOf(
     "CeramicDagger" to "Ceramic Dagger",
     "DualToxocyst" to "Dual Toxocyst",
     "AckBrunt" to "Ack & Brunt",
-    "NamiSolo" to "Nami Solo"
+    "DualRaza" to "Dual Raza",
+    "NamiSolo" to "Nami Solo",
+    "DualIchor" to "Dual Ichor",
+    "ReaperPrime" to "Reaper Prime"
   )
+
+  /**
+   * インカーノン武器の内部名（API値）を正規化された英語正式名（スペースあり）に変換する
+   */
+  fun getNormalizedIncarnonName(rawChoice: String): String {
+    return incarnonNameMap[rawChoice] ?: rawChoice
+  }
 
   /**
    * Prime Resurgence の Warframe 用 Wiki URL を生成する
@@ -61,7 +70,7 @@ object WikiUtils {
    * @param rawChoice APIから返される名前（例: "Dual Toxocyst"）
    */
   fun getCircuitIncarnonUrl(rawChoice: String): String {
-    val normalized = incarnonNameMap[rawChoice] ?: rawChoice
+    val normalized = getNormalizedIncarnonName(rawChoice)
     val encoded = normalized.uppercase()
       .replace("&", "＆")
       .replace(" ", "%20")

@@ -59,7 +59,12 @@ fun CircuitPage(
           ListGroup {
             val rewardItems: List<String> = if (circuitReward.choices != null) circuitReward.choices!! else listOf<String>()
             for (itemName in rewardItems) {
-              val translated = onLocalize(itemName)
+              val normalizedName = if (circuitReward.circuitCategory == "EXC_HARD") {
+                WikiUtils.getNormalizedIncarnonName(itemName)
+              } else {
+                itemName
+              }
+              val translated = onLocalize(normalizedName)
               ListTile(
                 title = translated,
                 trailingContent = {
