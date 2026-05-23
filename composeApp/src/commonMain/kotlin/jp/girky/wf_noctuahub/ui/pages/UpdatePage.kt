@@ -32,6 +32,7 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.utils.io.*
+import io.ktor.client.plugins.HttpTimeout
 import jp.girky.wf_noctuahub.platform.getAppUpdater
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -172,7 +173,13 @@ fun UpdatePage(
     coroutineScope.launch(Dispatchers.IO) {
       status = UpdateStatus.DOWNLOADING
       downloadProgress = 0f
-      val client = HttpClient(CIO)
+      val client = HttpClient(CIO) {
+        install(HttpTimeout) {
+          requestTimeoutMillis = HttpTimeout.INFINITE_TIMEOUT_MS
+          connectTimeoutMillis = 300000 // 300秒
+          socketTimeoutMillis = 300000 // 300秒
+        }
+      }
       try {
         val tempDir = java.lang.System.getProperty("java.io.tmpdir")
         val fileName = if (isAndroid) "noctuahub_update.apk" else "noctuahub_update.exe"
