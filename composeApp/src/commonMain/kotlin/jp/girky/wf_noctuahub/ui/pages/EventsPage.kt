@@ -232,6 +232,16 @@ fun EventsPage(
                             val health = (eventGoal.healthPct ?: 1.0).toFloat()
                             val healthPercent = String.format("%.1f", health * 100)
                             
+                            val relayName = eventGoal.node?.let { onLocalize(it) }
+                            if (relayName != null) {
+                                Text(
+                                    text = "襲撃対象: $relayName",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(bottom = 8.dp)
+                                )
+                            }
+                            
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween

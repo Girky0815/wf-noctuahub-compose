@@ -96,6 +96,9 @@ class WarframeRepository(private val apiClient: WarframeApiClient) {
                 localizationDict[item.uniqueName] = formatName(item.name)
             }
         }
+
+        // イベント専用ノードの手動マッピングを追加
+        localizationDict["EventNode5"] = "Kronia リレー (土星)"
     }
 
     /**
