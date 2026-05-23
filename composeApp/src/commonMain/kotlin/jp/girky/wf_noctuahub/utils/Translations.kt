@@ -601,7 +601,7 @@ object Translations {
   "SeasonDailyKillEnemiesWithHeadshots" to Pair("マークスマン", "ヘッドショットで敵を40体倒す"),
   "SeasonDailyKillEnemiesWhileOnKDrive" to Pair("スリルライダー", "K-ドライブ、ケイス、ベロシポッド、アトミサイクルに乗った状態で敵を20体倒す"),
   "SeasonDailyKillEnemiesWithSecondary" to Pair("小は大を征す", "セカンダリ武器で敵を150体倒す"),
-  "SeasonDailyMercyKill" to Pair("慈悲なし", "Mercy で敵を1体倒す")
+  "SeasonDailyMercyKill" to Pair("慈悲なし", "Mercy で敵を1体倒す"),
 
   "SeasonDailyVisitFeaturedDojo" to Pair("旅行目的", "特選Dojoを訪れる"),
   "SeasonDailyDeployAirSupport" to Pair("風通し良好", "エアリアルサポートチャージを展開する"),
