@@ -49,7 +49,7 @@ fun ResurgencePage(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             Text(
-                text = "過去の Prime アイテムが期間限定で復活。アヤを使用して設計図を入手しましょう。",
+                text = "過去の Prime が期間限定で復活。",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 24.dp)

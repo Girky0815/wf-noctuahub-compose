@@ -1,10 +1,7 @@
 package jp.girky.wf_noctuahub.data.repository
 
 import jp.girky.wf_noctuahub.data.api.WarframeApiClient
-import jp.girky.wf_noctuahub.data.api.model.ExportCustomsResponse
-import jp.girky.wf_noctuahub.data.api.model.ExportRegion
-import jp.girky.wf_noctuahub.data.api.model.ExportRegionsResponse
-import jp.girky.wf_noctuahub.data.api.model.WorldStateResponse
+import jp.girky.wf_noctuahub.data.api.model.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -39,7 +36,7 @@ class WarframeRepository(private val apiClient: WarframeApiClient) {
         if (customsLine != null) {
             val customsResponse: ExportCustomsResponse = apiClient.fetchExportJson(customsLine)
             customsResponse.exportCustoms?.forEach { item ->
-                localizationDict[item.uniqueName] = item.name
+                localizationDict[item.uniqueName] = formatName(item.name)
             }
         }
 
@@ -50,19 +47,75 @@ class WarframeRepository(private val apiClient: WarframeApiClient) {
             regionsResponse.exportRegions?.forEach { region ->
                 val planet = region.systemName ?: ""
                 val formatted = if (planet.isNotBlank()) "${region.name} ($planet)" else region.name
-                localizationDict[region.uniqueName] = formatted
+                localizationDict[region.uniqueName] = formatName(formatted)
                 regionDict[region.uniqueName] = region
             }
         }
 
-        // TODO: 必要に応じて Weapons, Warframes, Resources など他の Export データも辞書に追加する
+        // Warframes (フレーム名) の取得
+        val warframesLine = manifest.find { it.startsWith("ExportWarframes_ja.json") }
+        if (warframesLine != null) {
+            val warframesResponse: ExportWarframesResponse = apiClient.fetchExportJson(warframesLine)
+            warframesResponse.exportWarframes?.forEach { item ->
+                localizationDict[item.uniqueName] = formatName(item.name)
+            }
+        }
+
+        // Weapons (武器名) の取得
+        val weaponsLine = manifest.find { it.startsWith("ExportWeapons_ja.json") }
+        if (weaponsLine != null) {
+            val weaponsResponse: ExportWeaponsResponse = apiClient.fetchExportJson(weaponsLine)
+            weaponsResponse.exportWeapons?.forEach { item ->
+                localizationDict[item.uniqueName] = formatName(item.name)
+            }
+        }
+
+        // Resources (リソース名) の取得
+        val resourcesLine = manifest.find { it.startsWith("ExportResources_ja.json") }
+        if (resourcesLine != null) {
+            val resourcesResponse: ExportResourcesResponse = apiClient.fetchExportJson(resourcesLine)
+            resourcesResponse.exportResources?.forEach { item ->
+                localizationDict[item.uniqueName] = formatName(item.name)
+            }
+        }
+
+        // Gear (ギア名) の取得
+        val gearLine = manifest.find { it.startsWith("ExportGear_ja.json") }
+        if (gearLine != null) {
+            val gearResponse: ExportGearResponse = apiClient.fetchExportJson(gearLine)
+            gearResponse.exportGear?.forEach { item ->
+                localizationDict[item.uniqueName] = formatName(item.name)
+            }
+        }
+
+        // Sentinels (センチネル・ペット名) の取得
+        val sentinelsLine = manifest.find { it.startsWith("ExportSentinels_ja.json") }
+        if (sentinelsLine != null) {
+            val sentinelsResponse: ExportSentinelsResponse = apiClient.fetchExportJson(sentinelsLine)
+            sentinelsResponse.exportSentinels?.forEach { item ->
+                localizationDict[item.uniqueName] = formatName(item.name)
+            }
+        }
+    }
+
+    /**
+     * 全角記号を半角記号に正規化する
+     */
+    private fun formatName(name: String): String {
+        return name
+            .replace("％", "%")
+            .replace("：", ": ")
     }
 
     /**
      * アイテムの内部名（uniqueName）を日本語に翻訳する。
-     * 辞書に存在しない場合はそのまま uniqueName を返すか、末尾の階層だけを返すなどのフォールバックを行う
+     * 表記ゆれを正規化したキーでもマップを検索する
      */
     fun localize(uniqueName: String): String {
+        // "/Lotus/StoreItems/" を "/Lotus/" に置換したキーでも検索する
+        val cleaned = uniqueName.replace("/Lotus/StoreItems/", "/Lotus/")
+        localizationDict[cleaned]?.let { return it }
+        
         return localizationDict[uniqueName] ?: uniqueName
     }
 

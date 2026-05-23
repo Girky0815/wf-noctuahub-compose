@@ -36,3 +36,24 @@ data class ExportItem(
     @SerialName("name") val name: String,
     @SerialName("description") val description: String? = null
 )
+
+@Serializable
+data class ExportWarframesResponse(
+    @SerialName("ExportWarframes") val exportWarframes: List<ExportItem>? = emptyList()
+)
+
+@Serializable
+data class ExportWeaponsResponse(
+    @SerialName("ExportWeapons") val exportWeapons: List<ExportItem>? = emptyList()
+)
+
+@Serializable
+data class ExportGearResponse(
+    @SerialName("ExportGear") val exportGear: List<ExportItem>? = emptyList()
+)
+
+@Serializable
+data class ExportSentinelsResponse(
+    @SerialName("ExportSentinels") val exportSentinels: List<ExportItem>? = emptyList()
+)
+
