@@ -5,19 +5,24 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ChevronRight
 import jp.girky.wf_noctuahub.data.api.model.WorldStateResponse
 import jp.girky.wf_noctuahub.data.api.model.WsEndlessXpChoice
 import jp.girky.wf_noctuahub.ui.components.ui.ListGroup
 import jp.girky.wf_noctuahub.ui.components.ui.ListTile
 import jp.girky.wf_noctuahub.ui.components.ui.SectionTitle
 import jp.girky.wf_noctuahub.utils.Translations
+import jp.girky.wf_noctuahub.utils.WikiUtils
 
 @Composable
 fun CircuitPage(
     worldState: WorldStateResponse?,
     onLocalize: (String) -> String
 ) {
+    val uriHandler = LocalUriHandler.current
     val circuitRewards: List<WsEndlessXpChoice> = worldState?.endlessXpChoices ?: emptyList<WsEndlessXpChoice>()
 
     LazyColumn(
@@ -55,7 +60,24 @@ fun CircuitPage(
                         val rewardItems: List<String> = if (circuitReward.choices != null) circuitReward.choices!! else listOf<String>()
                         for (itemName in rewardItems) {
                             val translated = onLocalize(itemName)
-                            ListTile(title = translated)
+                            ListTile(
+                                title = translated,
+                                trailingContent = {
+                                    Icon(
+                                        imageVector = Icons.Rounded.ChevronRight,
+                                        contentDescription = "Wikiを開く",
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                                    )
+                                },
+                                onClick = {
+                                    val url = if (circuitReward.circuitCategory == "EXC_NORMAL") {
+                                        WikiUtils.getCircuitWarframeUrl(itemName)
+                                    } else {
+                                        WikiUtils.getCircuitIncarnonUrl(itemName)
+                                    }
+                                    uriHandler.openUri(url)
+                                }
+                            )
                         }
                     }
                     Spacer(modifier = Modifier.height(24.dp))

@@ -5,18 +5,23 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ChevronRight
 import jp.girky.wf_noctuahub.data.api.model.WorldStateResponse
 import jp.girky.wf_noctuahub.ui.components.ui.ListGroup
 import jp.girky.wf_noctuahub.ui.components.ui.ListTile
 import jp.girky.wf_noctuahub.ui.components.ui.SectionTitle
 import jp.girky.wf_noctuahub.utils.Translations
+import jp.girky.wf_noctuahub.utils.WikiUtils
 
 @Composable
 fun ResurgencePage(
     worldState: WorldStateResponse?,
     onLocalize: (String) -> String
 ) {
+    val uriHandler = LocalUriHandler.current
     val resurgence = worldState?.primeVaultTraders?.firstOrNull() ?: run {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
             Text("Prime Resurgence 情報を取得できませんでした。")
@@ -63,7 +68,18 @@ fun ResurgencePage(
                     for (resItem in primeWarframes) {
                         val name = onLocalize(resItem.itemType ?: "")
                         ListTile(
-                            title = name
+                            title = name,
+                            trailingContent = {
+                                Icon(
+                                    imageVector = Icons.Rounded.ChevronRight,
+                                    contentDescription = "Wikiを開く",
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                                )
+                            },
+                            onClick = {
+                                val url = WikiUtils.getResurgenceWarframeUrl(name)
+                                uriHandler.openUri(url)
+                            }
                         )
                     }
                 }
@@ -78,7 +94,18 @@ fun ResurgencePage(
                     for (resItem in primeWeapons) {
                         val name = onLocalize(resItem.itemType ?: "")
                         ListTile(
-                            title = name
+                            title = name,
+                            trailingContent = {
+                                Icon(
+                                    imageVector = Icons.Rounded.ChevronRight,
+                                    contentDescription = "Wikiを開く",
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                                )
+                            },
+                            onClick = {
+                                val url = WikiUtils.getResurgenceWeaponUrl(name)
+                                uriHandler.openUri(url)
+                            }
                         )
                     }
                 }
