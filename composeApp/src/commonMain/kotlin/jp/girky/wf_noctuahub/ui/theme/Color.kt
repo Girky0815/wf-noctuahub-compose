@@ -75,5 +75,5 @@ val surfaceContainerHighDark = Color(0xFF19211E)
 val surfaceContainerHighestDark = Color(0xFF1E2824)
 
 object CustomColors {
-    var black = false
+  var black = false
 }

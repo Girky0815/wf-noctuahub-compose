@@ -19,70 +19,70 @@ import jp.girky.wf_noctuahub.utils.WikiUtils
 
 @Composable
 fun CircuitPage(
-    worldState: WorldStateResponse?,
-    onLocalize: (String) -> String
+  worldState: WorldStateResponse?,
+  onLocalize: (String) -> String
 ) {
-    val uriHandler = LocalUriHandler.current
-    val circuitRewards: List<WsEndlessXpChoice> = worldState?.endlessXpChoices ?: emptyList<WsEndlessXpChoice>()
+  val uriHandler = LocalUriHandler.current
+  val circuitRewards: List<WsEndlessXpChoice> = worldState?.endlessXpChoices ?: emptyList<WsEndlessXpChoice>()
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(16.dp)
-    ) {
-        item {
-            Text(
-                text = "サーキット",
-                style = MaterialTheme.typography.displaySmall,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-            Text(
-                text = "デュヴィリのサーキットで獲得可能な報酬リストです。毎週更新されます。",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(bottom = 24.dp)
-            )
-        }
-
-        if (circuitRewards.isEmpty()) {
-            item {
-                Text("現在サーキット報酬の情報がありません。")
-            }
-        } else {
-            for (circuitReward in circuitRewards) {
-                item {
-                    val categoryName = if (circuitReward.circuitCategory != null) {
-                        Translations.translateCircuitCategory(circuitReward.circuitCategory)
-                    } else {
-                        "不明"
-                    }
-                    SectionTitle(title = categoryName, modifier = Modifier.padding(bottom = 8.dp))
-                    ListGroup {
-                        val rewardItems: List<String> = if (circuitReward.choices != null) circuitReward.choices!! else listOf<String>()
-                        for (itemName in rewardItems) {
-                            val translated = onLocalize(itemName)
-                            ListTile(
-                                title = translated,
-                                trailingContent = {
-                                    Icon(
-                                        imageVector = Icons.Rounded.ChevronRight,
-                                        contentDescription = "Wikiを開く",
-                                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
-                                    )
-                                },
-                                onClick = {
-                                    val url = if (circuitReward.circuitCategory == "EXC_NORMAL") {
-                                        WikiUtils.getCircuitWarframeUrl(itemName)
-                                    } else {
-                                        WikiUtils.getCircuitIncarnonUrl(itemName)
-                                    }
-                                    uriHandler.openUri(url)
-                                }
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(24.dp))
-                }
-            }
-        }
+  LazyColumn(
+    modifier = Modifier.fillMaxSize().padding(16.dp)
+  ) {
+    item {
+      Text(
+        text = "サーキット",
+        style = MaterialTheme.typography.displaySmall,
+        color = MaterialTheme.colorScheme.onSurface,
+        modifier = Modifier.padding(bottom = 8.dp)
+      )
+      Text(
+        text = "デュヴィリのサーキットで獲得可能な報酬リストです。毎週更新されます。",
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.padding(bottom = 24.dp)
+      )
     }
+
+    if (circuitRewards.isEmpty()) {
+      item {
+        Text("現在サーキット報酬の情報がありません。")
+      }
+    } else {
+      for (circuitReward in circuitRewards) {
+        item {
+          val categoryName = if (circuitReward.circuitCategory != null) {
+            Translations.translateCircuitCategory(circuitReward.circuitCategory)
+          } else {
+            "不明"
+          }
+          SectionTitle(title = categoryName, modifier = Modifier.padding(bottom = 8.dp))
+          ListGroup {
+            val rewardItems: List<String> = if (circuitReward.choices != null) circuitReward.choices!! else listOf<String>()
+            for (itemName in rewardItems) {
+              val translated = onLocalize(itemName)
+              ListTile(
+                title = translated,
+                trailingContent = {
+                  Icon(
+                    imageVector = Icons.Rounded.ChevronRight,
+                    contentDescription = "Wikiを開く",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                  )
+                },
+                onClick = {
+                  val url = if (circuitReward.circuitCategory == "EXC_NORMAL") {
+                    WikiUtils.getCircuitWarframeUrl(itemName)
+                  } else {
+                    WikiUtils.getCircuitIncarnonUrl(itemName)
+                  }
+                  uriHandler.openUri(url)
+                }
+              )
+            }
+          }
+          Spacer(modifier = Modifier.height(24.dp))
+        }
+      }
+    }
+  }
 }

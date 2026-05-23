@@ -24,44 +24,44 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun CenteredLoadingIndicator(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        LoadingIndicator()
-    }
+  Box(
+    modifier = modifier.fillMaxSize(),
+    contentAlignment = Alignment.Center
+  ) {
+    LoadingIndicator()
+  }
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ExpressivePullToRefreshIndicator(
-    isRefreshing: Boolean,
-    state: PullToRefreshState,
-    modifier: Modifier = Modifier
+  isRefreshing: Boolean,
+  state: PullToRefreshState,
+  modifier: Modifier = Modifier
 ) {
-    AnimatedVisibility(
-        visible = isRefreshing || state.distanceFraction > 0f,
-        enter = fadeIn() + slideInVertically(initialOffsetY = { -it }),
-        exit = fadeOut() + slideOutVertically(targetOffsetY = { -it }),
-        modifier = modifier
+  AnimatedVisibility(
+    visible = isRefreshing || state.distanceFraction > 0f,
+    enter = fadeIn() + slideInVertically(initialOffsetY = { -it }),
+    exit = fadeOut() + slideOutVertically(targetOffsetY = { -it }),
+    modifier = modifier
+  ) {
+    Box(
+      modifier = Modifier.graphicsLayer {
+        val scale = if (isRefreshing) 1f else state.distanceFraction.coerceIn(0f, 1f)
+        scaleX = scale
+        scaleY = scale
+      }
     ) {
-        Box(
-            modifier = Modifier.graphicsLayer {
-                val scale = if (isRefreshing) 1f else state.distanceFraction.coerceIn(0f, 1f)
-                scaleX = scale
-                scaleY = scale
-            }
-        ) {
-            Surface(
-                shape = CircleShape,
-                shadowElevation = 4.dp,
-                color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                modifier = Modifier.padding(top = 16.dp)
-            ) {
-                LoadingIndicator(
-                    modifier = Modifier.padding(12.dp)
-                )
-            }
-        }
+      Surface(
+        shape = CircleShape,
+        shadowElevation = 4.dp,
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+        modifier = Modifier.padding(top = 16.dp)
+      ) {
+        LoadingIndicator(
+          modifier = Modifier.padding(12.dp)
+        )
+      }
     }
+  }
 }

@@ -16,56 +16,56 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun FissureCard(fissure: FissureItem) {
-    var now by remember { mutableStateOf(currentTimeMillis()) }
+  var now by remember { mutableStateOf(currentTimeMillis()) }
 
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(1000)
-            now = currentTimeMillis()
-        }
+  LaunchedEffect(Unit) {
+    while (true) {
+      delay(1000)
+      now = currentTimeMillis()
     }
+  }
 
-    val subtitleText = if (fissure.enemyFaction.isNotBlank() && fissure.enemyFaction != "不明") {
-        if (fissure.minLevel > 0) {
-            "${fissure.missionType} | ${fissure.enemyFaction} (${fissure.minLevel} - ${fissure.maxLevel})"
-        } else {
-            "${fissure.missionType} | ${fissure.enemyFaction}"
-        }
+  val subtitleText = if (fissure.enemyFaction.isNotBlank() && fissure.enemyFaction != "不明") {
+    if (fissure.minLevel > 0) {
+      "${fissure.missionType} | ${fissure.enemyFaction} (${fissure.minLevel} - ${fissure.maxLevel})"
     } else {
-        fissure.missionType
+      "${fissure.missionType} | ${fissure.enemyFaction}"
     }
+  } else {
+    fissure.missionType
+  }
 
-    ListTile(
-        title = fissure.node,
-        subtitle = subtitleText,
-        trailingContent = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.HourglassBottom,
-                    contentDescription = "残り時間",
-                    modifier = Modifier.size(16.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    text = formatTimeRemaining(fissure.expiry, now),
-                    style = jp.girky.wf_noctuahub.ui.theme.getAppTypographyCondensed().bodyMedium.copy(
-                        fontFeatureSettings = "tnum"
-                    ),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
-    )
+  ListTile(
+    title = fissure.node,
+    subtitle = subtitleText,
+    trailingContent = {
+      Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+      ) {
+        Icon(
+          imageVector = Icons.Default.HourglassBottom,
+          contentDescription = "残り時間",
+          modifier = Modifier.size(16.dp),
+          tint = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+          text = formatTimeRemaining(fissure.expiry, now),
+          style = jp.girky.wf_noctuahub.ui.theme.getAppTypographyCondensed().bodyMedium.copy(
+            fontFeatureSettings = "tnum"
+          ),
+          color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+      }
+    }
+  )
 }
 
 private fun formatTimeRemaining(expiryMs: Long, nowMs: Long): String {
-    val remaining = expiryMs - nowMs
-    if (remaining <= 0) return "期限切れ"
-    val totalSeconds = remaining / 1000
-    val m = totalSeconds / 60
-    val s = totalSeconds % 60
-    return "${m.toString().padStart(2, '0')}分${s.toString().padStart(2, '0')}秒"
+  val remaining = expiryMs - nowMs
+  if (remaining <= 0) return "期限切れ"
+  val totalSeconds = remaining / 1000
+  val m = totalSeconds / 60
+  val s = totalSeconds % 60
+  return "${m.toString().padStart(2, '0')}分${s.toString().padStart(2, '0')}秒"
 }

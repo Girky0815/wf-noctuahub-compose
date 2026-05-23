@@ -20,23 +20,23 @@ import androidx.compose.ui.unit.dp
  */
 @Composable
 fun RewardBadge(
-    text: String,
-    modifier: Modifier = Modifier,
-    containerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
-    contentColor: Color = MaterialTheme.colorScheme.onSecondaryContainer
+  text: String,
+  modifier: Modifier = Modifier,
+  containerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
+  contentColor: Color = MaterialTheme.colorScheme.onSecondaryContainer
 ) {
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(containerColor)
-            .padding(horizontal = 8.dp, vertical = 4.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.Bold,
-            color = contentColor
-        )
-    }
+  Box(
+    modifier = modifier
+      .clip(RoundedCornerShape(8.dp))
+      .background(containerColor)
+      .padding(horizontal = 8.dp, vertical = 4.dp),
+    contentAlignment = Alignment.Center
+  ) {
+    Text(
+      text = text,
+      style = MaterialTheme.typography.labelMedium,
+      fontWeight = FontWeight.Bold,
+      color = contentColor
+    )
+  }
 }

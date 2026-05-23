@@ -20,43 +20,43 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 data class ExpressiveButtonOption(
-    val label: String,
-    val icon: ImageVector? = null,
-    val onClick: () -> Unit
+  val label: String,
+  val icon: ImageVector? = null,
+  val onClick: () -> Unit
 )
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ExpressiveButtonGroup(
-    options: List<ExpressiveButtonOption>,
-    selectedIndex: Int,
-    modifier: Modifier = Modifier
+  options: List<ExpressiveButtonOption>,
+  selectedIndex: Int,
+  modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween, Alignment.CenterHorizontally)
-    ) {
-        options.forEachIndexed { index, option ->
-            ToggleButton(
-                checked = selectedIndex == index,
-                onCheckedChange = { option.onClick() },
-                modifier = Modifier.weight(1f).heightIn(min = 48.dp),
-                shapes = when (index) {
-                    0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                    options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
-                    else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
-                }
-            ) {
-                option.icon?.let { icon ->
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = null,
-                        modifier = Modifier.size(ToggleButtonDefaults.IconSize)
-                    )
-                    Spacer(modifier = Modifier.size(ToggleButtonDefaults.IconSpacing))
-                }
-                Text(option.label)
-            }
+  Row(
+    modifier = modifier.fillMaxWidth(),
+    horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween, Alignment.CenterHorizontally)
+  ) {
+    options.forEachIndexed { index, option ->
+      ToggleButton(
+        checked = selectedIndex == index,
+        onCheckedChange = { option.onClick() },
+        modifier = Modifier.weight(1f).heightIn(min = 48.dp),
+        shapes = when (index) {
+          0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+          options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+          else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
         }
+      ) {
+        option.icon?.let { icon ->
+          Icon(
+            imageVector = icon,
+            contentDescription = null,
+            modifier = Modifier.size(ToggleButtonDefaults.IconSize)
+          )
+          Spacer(modifier = Modifier.size(ToggleButtonDefaults.IconSpacing))
+        }
+        Text(option.label)
+      }
     }
+  }
 }

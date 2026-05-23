@@ -7,8 +7,8 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 enum class ThemeMode(val label: String) {
-    SYSTEM_DEFAULT("システム(OS)に連動"),
-    LIGHT("ライトモード"),
-    DARK("ダークモード"),
-    AMOLED_BLACK("AMOLED ブラック")
+  SYSTEM_DEFAULT("システム(OS)に連動"),
+  LIGHT("ライトモード"),
+  DARK("ダークモード"),
+  AMOLED_BLACK("AMOLED ブラック")
 }

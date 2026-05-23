@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
  */
 @Composable
 expect fun BackupRestoreButtons(
-    modifier: Modifier = Modifier,
-    onExport: suspend () -> String,
-    onImport: suspend (String) -> Unit
+  modifier: Modifier = Modifier,
+  onExport: suspend () -> String,
+  onImport: suspend (String) -> Unit
 )

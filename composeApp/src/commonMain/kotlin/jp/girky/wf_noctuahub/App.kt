@@ -86,8 +86,8 @@ enum class Screen(val route: String, val icon: androidx.compose.ui.graphics.vect
 fun App() {
   val coroutineScope = rememberCoroutineScope()
   val appSettings = remember { 
-      val s = jp.girky.wf_noctuahub.data.repository.createSettings()
-      jp.girky.wf_noctuahub.data.repository.AppSettings(s) 
+    val s = jp.girky.wf_noctuahub.data.repository.createSettings()
+    jp.girky.wf_noctuahub.data.repository.AppSettings(s) 
   }
   
   val themeMode by appSettings.themeModeFlow.collectAsState(jp.girky.wf_noctuahub.utils.ThemeMode.SYSTEM_DEFAULT)
@@ -96,9 +96,9 @@ fun App() {
   val seedColor = Color(seedColorArgb.toLong())
   
   val isDark = when (themeMode) {
-      jp.girky.wf_noctuahub.utils.ThemeMode.LIGHT -> false
-      jp.girky.wf_noctuahub.utils.ThemeMode.DARK, jp.girky.wf_noctuahub.utils.ThemeMode.AMOLED_BLACK -> true
-      jp.girky.wf_noctuahub.utils.ThemeMode.SYSTEM_DEFAULT -> androidx.compose.foundation.isSystemInDarkTheme()
+    jp.girky.wf_noctuahub.utils.ThemeMode.LIGHT -> false
+    jp.girky.wf_noctuahub.utils.ThemeMode.DARK, jp.girky.wf_noctuahub.utils.ThemeMode.AMOLED_BLACK -> true
+    jp.girky.wf_noctuahub.utils.ThemeMode.SYSTEM_DEFAULT -> androidx.compose.foundation.isSystemInDarkTheme()
   }
   
   val apiClient = remember { WarframeApiClient() }
@@ -112,319 +112,319 @@ fun App() {
   val isInitialized by viewModel.isInitialized.collectAsState()
   
   LaunchedEffect(Unit) {
-    viewModel.loadInitialData(coroutineScope)
+  viewModel.loadInitialData(coroutineScope)
   }
 
   var currentScreen by remember { mutableStateOf(Screen.Status) }
 
   AppTheme(
-    darkTheme = isDark,
-    seedColor = seedColor,
-    useDynamicColor = useDynamicColor,
-    blackTheme = themeMode == jp.girky.wf_noctuahub.utils.ThemeMode.AMOLED_BLACK
+  darkTheme = isDark,
+  seedColor = seedColor,
+  useDynamicColor = useDynamicColor,
+  blackTheme = themeMode == jp.girky.wf_noctuahub.utils.ThemeMode.AMOLED_BLACK
   ) {
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+  val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
-    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.surfaceContainerHigh) {
-      ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-          ModalDrawerSheet {
-            Text(
-              text = "Noctua Hub",
-              style = MaterialTheme.typography.titleLarge,
-              modifier = Modifier.padding(16.dp)
-            )
-            HorizontalDivider()
-            
-            Column(
-              modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .verticalScroll(rememberScrollState())
-            ) {
-              SectionTitle(title = "一般情報", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
-              ListGroup {
-                listOf(
-                  Screen.Status, 
-                  Screen.Fissures,
-                  Screen.Events, 
-                  Screen.Nightwave, 
-                  Screen.Sortie, 
-                  Screen.Baro, 
-                  Screen.Resurgence, 
-                  Screen.Calendar1999
-                ).forEach { screen ->
-                  val isSelected = currentScreen == screen
-                  ListTile(
-                    title = screen.label,
-                    titleColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-                    titleFontWeight = if (isSelected) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Medium,
-                    leadingIcon = { 
-                      Icon(
-                        screen.icon, 
-                        contentDescription = screen.label,
-                        tint = if (isSelected) MaterialTheme.colorScheme.primary else LocalContentColor.current
-                      ) 
-                    },
-                    containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
-                    onClick = {
-                      currentScreen = screen
-                      coroutineScope.launch { drawerState.close() }
-                    }
-                  )
-                }
-              }
-
-              SectionTitle(title = "中級者向け", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
-              ListGroup {
-                listOf(Screen.Circuit, Screen.ArchonHunt, Screen.Descendia, Screen.Archimedea).forEach { screen ->
-                  val isSelected = currentScreen == screen
-                  ListTile(
-                    title = screen.label,
-                    titleColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-                    titleFontWeight = if (isSelected) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Medium,
-                    leadingIcon = { 
-                      Icon(
-                        screen.icon, 
-                        contentDescription = null,
-                        tint = if (isSelected) MaterialTheme.colorScheme.primary else LocalContentColor.current
-                      ) 
-                    },
-                    containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
-                    onClick = {
-                      currentScreen = screen
-                      coroutineScope.launch { drawerState.close() }
-                    }
-                  )
-                }
-              }
-
-              SectionTitle(title = "システム", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
-              ListGroup {
-                val isSelected = currentScreen == Screen.Settings
-                ListTile(
-                  title = Screen.Settings.label,
-                  titleColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-                  titleFontWeight = if (isSelected) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Medium,
-                  leadingIcon = { 
-                    Icon(
-                      Screen.Settings.icon, 
-                      contentDescription = null,
-                      tint = if (isSelected) MaterialTheme.colorScheme.primary else LocalContentColor.current
-                    ) 
-                  },
-                  containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
-                  onClick = {
-                    currentScreen = Screen.Settings
-                    coroutineScope.launch { drawerState.close() }
-                  }
-                )
-              }
-              
-              Spacer(modifier = Modifier.height(24.dp))
-            }
-          }
-        }
+  Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.surfaceContainerHigh) {
+    ModalNavigationDrawer(
+    drawerState = drawerState,
+    drawerContent = {
+      ModalDrawerSheet {
+      Text(
+        text = "Noctua Hub",
+        style = MaterialTheme.typography.titleLarge,
+        modifier = Modifier.padding(16.dp)
+      )
+      HorizontalDivider()
+      
+      Column(
+        modifier = Modifier
+        .padding(horizontal = 16.dp)
+        .verticalScroll(rememberScrollState())
       ) {
-      Scaffold(
-        containerColor = Color.Transparent,
-        topBar = {
-          @OptIn(ExperimentalMaterial3Api::class)
-          TopAppBar(
-            title = { Text(currentScreen.label) },
-            navigationIcon = {
-              if (currentScreen == Screen.Update) {
-                IconButton(onClick = { currentScreen = Screen.Settings }) {
-                  Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                }
-              } else {
-                IconButton(onClick = { coroutineScope.launch { drawerState.open() } }) {
-                  Icon(Icons.Rounded.Menu, contentDescription = "Menu")
-                }
-              }
-            },
-            actions = {
-              if (currentScreen != Screen.Update) {
-                worldState?.time?.let { timeSec ->
-                  val dt = kotlinx.datetime.Instant.fromEpochSeconds(timeSec).toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault())
-                  val timeStr = "${dt.monthNumber}/${dt.dayOfMonth} ${dt.hour.toString().padStart(2, '0')}:${dt.minute.toString().padStart(2, '0')}:${dt.second.toString().padStart(2, '0')}"
-                  Column(horizontalAlignment = Alignment.End, modifier = Modifier.padding(end = 16.dp)) {
-                    Text(text = "タイムスタンプ", style = MaterialTheme.typography.bodyMedium)
-                    Text(
-                      text = timeStr, 
-                      style = jp.girky.wf_noctuahub.ui.theme.getAppTypographyCondensed().bodyMedium.copy(
-                          fontFeatureSettings = "tnum"
-                      )
-                    )
-                  }
-                }
-              }
-            },
-            colors = TopAppBarDefaults.topAppBarColors(
-              containerColor = Color.Transparent
-            )
-          )
-        },
-        bottomBar = {
-          if (currentScreen != Screen.Update) {
-            NavigationBar {
-              listOf(Screen.Status, Screen.Fissures, Screen.Events, Screen.Settings).forEach { screen ->
-                val isSelected = currentScreen == screen
-                NavigationBarItem(
-                  icon = { Icon(screen.icon, contentDescription = screen.label) },
-                  label = { 
-                    Text(
-                      text = screen.label,
-                      fontWeight = if (isSelected) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Normal
-                    ) 
-                  },
-                  selected = isSelected,
-                  onClick = { currentScreen = screen },
-                  colors = androidx.compose.material3.NavigationBarItemDefaults.colors(
-                    selectedIconColor = MaterialTheme.colorScheme.primary,
-                    selectedTextColor = MaterialTheme.colorScheme.primary,
-                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant
-                  )
-                )
-              }
-            }
-          }
-        }
-      ) { innerPadding ->
-        @OptIn(ExperimentalMaterial3Api::class)
-        val pullState = androidx.compose.material3.pulltorefresh.rememberPullToRefreshState()
-        val isRefreshingState = fetchState == FetchState.LOADING_WORLDSTATE || fetchState == FetchState.LOADING_EXPORT
-        @OptIn(ExperimentalMaterial3Api::class)
-        androidx.compose.material3.pulltorefresh.PullToRefreshBox(
-          state = pullState,
-          isRefreshing = isRefreshingState,
-          onRefresh = { viewModel.loadInitialData(coroutineScope) },
-          indicator = {
-              jp.girky.wf_noctuahub.ui.components.ui.ExpressivePullToRefreshIndicator(
-                  isRefreshing = isRefreshingState,
-                  state = pullState,
-                  modifier = Modifier.align(Alignment.TopCenter)
-              )
+        SectionTitle(title = "一般情報", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
+        ListGroup {
+        listOf(
+          Screen.Status, 
+          Screen.Fissures,
+          Screen.Events, 
+          Screen.Nightwave, 
+          Screen.Sortie, 
+          Screen.Baro, 
+          Screen.Resurgence, 
+          Screen.Calendar1999
+        ).forEach { screen ->
+          val isSelected = currentScreen == screen
+          ListTile(
+          title = screen.label,
+          titleColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+          titleFontWeight = if (isSelected) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Medium,
+          leadingIcon = { 
+            Icon(
+            screen.icon, 
+            contentDescription = screen.label,
+            tint = if (isSelected) MaterialTheme.colorScheme.primary else LocalContentColor.current
+            ) 
           },
-          modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)
-        ) {
-          if (fetchState == FetchState.ERROR) {
-            Box(modifier = Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
-              Text(text = "エラー: $errorMessage", color = MaterialTheme.colorScheme.error)
-            }
-          } else if (worldState == null || !isInitialized) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-              Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                @OptIn(androidx.compose.material3.ExperimentalMaterial3ExpressiveApi::class)
-                androidx.compose.material3.LoadingIndicator()
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = loadingMessage ?: "データを取得中...", 
-                    color = MaterialTheme.colorScheme.onBackground,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                    modifier = Modifier.padding(horizontal = 32.dp)
-                )
-              }
-            }
-          } else {
-            when (currentScreen) {
-              Screen.Status -> {
-                StatusPage(
-                  worldState = worldState,
-                  onLocalize = { viewModel.localize(it) }
-                )
-              }
-              Screen.Events -> {
-                EventsPage(
-                  worldState = worldState,
-                  onLocalize = { viewModel.localize(it) }
-                )
-              }
-              Screen.Fissures -> {
-                FissuresPage(
-                  worldState = worldState,
-                  onLocalize = { viewModel.localize(it) },
-                  onGetRegionInfo = { viewModel.getRegionInfo(it) }
-                )
-              }
-              Screen.Nightwave -> {
-                NightwavePage(
-                  worldState = worldState,
-                  onTranslateNightwave = { Translations.translateNightwaveChallenge(it) }
-                )
-              }
-              Screen.Sortie -> {
-                SortiePage(
-                  worldState = worldState,
-                  onLocalize = { viewModel.localize(it) },
-                  onGetRegionInfo = { viewModel.getRegionInfo(it) }
-                )
-              }
-              Screen.Baro -> {
-                BaroPage(
-                  worldState = worldState,
-                  onLocalize = { viewModel.localize(it) }
-                )
-              }
-              Screen.Resurgence -> {
-                ResurgencePage(
-                  worldState = worldState,
-                  onLocalize = { viewModel.localize(it) }
-                )
-              }
-              Screen.Calendar1999 -> {
-                Calendar1999Page(
-                  worldState = worldState,
-                  onLocalize = { viewModel.localize(it) }
-                )
-              }
-              Screen.Circuit -> {
-                CircuitPage(
-                  worldState = worldState,
-                  onLocalize = { viewModel.localize(it) }
-                )
-              }
-              Screen.ArchonHunt -> {
-                ArchonHuntPage(
-                  worldState = worldState,
-                  onLocalize = { viewModel.localize(it) },
-                  onGetRegionInfo = { viewModel.getRegionInfo(it) }
-                )
-              }
-              Screen.Descendia -> {
-                DescendiaPage(
-                  worldState = worldState,
-                  onLocalize = { viewModel.localize(it) }
-                )
-              }
-              Screen.Archimedea -> {
-                ArchimedeaPage(
-                  worldState = worldState,
-                  onLocalize = { viewModel.localize(it) }
-                )
-              }
-              Screen.Settings -> {
-                SettingsPage(
-                  appSettings = appSettings,
-                  worldState = worldState,
-                  errorMessage = errorMessage,
-                  fetchState = fetchState,
-                  onNavigateToUpdate = { currentScreen = Screen.Update }
-                )
-              }
-              Screen.Update -> {
-                jp.girky.wf_noctuahub.ui.pages.UpdatePage(
-                  onBack = { currentScreen = Screen.Settings }
-                )
-              }
-            }
+          containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
+          onClick = {
+            currentScreen = screen
+            coroutineScope.launch { drawerState.close() }
           }
+          )
         }
+        }
+
+        SectionTitle(title = "中級者向け", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
+        ListGroup {
+        listOf(Screen.Circuit, Screen.ArchonHunt, Screen.Descendia, Screen.Archimedea).forEach { screen ->
+          val isSelected = currentScreen == screen
+          ListTile(
+          title = screen.label,
+          titleColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+          titleFontWeight = if (isSelected) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Medium,
+          leadingIcon = { 
+            Icon(
+            screen.icon, 
+            contentDescription = null,
+            tint = if (isSelected) MaterialTheme.colorScheme.primary else LocalContentColor.current
+            ) 
+          },
+          containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
+          onClick = {
+            currentScreen = screen
+            coroutineScope.launch { drawerState.close() }
+          }
+          )
+        }
+        }
+
+        SectionTitle(title = "システム", modifier = Modifier.padding(top = 16.dp, bottom = 4.dp))
+        ListGroup {
+        val isSelected = currentScreen == Screen.Settings
+        ListTile(
+          title = Screen.Settings.label,
+          titleColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+          titleFontWeight = if (isSelected) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Medium,
+          leadingIcon = { 
+          Icon(
+            Screen.Settings.icon, 
+            contentDescription = null,
+            tint = if (isSelected) MaterialTheme.colorScheme.primary else LocalContentColor.current
+          ) 
+          },
+          containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
+          onClick = {
+          currentScreen = Screen.Settings
+          coroutineScope.launch { drawerState.close() }
+          }
+        )
+        }
+        
+        Spacer(modifier = Modifier.height(24.dp))
+      }
       }
     }
+    ) {
+    Scaffold(
+    containerColor = Color.Transparent,
+    topBar = {
+      @OptIn(ExperimentalMaterial3Api::class)
+      TopAppBar(
+      title = { Text(currentScreen.label) },
+      navigationIcon = {
+        if (currentScreen == Screen.Update) {
+        IconButton(onClick = { currentScreen = Screen.Settings }) {
+          Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+        }
+        } else {
+        IconButton(onClick = { coroutineScope.launch { drawerState.open() } }) {
+          Icon(Icons.Rounded.Menu, contentDescription = "Menu")
+        }
+        }
+      },
+      actions = {
+        if (currentScreen != Screen.Update) {
+        worldState?.time?.let { timeSec ->
+          val dt = kotlinx.datetime.Instant.fromEpochSeconds(timeSec).toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault())
+          val timeStr = "${dt.monthNumber}/${dt.dayOfMonth} ${dt.hour.toString().padStart(2, '0')}:${dt.minute.toString().padStart(2, '0')}:${dt.second.toString().padStart(2, '0')}"
+          Column(horizontalAlignment = Alignment.End, modifier = Modifier.padding(end = 16.dp)) {
+          Text(text = "タイムスタンプ", style = MaterialTheme.typography.bodyMedium)
+          Text(
+            text = timeStr, 
+            style = jp.girky.wf_noctuahub.ui.theme.getAppTypographyCondensed().bodyMedium.copy(
+              fontFeatureSettings = "tnum"
+            )
+          )
+          }
+        }
+        }
+      },
+      colors = TopAppBarDefaults.topAppBarColors(
+        containerColor = Color.Transparent
+      )
+      )
+    },
+    bottomBar = {
+      if (currentScreen != Screen.Update) {
+      NavigationBar {
+        listOf(Screen.Status, Screen.Fissures, Screen.Events, Screen.Settings).forEach { screen ->
+        val isSelected = currentScreen == screen
+        NavigationBarItem(
+          icon = { Icon(screen.icon, contentDescription = screen.label) },
+          label = { 
+          Text(
+            text = screen.label,
+            fontWeight = if (isSelected) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Normal
+          ) 
+          },
+          selected = isSelected,
+          onClick = { currentScreen = screen },
+          colors = androidx.compose.material3.NavigationBarItemDefaults.colors(
+          selectedIconColor = MaterialTheme.colorScheme.primary,
+          selectedTextColor = MaterialTheme.colorScheme.primary,
+          unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+          unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant
+          )
+        )
+        }
+      }
+      }
+    }
+    ) { innerPadding ->
+    @OptIn(ExperimentalMaterial3Api::class)
+    val pullState = androidx.compose.material3.pulltorefresh.rememberPullToRefreshState()
+    val isRefreshingState = fetchState == FetchState.LOADING_WORLDSTATE || fetchState == FetchState.LOADING_EXPORT
+    @OptIn(ExperimentalMaterial3Api::class)
+    androidx.compose.material3.pulltorefresh.PullToRefreshBox(
+      state = pullState,
+      isRefreshing = isRefreshingState,
+      onRefresh = { viewModel.loadInitialData(coroutineScope) },
+      indicator = {
+        jp.girky.wf_noctuahub.ui.components.ui.ExpressivePullToRefreshIndicator(
+          isRefreshing = isRefreshingState,
+          state = pullState,
+          modifier = Modifier.align(Alignment.TopCenter)
+        )
+      },
+      modifier = Modifier
+      .fillMaxSize()
+      .padding(innerPadding)
+    ) {
+      if (fetchState == FetchState.ERROR) {
+      Box(modifier = Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
+        Text(text = "エラー: $errorMessage", color = MaterialTheme.colorScheme.error)
+      }
+      } else if (worldState == null || !isInitialized) {
+      Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        @OptIn(androidx.compose.material3.ExperimentalMaterial3ExpressiveApi::class)
+        androidx.compose.material3.LoadingIndicator()
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+          text = loadingMessage ?: "データを取得中...", 
+          color = MaterialTheme.colorScheme.onBackground,
+          textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+          modifier = Modifier.padding(horizontal = 32.dp)
+        )
+        }
+      }
+      } else {
+      when (currentScreen) {
+        Screen.Status -> {
+        StatusPage(
+          worldState = worldState,
+          onLocalize = { viewModel.localize(it) }
+        )
+        }
+        Screen.Events -> {
+        EventsPage(
+          worldState = worldState,
+          onLocalize = { viewModel.localize(it) }
+        )
+        }
+        Screen.Fissures -> {
+        FissuresPage(
+          worldState = worldState,
+          onLocalize = { viewModel.localize(it) },
+          onGetRegionInfo = { viewModel.getRegionInfo(it) }
+        )
+        }
+        Screen.Nightwave -> {
+        NightwavePage(
+          worldState = worldState,
+          onTranslateNightwave = { Translations.translateNightwaveChallenge(it) }
+        )
+        }
+        Screen.Sortie -> {
+        SortiePage(
+          worldState = worldState,
+          onLocalize = { viewModel.localize(it) },
+          onGetRegionInfo = { viewModel.getRegionInfo(it) }
+        )
+        }
+        Screen.Baro -> {
+        BaroPage(
+          worldState = worldState,
+          onLocalize = { viewModel.localize(it) }
+        )
+        }
+        Screen.Resurgence -> {
+        ResurgencePage(
+          worldState = worldState,
+          onLocalize = { viewModel.localize(it) }
+        )
+        }
+        Screen.Calendar1999 -> {
+        Calendar1999Page(
+          worldState = worldState,
+          onLocalize = { viewModel.localize(it) }
+        )
+        }
+        Screen.Circuit -> {
+        CircuitPage(
+          worldState = worldState,
+          onLocalize = { viewModel.localize(it) }
+        )
+        }
+        Screen.ArchonHunt -> {
+        ArchonHuntPage(
+          worldState = worldState,
+          onLocalize = { viewModel.localize(it) },
+          onGetRegionInfo = { viewModel.getRegionInfo(it) }
+        )
+        }
+        Screen.Descendia -> {
+        DescendiaPage(
+          worldState = worldState,
+          onLocalize = { viewModel.localize(it) }
+        )
+        }
+        Screen.Archimedea -> {
+        ArchimedeaPage(
+          worldState = worldState,
+          onLocalize = { viewModel.localize(it) }
+        )
+        }
+        Screen.Settings -> {
+        SettingsPage(
+          appSettings = appSettings,
+          worldState = worldState,
+          errorMessage = errorMessage,
+          fetchState = fetchState,
+          onNavigateToUpdate = { currentScreen = Screen.Update }
+        )
+        }
+        Screen.Update -> {
+        jp.girky.wf_noctuahub.ui.pages.UpdatePage(
+          onBack = { currentScreen = Screen.Settings }
+        )
+        }
+      }
+      }
+    }
+    }
+  }
   }
 }
 }

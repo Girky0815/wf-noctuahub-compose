@@ -17,23 +17,23 @@ import androidx.compose.ui.unit.dp
  */
 @Composable
 fun ListGroup(
-    modifier: Modifier = Modifier,
-    content: @Composable ColumnScope.() -> Unit
+  modifier: Modifier = Modifier,
+  content: @Composable ColumnScope.() -> Unit
 ) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp), // Tomato風の大きめの角丸
-        colors = CardDefaults.cardColors(
-            // ギャップ部分を透明にし、アプリの背景色を直接透けさせる
-            containerColor = androidx.compose.ui.graphics.Color.Transparent
-        ),
-        elevation = CardDefaults.cardElevation(0.dp)
-    ) {
-        Column(
-          // グループリストのギャップ
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(2.dp),
-            content = content
-        )
-    }
+  Card(
+    modifier = modifier.fillMaxWidth(),
+    shape = RoundedCornerShape(20.dp), // Tomato風の大きめの角丸
+    colors = CardDefaults.cardColors(
+      // ギャップ部分を透明にし、アプリの背景色を直接透けさせる
+      containerColor = androidx.compose.ui.graphics.Color.Transparent
+    ),
+    elevation = CardDefaults.cardElevation(0.dp)
+  ) {
+    Column(
+      // グループリストのギャップ
+      modifier = Modifier.fillMaxWidth(),
+      verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(2.dp),
+      content = content
+    )
+  }
 }

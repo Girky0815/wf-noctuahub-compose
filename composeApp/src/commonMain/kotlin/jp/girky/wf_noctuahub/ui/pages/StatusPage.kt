@@ -21,74 +21,74 @@ import jp.girky.wf_noctuahub.utils.currentTimeMillis
  */
 @Composable
 fun StatusPage(
-    worldState: WorldStateResponse?,
-    onLocalize: (String?) -> String
+  worldState: WorldStateResponse?,
+  onLocalize: (String?) -> String
 ) {
-    val scrollState = rememberScrollState()
+  val scrollState = rememberScrollState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        if (worldState == null) {
-            // ローディング中などの表示（App.kt 側で制御するため基本は到達しない前提）
-            return@Column
-        }
-
-        // ワールドサイクル (2列グリッド)
-        GridGroup(columns = 2) {
-            // 地球サイクル
-            CycleCard(
-                title = "地球: 森林タイル",
-                cycleGenerator = { LocalCycles.getEarthCycle(it) },
-                stateTextFormatter = { if (it.isDay) "昼" else "夜" },
-                stateColorFormatter = { if (it.isDay) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary }
-            )
-    
-            // シータスサイクル
-            CycleCard(
-                title = "エイドロンの草原",
-                cycleGenerator = { LocalCycles.getCetusCycle(it) },
-                stateTextFormatter = { if (it.isDay) "昼" else "夜" },
-                stateColorFormatter = { if (it.isDay) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary }
-            )
-    
-            // オーブ峡谷サイクル
-            CycleCard(
-                title = "オーブ峡谷",
-                cycleGenerator = { LocalCycles.getVallisCycle(it) },
-                stateTextFormatter = { if (it.state == "warm") "温暖" else "寒冷" },
-                stateColorFormatter = { if (it.state == "warm") MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.tertiary }
-            )
-    
-            // カンビオン荒地サイクル
-            CycleCard(
-                title = "カンビオン荒地",
-                cycleGenerator = { LocalCycles.getCambionCycle(it) },
-                stateTextFormatter = { if (it.isDay) "Fass" else "Vome" },
-                stateColorFormatter = { if (it.isDay) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary }
-            )
-        }
-
-        // Zariman や Duviri はAPIの SyndicateMissions 等から抽出してここで表示予定 (一旦保留)
-
-        // Zariman や Duviri はAPIの SyndicateMissions 等から抽出してここで表示予定 (一旦保留)
-
-        // アラート
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            SectionTitle("アラート")
-            AlertList(alerts = worldState.alerts, onLocalize = onLocalize)
-        }
-
-        // 侵略
-        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            SectionTitle("侵略")
-            InvasionList(invasions = worldState.invasions, onLocalize = onLocalize)
-        }
-        
-        Spacer(modifier = Modifier.height(32.dp)) // ボトムナビゲーション用の余白想定
+  Column(
+    modifier = Modifier
+      .fillMaxSize()
+      .verticalScroll(scrollState)
+      .padding(16.dp),
+    verticalArrangement = Arrangement.spacedBy(16.dp)
+  ) {
+    if (worldState == null) {
+      // ローディング中などの表示（App.kt 側で制御するため基本は到達しない前提）
+      return@Column
     }
+
+    // ワールドサイクル (2列グリッド)
+    GridGroup(columns = 2) {
+      // 地球サイクル
+      CycleCard(
+        title = "地球: 森林タイル",
+        cycleGenerator = { LocalCycles.getEarthCycle(it) },
+        stateTextFormatter = { if (it.isDay) "昼" else "夜" },
+        stateColorFormatter = { if (it.isDay) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary }
+      )
+  
+      // シータスサイクル
+      CycleCard(
+        title = "エイドロンの草原",
+        cycleGenerator = { LocalCycles.getCetusCycle(it) },
+        stateTextFormatter = { if (it.isDay) "昼" else "夜" },
+        stateColorFormatter = { if (it.isDay) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary }
+      )
+  
+      // オーブ峡谷サイクル
+      CycleCard(
+        title = "オーブ峡谷",
+        cycleGenerator = { LocalCycles.getVallisCycle(it) },
+        stateTextFormatter = { if (it.state == "warm") "温暖" else "寒冷" },
+        stateColorFormatter = { if (it.state == "warm") MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.tertiary }
+      )
+  
+      // カンビオン荒地サイクル
+      CycleCard(
+        title = "カンビオン荒地",
+        cycleGenerator = { LocalCycles.getCambionCycle(it) },
+        stateTextFormatter = { if (it.isDay) "Fass" else "Vome" },
+        stateColorFormatter = { if (it.isDay) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary }
+      )
+    }
+
+    // Zariman や Duviri はAPIの SyndicateMissions 等から抽出してここで表示予定 (一旦保留)
+
+    // Zariman や Duviri はAPIの SyndicateMissions 等から抽出してここで表示予定 (一旦保留)
+
+    // アラート
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+      SectionTitle("アラート")
+      AlertList(alerts = worldState.alerts, onLocalize = onLocalize)
+    }
+
+    // 侵略
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+      SectionTitle("侵略")
+      InvasionList(invasions = worldState.invasions, onLocalize = onLocalize)
+    }
+    
+    Spacer(modifier = Modifier.height(32.dp)) // ボトムナビゲーション用の余白想定
+  }
 }

@@ -24,8 +24,8 @@ fun DescendiaPage(
   onLocalize: (String) -> String
 ) {
   if (worldState == null) {
-    jp.girky.wf_noctuahub.ui.components.ui.CenteredLoadingIndicator()
-    return
+  jp.girky.wf_noctuahub.ui.components.ui.CenteredLoadingIndicator()
+  return
   }
 
   // worldState.time は秒単位のUNIX時間と推測されるためミリ秒化。未取得の場合は 0L とする。
@@ -40,33 +40,33 @@ fun DescendiaPage(
   modifier = Modifier.fillMaxSize().padding(16.dp)
   ) {
   item {
-    Text(
-    text = "ディセンディア",
-    style = MaterialTheme.typography.displaySmall,
-    color = MaterialTheme.colorScheme.onSurface,
-    modifier = Modifier.padding(bottom = 16.dp)
-    )
-    Text(
-    text = "21のチャレンジを次々にクリアしていくミッション。",
-    style = MaterialTheme.typography.bodyMedium,
-    color = MaterialTheme.colorScheme.onSurfaceVariant,
-    modifier = Modifier.padding(bottom = 24.dp)
-    )
+  Text(
+  text = "ディセンディア",
+  style = MaterialTheme.typography.displaySmall,
+  color = MaterialTheme.colorScheme.onSurface,
+  modifier = Modifier.padding(bottom = 16.dp)
+  )
+  Text(
+  text = "21のチャレンジを次々にクリアしていくミッション。",
+  style = MaterialTheme.typography.bodyMedium,
+  color = MaterialTheme.colorScheme.onSurfaceVariant,
+  modifier = Modifier.padding(bottom = 24.dp)
+  )
   }
 
   if (activeDescents.isEmpty()) {
-    item {
-    Text(
-      text = "現在アクティブなディセンディアはありません",
-      color = MaterialTheme.colorScheme.onSurfaceVariant,
-      style = MaterialTheme.typography.bodyLarge
-    )
-    }
+  item {
+  Text(
+    text = "現在アクティブなディセンディアはありません",
+    color = MaterialTheme.colorScheme.onSurfaceVariant,
+    style = MaterialTheme.typography.bodyLarge
+  )
+  }
   } else {
-    items(activeDescents) { descent ->
-    DescendiaCard(descent = descent, onLocalize = onLocalize)
-    Spacer(modifier = Modifier.height(24.dp))
-    }
+  items(activeDescents) { descent ->
+  DescendiaCard(descent = descent, onLocalize = onLocalize)
+  Spacer(modifier = Modifier.height(24.dp))
+  }
   }
   }
 }
@@ -81,38 +81,38 @@ fun DescendiaCard(
   Column {
   SectionTitle(title = "現在のローテーション", modifier = Modifier.padding(bottom = 8.dp))
   ListGroup {
-    challenges.forEach { challenge ->
-    val typeRaw = challenge.type ?: "不明"
-    val type = jp.girky.wf_noctuahub.utils.Translations.translateDescendiaMissionType(typeRaw)
-    val modifierRaw = challenge.challenge ?: "不明"
-    val modifierName = jp.girky.wf_noctuahub.utils.Translations.translateDescendiaModifier(modifierRaw)
-    val missionIndex = (challenge.index ?: 0)
-    
-    val subtitleText = buildString {
-      append(modifierName)
-      val aurasRaw = challenge.auras ?: emptyList()
-      if (aurasRaw.isNotEmpty()) {
-      val aurasTranslated = aurasRaw.map { jp.girky.wf_noctuahub.utils.Translations.translateDescendiaModifier(it) }.distinct()
-      val uniqueAuras = aurasTranslated.filter { it != modifierName }
-      if (uniqueAuras.isNotEmpty()) {
-        append("\n")
-        append(uniqueAuras.joinToString(", "))
-      }
-      }
+  challenges.forEach { challenge ->
+  val typeRaw = challenge.type ?: "不明"
+  val type = jp.girky.wf_noctuahub.utils.Translations.translateDescendiaMissionType(typeRaw)
+  val modifierRaw = challenge.challenge ?: "不明"
+  val modifierName = jp.girky.wf_noctuahub.utils.Translations.translateDescendiaModifier(modifierRaw)
+  val missionIndex = (challenge.index ?: 0)
+  
+  val subtitleText = buildString {
+    append(modifierName)
+    val aurasRaw = challenge.auras ?: emptyList()
+    if (aurasRaw.isNotEmpty()) {
+    val aurasTranslated = aurasRaw.map { jp.girky.wf_noctuahub.utils.Translations.translateDescendiaModifier(it) }.distinct()
+    val uniqueAuras = aurasTranslated.filter { it != modifierName }
+    if (uniqueAuras.isNotEmpty()) {
+    append("\n")
+    append(uniqueAuras.joinToString(", "))
     }
-    
-    ListTile(
-      title = type,
-      subtitle = subtitleText,
-      leadingIcon = {
-      Text(
-        text = "$missionIndex",
-        style = MaterialTheme.typography.titleLarge,
-        color = MaterialTheme.colorScheme.onSurface
-      )
-      }
+    }
+  }
+  
+  ListTile(
+    title = type,
+    subtitle = subtitleText,
+    leadingIcon = {
+    Text(
+    text = "$missionIndex",
+    style = MaterialTheme.typography.titleLarge,
+    color = MaterialTheme.colorScheme.onSurface
     )
     }
+  )
+  }
   }
   }
 }

@@ -20,121 +20,121 @@ import kotlinx.datetime.Instant
 
 @Composable
 fun ResurgencePage(
-    worldState: WorldStateResponse?,
-    onLocalize: (String) -> String
+  worldState: WorldStateResponse?,
+  onLocalize: (String) -> String
 ) {
-    val uriHandler = LocalUriHandler.current
-    val resurgence = worldState?.primeVaultTraders?.firstOrNull() ?: run {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
-            Text("Prime Resurgence 情報を取得できませんでした。")
+  val uriHandler = LocalUriHandler.current
+  val resurgence = worldState?.primeVaultTraders?.firstOrNull() ?: run {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
+      Text("Prime Resurgence 情報を取得できませんでした。")
+    }
+    return
+  }
+
+  val expiryLong = resurgence.expiry?.date?.numberLong?.toLongOrNull()
+  val expiryString = expiryLong?.let { Instant.fromEpochMilliseconds(it).toString() }
+  val manifest = resurgence.manifest ?: emptyList()
+  
+  // Powersuits を含むものを Prime Warframe として抽出
+  val primeWarframes = manifest.filter { item ->
+    val type = item.itemType ?: ""
+    type.contains("Powersuits", ignoreCase = true)
+  }
+
+  // Weapons を含むものを Prime 武器 として抽出
+  val primeWeapons = manifest.filter { item ->
+    val type = item.itemType ?: ""
+    type.contains("Weapons", ignoreCase = true)
+  }
+
+  LazyColumn(
+    modifier = Modifier.fillMaxSize().padding(16.dp)
+  ) {
+    item {
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+      ) {
+        Text(
+          text = "Prime Resurgence",
+          style = MaterialTheme.typography.displaySmall,
+          color = MaterialTheme.colorScheme.onSurface
+        )
+        if (expiryString != null) {
+          Card(
+            colors = CardDefaults.cardColors(
+              containerColor = MaterialTheme.colorScheme.primaryContainer,
+              contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            ),
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
+          ) {
+            Box(modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)) {
+              EtaText(
+                expiryString = expiryString,
+                color = MaterialTheme.colorScheme.onPrimaryContainer
+              )
+            }
+          }
         }
-        return
+      }
+      Text(
+        text = "過去の Prime が期間限定で復活。",
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.padding(top = 8.dp, bottom = 24.dp)
+      )
     }
 
-    val expiryLong = resurgence.expiry?.date?.numberLong?.toLongOrNull()
-    val expiryString = expiryLong?.let { Instant.fromEpochMilliseconds(it).toString() }
-    val manifest = resurgence.manifest ?: emptyList()
-    
-    // Powersuits を含むものを Prime Warframe として抽出
-    val primeWarframes = manifest.filter { item ->
-        val type = item.itemType ?: ""
-        type.contains("Powersuits", ignoreCase = true)
-    }
-
-    // Weapons を含むものを Prime 武器 として抽出
-    val primeWeapons = manifest.filter { item ->
-        val type = item.itemType ?: ""
-        type.contains("Weapons", ignoreCase = true)
-    }
-
-    LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(16.dp)
-    ) {
-        item {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Prime Resurgence",
-                    style = MaterialTheme.typography.displaySmall,
-                    color = MaterialTheme.colorScheme.onSurface
+    if (primeWarframes.isNotEmpty()) {
+      item {
+        SectionTitle(title = "復活中の Prime Warframe", modifier = Modifier.padding(bottom = 8.dp))
+        ListGroup {
+          for (resItem in primeWarframes) {
+            val name = onLocalize(resItem.itemType ?: "")
+            ListTile(
+              title = name,
+              trailingContent = {
+                Icon(
+                  imageVector = Icons.Rounded.ChevronRight,
+                  contentDescription = "Wikiを開く",
+                  tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                 )
-                if (expiryString != null) {
-                    Card(
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                        ),
-                        shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
-                    ) {
-                        Box(modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)) {
-                            EtaText(
-                                expiryString = expiryString,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                        }
-                    }
-                }
-            }
-            Text(
-                text = "過去の Prime が期間限定で復活。",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(top = 8.dp, bottom = 24.dp)
+              },
+              onClick = {
+                val url = WikiUtils.getResurgenceWarframeUrl(name)
+                uriHandler.openUri(url)
+              }
             )
+          }
         }
-
-        if (primeWarframes.isNotEmpty()) {
-            item {
-                SectionTitle(title = "復活中の Prime Warframe", modifier = Modifier.padding(bottom = 8.dp))
-                ListGroup {
-                    for (resItem in primeWarframes) {
-                        val name = onLocalize(resItem.itemType ?: "")
-                        ListTile(
-                            title = name,
-                            trailingContent = {
-                                Icon(
-                                    imageVector = Icons.Rounded.ChevronRight,
-                                    contentDescription = "Wikiを開く",
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
-                                )
-                            },
-                            onClick = {
-                                val url = WikiUtils.getResurgenceWarframeUrl(name)
-                                uriHandler.openUri(url)
-                            }
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.height(24.dp))
-            }
-        }
-
-        if (primeWeapons.isNotEmpty()) {
-            item {
-                SectionTitle(title = "復活中の Prime 武器", modifier = Modifier.padding(bottom = 8.dp))
-                ListGroup {
-                    for (resItem in primeWeapons) {
-                        val name = onLocalize(resItem.itemType ?: "")
-                        ListTile(
-                            title = name,
-                            trailingContent = {
-                                Icon(
-                                    imageVector = Icons.Rounded.ChevronRight,
-                                    contentDescription = "Wikiを開く",
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
-                                )
-                            },
-                            onClick = {
-                                val url = WikiUtils.getResurgenceWeaponUrl(name)
-                                uriHandler.openUri(url)
-                            }
-                        )
-                    }
-                }
-            }
-        }
+        Spacer(modifier = Modifier.height(24.dp))
+      }
     }
+
+    if (primeWeapons.isNotEmpty()) {
+      item {
+        SectionTitle(title = "復活中の Prime 武器", modifier = Modifier.padding(bottom = 8.dp))
+        ListGroup {
+          for (resItem in primeWeapons) {
+            val name = onLocalize(resItem.itemType ?: "")
+            ListTile(
+              title = name,
+              trailingContent = {
+                Icon(
+                  imageVector = Icons.Rounded.ChevronRight,
+                  contentDescription = "Wikiを開く",
+                  tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                )
+              },
+              onClick = {
+                val url = WikiUtils.getResurgenceWeaponUrl(name)
+                uriHandler.openUri(url)
+              }
+            )
+          }
+        }
+      }
+    }
+  }
 }

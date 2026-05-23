@@ -19,66 +19,66 @@ import kotlinx.coroutines.delay
  */
 @Composable
 fun CycleCard(
-    title: String,
-    cycleGenerator: (Long) -> CycleState,
-    stateTextFormatter: @Composable (CycleState) -> String,
-    stateColorFormatter: @Composable (CycleState) -> androidx.compose.ui.graphics.Color,
-    modifier: Modifier = Modifier
+  title: String,
+  cycleGenerator: (Long) -> CycleState,
+  stateTextFormatter: @Composable (CycleState) -> String,
+  stateColorFormatter: @Composable (CycleState) -> androidx.compose.ui.graphics.Color,
+  modifier: Modifier = Modifier
 ) {
-    var nowMs by remember { mutableStateOf(currentTimeMillis()) }
+  var nowMs by remember { mutableStateOf(currentTimeMillis()) }
 
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(1000)
-            nowMs = currentTimeMillis()
-        }
+  LaunchedEffect(Unit) {
+    while (true) {
+      delay(1000)
+      nowMs = currentTimeMillis()
     }
+  }
 
-    val currentCycle = cycleGenerator(nowMs)
-    val stateText = stateTextFormatter(currentCycle)
-    val stateColor = stateColorFormatter(currentCycle)
-    
-    val remainingMs = currentCycle.expiry.toEpochMilliseconds() - nowMs
-    val remainingText = formatCycleTimeRemaining(remainingMs)
+  val currentCycle = cycleGenerator(nowMs)
+  val stateText = stateTextFormatter(currentCycle)
+  val stateColor = stateColorFormatter(currentCycle)
+  
+  val remainingMs = currentCycle.expiry.toEpochMilliseconds() - nowMs
+  val remainingText = formatCycleTimeRemaining(remainingMs)
 
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surfaceBright, shape = RoundedCornerShape(2.dp))
-            .padding(16.dp)
+  Column(
+    modifier = modifier
+      .fillMaxWidth()
+      .background(MaterialTheme.colorScheme.surfaceBright, shape = RoundedCornerShape(2.dp))
+      .padding(16.dp)
+  ) {
+    Text(
+      text = title,
+      style = MaterialTheme.typography.bodyMedium,
+      color = MaterialTheme.colorScheme.onSurfaceVariant
+    )
+    Spacer(modifier = Modifier.height(4.dp))
+    Row(
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.SpaceBetween,
+      modifier = Modifier.fillMaxWidth()
     ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = stateText,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold,
-                color = stateColor
-            )
-            Text(
-                text = remainingText,
-                style = jp.girky.wf_noctuahub.ui.theme.getAppTypographyCondensed().bodyMedium.copy(
-                    fontFeatureSettings = "tnum"
-                ),
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
+      Text(
+        text = stateText,
+        style = MaterialTheme.typography.bodyLarge,
+        fontWeight = FontWeight.Bold,
+        color = stateColor
+      )
+      Text(
+        text = remainingText,
+        style = jp.girky.wf_noctuahub.ui.theme.getAppTypographyCondensed().bodyMedium.copy(
+          fontFeatureSettings = "tnum"
+        ),
+        color = MaterialTheme.colorScheme.onSurfaceVariant
+      )
     }
+  }
 }
 
 private fun formatCycleTimeRemaining(remainingMs: Long): String {
-    if (remainingMs <= 0) return "更新中..."
-    val totalSeconds = remainingMs / 1000
-    val m = totalSeconds / 60
-    val s = totalSeconds % 60
-    return "${m.toString().padStart(2, '0')}分${s.toString().padStart(2, '0')}秒"
+  if (remainingMs <= 0) return "更新中..."
+  val totalSeconds = remainingMs / 1000
+  val m = totalSeconds / 60
+  val s = totalSeconds % 60
+  return "${m.toString().padStart(2, '0')}分${s.toString().padStart(2, '0')}秒"
 }

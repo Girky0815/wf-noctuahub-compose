@@ -13,14 +13,14 @@ import androidx.compose.ui.unit.dp
  */
 @Composable
 fun SectionTitle(
-    title: String,
-    modifier: Modifier = Modifier
+  title: String,
+  modifier: Modifier = Modifier
 ) {
-    Text(
-        text = title,
-        style = MaterialTheme.typography.titleMedium,
-        fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.primary, // セクション名はPrimaryで強調（React版に基づく）
-        modifier = modifier.padding(horizontal = 4.dp)
-    )
+  Text(
+    text = title,
+    style = MaterialTheme.typography.titleMedium,
+    fontWeight = FontWeight.Bold,
+    color = MaterialTheme.colorScheme.primary, // セクション名はPrimaryで強調（React版に基づく）
+    modifier = modifier.padding(horizontal = 4.dp)
+  )
 }

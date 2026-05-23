@@ -14,42 +14,42 @@ import java.io.File
 
 @Composable
 actual fun BackupRestoreButtons(
-    modifier: Modifier,
-    onExport: suspend () -> String,
-    onImport: suspend (String) -> Unit
+  modifier: Modifier,
+  onExport: suspend () -> String,
+  onImport: suspend (String) -> Unit
 ) {
-    val coroutineScope = rememberCoroutineScope()
+  val coroutineScope = rememberCoroutineScope()
 
-    Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-        Button(onClick = {
-            coroutineScope.launch {
-                val fd = FileDialog(null as Frame?, "設定を保存", FileDialog.SAVE)
-                fd.file = "noctuahub_backup.yaml"
-                fd.isVisible = true
-                val file = fd.file
-                val dir = fd.directory
-                if (file != null && dir != null) {
-                    val content = onExport()
-                    File(dir, file).writeText(content)
-                }
-            }
-        }) {
-            Text("設定をエクスポート")
+  Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+    Button(onClick = {
+      coroutineScope.launch {
+        val fd = FileDialog(null as Frame?, "設定を保存", FileDialog.SAVE)
+        fd.file = "noctuahub_backup.yaml"
+        fd.isVisible = true
+        val file = fd.file
+        val dir = fd.directory
+        if (file != null && dir != null) {
+          val content = onExport()
+          File(dir, file).writeText(content)
         }
-
-        Button(onClick = {
-            coroutineScope.launch {
-                val fd = FileDialog(null as Frame?, "設定をインポート", FileDialog.LOAD)
-                fd.isVisible = true
-                val file = fd.file
-                val dir = fd.directory
-                if (file != null && dir != null) {
-                    val content = File(dir, file).readText()
-                    onImport(content)
-                }
-            }
-        }) {
-            Text("設定をインポート")
-        }
+      }
+    }) {
+      Text("設定をエクスポート")
     }
+
+    Button(onClick = {
+      coroutineScope.launch {
+        val fd = FileDialog(null as Frame?, "設定をインポート", FileDialog.LOAD)
+        fd.isVisible = true
+        val file = fd.file
+        val dir = fd.directory
+        if (file != null && dir != null) {
+          val content = File(dir, file).readText()
+          onImport(content)
+        }
+      }
+    }) {
+      Text("設定をインポート")
+    }
+  }
 }

@@ -17,88 +17,88 @@ import kotlinx.datetime.Instant
 
 @Composable
 fun BaroPage(
-    worldState: WorldStateResponse?,
-    onLocalize: (String) -> String
+  worldState: WorldStateResponse?,
+  onLocalize: (String) -> String
 ) {
-    val baro = worldState?.voidTraders?.firstOrNull() ?: run {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
-            Text("Baro Ki'Teer 情報を取得できませんでした。")
-        }
-        return
+  val baro = worldState?.voidTraders?.firstOrNull() ?: run {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
+      Text("Baro Ki'Teer 情報を取得できませんでした。")
+    }
+    return
+  }
+
+  val now = currentTimeMillis()
+  val activationLong = baro.activation?.date?.numberLong?.toLongOrNull()
+  val expiryLong = baro.expiry?.date?.numberLong?.toLongOrNull()
+  val isActive = activationLong != null && expiryLong != null && now >= activationLong && now < expiryLong
+
+  val location = baro.node?.let { onLocalize(it) } ?: "不明"
+  val activationString = activationLong?.let { Instant.fromEpochMilliseconds(it).toString() }
+  val expiryString = expiryLong?.let { Instant.fromEpochMilliseconds(it).toString() }
+
+  LazyColumn(
+    modifier = Modifier.fillMaxSize().padding(16.dp)
+  ) {
+    item {
+      Text(
+        text = "Baro Ki'Teer",
+        style = MaterialTheme.typography.displaySmall,
+        color = MaterialTheme.colorScheme.onSurface,
+        modifier = Modifier.padding(bottom = 8.dp)
+      )
+      if (isActive) {
+        Text(
+          text = "Baro Ki'Teer 出現中!",
+          style = MaterialTheme.typography.bodyMedium,
+          color = MaterialTheme.colorScheme.primary,
+          modifier = Modifier.padding(bottom = 24.dp)
+        )
+      } else {
+        Text(
+          text = "Baro Ki'Teer は不在です。",
+          style = MaterialTheme.typography.bodyMedium,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
+          modifier = Modifier.padding(bottom = 24.dp)
+        )
+      }
     }
 
-    val now = currentTimeMillis()
-    val activationLong = baro.activation?.date?.numberLong?.toLongOrNull()
-    val expiryLong = baro.expiry?.date?.numberLong?.toLongOrNull()
-    val isActive = activationLong != null && expiryLong != null && now >= activationLong && now < expiryLong
+    item {
+      SectionTitle(title = "ステータス", modifier = Modifier.padding(bottom = 8.dp))
+      ListGroup {
+        ListTile(
+          title = "場所",
+          subtitle = location
+        )
+        ListTile(
+          title = if (isActive) "離脱まで" else "到着まで",
+          trailingContent = {
+            val targetString = if (isActive) expiryString else activationString
+            if (targetString != null) {
+              EtaText(expiryString = targetString)
+            }
+          }
+        )
+      }
+      Spacer(modifier = Modifier.height(24.dp))
+    }
 
-    val location = baro.node?.let { onLocalize(it) } ?: "不明"
-    val activationString = activationLong?.let { Instant.fromEpochMilliseconds(it).toString() }
-    val expiryString = expiryLong?.let { Instant.fromEpochMilliseconds(it).toString() }
-
-    LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(16.dp)
-    ) {
-        item {
-            Text(
-                text = "Baro Ki'Teer",
-                style = MaterialTheme.typography.displaySmall,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(bottom = 8.dp)
+    if (isActive && baro.manifest != null && baro.manifest.isNotEmpty()) {
+      item {
+        SectionTitle(title = "販売品リスト", modifier = Modifier.padding(bottom = 8.dp))
+        ListGroup {
+          for (baroItem in baro.manifest) {
+            val name = onLocalize(baroItem.itemType ?: "")
+            val ducats = baroItem.primePrice ?: 0
+            val credits = baroItem.regularPrice ?: 0
+            
+            ListTile(
+              title = name,
+              subtitle = "${ducats} Ducats | ${credits} Credits"
             )
-            if (isActive) {
-                Text(
-                    text = "Baro Ki'Teer 出現中!",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(bottom = 24.dp)
-                )
-            } else {
-                Text(
-                    text = "Baro Ki'Teer は不在です。",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(bottom = 24.dp)
-                )
-            }
+          }
         }
-
-        item {
-            SectionTitle(title = "ステータス", modifier = Modifier.padding(bottom = 8.dp))
-            ListGroup {
-                ListTile(
-                    title = "場所",
-                    subtitle = location
-                )
-                ListTile(
-                    title = if (isActive) "離脱まで" else "到着まで",
-                    trailingContent = {
-                        val targetString = if (isActive) expiryString else activationString
-                        if (targetString != null) {
-                            EtaText(expiryString = targetString)
-                        }
-                    }
-                )
-            }
-            Spacer(modifier = Modifier.height(24.dp))
-        }
-
-        if (isActive && baro.manifest != null && baro.manifest.isNotEmpty()) {
-            item {
-                SectionTitle(title = "販売品リスト", modifier = Modifier.padding(bottom = 8.dp))
-                ListGroup {
-                    for (baroItem in baro.manifest) {
-                        val name = onLocalize(baroItem.itemType ?: "")
-                        val ducats = baroItem.primePrice ?: 0
-                        val credits = baroItem.regularPrice ?: 0
-                        
-                        ListTile(
-                            title = name,
-                            subtitle = "${ducats} Ducats | ${credits} Credits"
-                        )
-                    }
-                }
-            }
-        }
+      }
     }
+  }
 }
