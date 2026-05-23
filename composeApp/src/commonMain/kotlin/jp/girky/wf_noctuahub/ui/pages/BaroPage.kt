@@ -48,14 +48,14 @@ fun BaroPage(
             )
             if (isActive) {
                 Text(
-                    text = "Voidの商人が到着しました！リレーで珍しいアイテムを販売しています。",
+                    text = "Baro Ki'Teer 出現中!",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(bottom = 24.dp)
                 )
             } else {
                 Text(
-                    text = "Baro Ki'Teer は現在移動中です。次の到着をお楽しみに。",
+                    text = "Baro Ki'Teer は不在です。",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(bottom = 24.dp)
