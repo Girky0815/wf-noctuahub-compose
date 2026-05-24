@@ -175,7 +175,7 @@ fun UpdatePage(
       downloadProgress = 0f
       val client = HttpClient(CIO) {
         install(HttpTimeout) {
-          requestTimeoutMillis = HttpTimeout.INFINITE_TIMEOUT_MS
+          requestTimeoutMillis = Long.MAX_VALUE
           connectTimeoutMillis = 300000 // 300秒
           socketTimeoutMillis = 300000 // 300秒
         }
