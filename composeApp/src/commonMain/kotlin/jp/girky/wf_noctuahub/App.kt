@@ -37,6 +37,8 @@ import androidx.compose.material.icons.rounded.Storefront
 import androidx.compose.material.icons.rounded.Sync
 import androidx.compose.material.icons.rounded.CalendarToday
 import androidx.compose.material.icons.rounded.Repeat
+import androidx.compose.material.icons.rounded.Category
+import jp.girky.wf_noctuahub.ui.pages.RelicsPage
 import jp.girky.wf_noctuahub.ui.pages.SettingsPage
 import jp.girky.wf_noctuahub.data.repository.AppSettings
 import com.russhwolf.settings.ObservableSettings
@@ -68,6 +70,7 @@ enum class Screen(val route: String, val icon: androidx.compose.ui.graphics.vect
   Status("status", Icons.Rounded.Dashboard, "ステータス"),
   Events("events", Icons.Rounded.Event, "イベント"),
   Fissures("fissures", Icons.Rounded.Bolt, "亀裂"),
+  Relics("relics", Icons.Rounded.Category, "レリック"),
   Nightwave("nightwave", Icons.Rounded.Radio, "Nightwave"),
   Sortie("sortie", Icons.Rounded.FormatListBulleted, "ソーティー"),
   Baro("baro", Icons.Rounded.Storefront, "Baro Ki'Teer"),
@@ -148,6 +151,7 @@ fun App() {
           Screen.Status, 
           Screen.Fissures,
           Screen.Events, 
+          Screen.Relics,
           Screen.Nightwave, 
           Screen.Sortie, 
           Screen.Baro, 
@@ -348,6 +352,13 @@ fun App() {
           worldState = worldState,
           onLocalize = { viewModel.localize(it) },
           onGetRegionInfo = { viewModel.getRegionInfo(it) }
+        )
+        }
+        Screen.Relics -> {
+        RelicsPage(
+          repository = repository,
+          worldState = worldState,
+          onLocalize = { viewModel.localize(it) }
         )
         }
         Screen.Nightwave -> {
