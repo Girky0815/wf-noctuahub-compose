@@ -24,6 +24,7 @@ import jp.girky.wf_noctuahub.ui.components.ui.ExpressiveButtonGroup
 import jp.girky.wf_noctuahub.ui.components.ui.ExpressiveButtonOption
 import jp.girky.wf_noctuahub.ui.components.ui.ListGroup
 import jp.girky.wf_noctuahub.ui.components.ui.ListTile
+import jp.girky.wf_noctuahub.ui.components.ui.ListItem
 import jp.girky.wf_noctuahub.utils.currentTimeMillis
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
@@ -166,8 +167,7 @@ fun NewsPage(
     // ニュースのコンテンツリスト
     LazyColumn(
       modifier = Modifier.fillMaxSize(),
-      contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 32.dp),
-      verticalArrangement = Arrangement.spacedBy(12.dp)
+      contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 32.dp)
     ) {
       if (filteredEvents.isEmpty()) {
         item {
@@ -185,190 +185,188 @@ fun NewsPage(
           }
         }
       } else {
-        items(filteredEvents, key = { it.first.id?.oid ?: it.first.hashCode().toString() }) { (event, title) ->
-          val dateLong = event.date?.epochMillis ?: 0L
-          
-          // 日付のJST変換と美フォーマット
-          val dateStr = if (dateLong > 0L) {
-            val dt = Instant.fromEpochMilliseconds(dateLong).toLocalDateTime(TimeZone.currentSystemDefault())
-            "${dt.year}/${dt.monthNumber.toString().padStart(2, '0')}/${dt.dayOfMonth.toString().padStart(2, '0')}"
-          } else {
-            ""
-          }
+        item {
+          ListGroup {
+            filteredEvents.forEach { (event, title) ->
+              val dateLong = event.date?.epochMillis ?: 0L
+              
+              // 日付のJST変換と美フォーマット
+              val dateStr = if (dateLong > 0L) {
+                val dt = Instant.fromEpochMilliseconds(dateLong).toLocalDateTime(TimeZone.currentSystemDefault())
+                "${dt.year}/${dt.monthNumber.toString().padStart(2, '0')}/${dt.dayOfMonth.toString().padStart(2, '0')}"
+              } else {
+                ""
+              }
 
-          // 配信スケジュールの解析とJSTフォーマット (コミュニティタブ用)
-          val startMillis = event.eventStartDate?.epochMillis ?: 0L
-          val endMillis = event.eventEndDate?.epochMillis ?: 0L
-          val hasSchedule = startMillis > 0L && endMillis > 0L
-          val isLive = hasSchedule && nowMs in startMillis..endMillis
+              // 配信スケジュールの解析とJSTフォーマット (コミュニティタブ用)
+              val startMillis = event.eventStartDate?.epochMillis ?: 0L
+              val endMillis = event.eventEndDate?.epochMillis ?: 0L
+              val hasSchedule = startMillis > 0L && endMillis > 0L
+              val isLive = hasSchedule && nowMs in startMillis..endMillis
 
-          val scheduleStr = if (hasSchedule) {
-            val startDt = Instant.fromEpochMilliseconds(startMillis).toLocalDateTime(TimeZone.currentSystemDefault())
-            val endDt = Instant.fromEpochMilliseconds(endMillis).toLocalDateTime(TimeZone.currentSystemDefault())
-            "${startDt.monthNumber}月${startDt.dayOfMonth}日 ${startDt.hour.toString().padStart(2, '0')}:${startDt.minute.toString().padStart(2, '0')} 〜 ${endDt.hour.toString().padStart(2, '0')}:${endDt.minute.toString().padStart(2, '0')} (JST)"
-          } else {
-            ""
-          }
+              val scheduleStr = if (hasSchedule) {
+                val startDt = Instant.fromEpochMilliseconds(startMillis).toLocalDateTime(TimeZone.currentSystemDefault())
+                val endDt = Instant.fromEpochMilliseconds(endMillis).toLocalDateTime(TimeZone.currentSystemDefault())
+                "${startDt.monthNumber}月${startDt.dayOfMonth}日 ${startDt.hour.toString().padStart(2, '0')}:${startDt.minute.toString().padStart(2, '0')} 〜 ${endDt.hour.toString().padStart(2, '0')}:${endDt.minute.toString().padStart(2, '0')} (JST)"
+              } else {
+                ""
+              }
 
-          // カスタムの美しいニュースリストカード
-          Card(
-            onClick = {
-              event.prop?.let { uriHandler.openUri(it) }
-            },
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(
-              containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-              contentColor = MaterialTheme.colorScheme.onSurface
-            )
-          ) {
-            Column(
-              modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-              verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-              // ヘッダー情報 (日付、カテゴリタグ、ライブバッジ)
-              Row(
+              ListItem(
+                onClick = {
+                  event.prop?.let { uriHandler.openUri(it) }
+                },
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                shape = RoundedCornerShape(4.dp),
+                containerColor = MaterialTheme.colorScheme.surfaceContainerLow
               ) {
-                // 日付
-                if (dateStr.isNotEmpty()) {
-                  Text(
-                    text = dateStr,
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                  )
-                }
-
-                // ライブ配信バッジ
-                if (isLive) {
-                  Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    modifier = Modifier
-                      .clip(CircleShape)
-                      .background(MaterialTheme.colorScheme.errorContainer)
-                      .padding(horizontal = 10.dp, vertical = 2.dp)
-                  ) {
-                    Box(
-                      modifier = Modifier
-                        .size(8.dp)
-                        .clip(CircleShape)
-                        .background(Color.Red)
-                    )
-                    Text(
-                      text = "LIVE配信中",
-                      color = MaterialTheme.colorScheme.onErrorContainer,
-                      style = MaterialTheme.typography.labelSmall,
-                      fontWeight = FontWeight.Bold
-                    )
-                  }
-                }
-              }
-
-              // ニュースタイトル
-              Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
-              )
-
-              // 配信スケジュール
-              if (scheduleStr.isNotEmpty()) {
-                Card(
-                  colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.6f),
-                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                  ),
-                  shape = RoundedCornerShape(12.dp),
-                  modifier = Modifier.padding(top = 4.dp)
+                Column(
+                  modifier = Modifier.fillMaxWidth(),
+                  verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                  // ヘッダー情報 (日付、カテゴリタグ、ライブバッジ)
                   Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                   ) {
-                    Icon(
-                      imageVector = Icons.Rounded.AccessTime,
-                      contentDescription = null,
-                      modifier = Modifier.size(16.dp)
-                    )
-                    Text(
-                      text = "配信時間: $scheduleStr",
-                      style = MaterialTheme.typography.bodySmall,
-                      fontWeight = FontWeight.Medium
-                    )
-                  }
-                }
-              }
-
-              // アクションボタンとライブ先リンク
-              Row(
-                modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(top = 4.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-              ) {
-                // Twitchなどの配信URLがある場合のボタン
-                if (!event.eventLiveUrl.isNullOrBlank()) {
-                  Button(
-                    onClick = { uriHandler.openUri(event.eventLiveUrl) },
-                    shape = CircleShape,
-                    colors = ButtonDefaults.buttonColors(
-                      containerColor = MaterialTheme.colorScheme.primaryContainer,
-                      contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    ),
-                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 4.dp),
-                    modifier = Modifier.height(32.dp)
-                  ) {
-                    Row(
-                      verticalAlignment = Alignment.CenterVertically,
-                      horizontalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                      Icon(
-                        imageVector = Icons.Rounded.LiveTv,
-                        contentDescription = null,
-                        modifier = Modifier.size(16.dp)
-                      )
+                    // 日付
+                    if (dateStr.isNotEmpty()) {
                       Text(
-                        text = "配信を観る",
+                        text = dateStr,
                         style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.Bold
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                       )
                     }
-                  }
-                } else {
-                  Spacer(modifier = Modifier.width(1.dp))
-                }
 
-                // 詳細リンク案内
-                if (!event.prop.isNullOrBlank()) {
-                  TextButton(
-                    onClick = { uriHandler.openUri(event.prop) },
-                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
-                    modifier = Modifier.height(32.dp)
-                  ) {
-                    Row(
-                      verticalAlignment = Alignment.CenterVertically,
-                      horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    // ライブ配信バッジ
+                    if (isLive) {
+                      Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        modifier = Modifier
+                          .clip(CircleShape)
+                          .background(MaterialTheme.colorScheme.errorContainer)
+                          .padding(horizontal = 10.dp, vertical = 2.dp)
+                      ) {
+                        Box(
+                          modifier = Modifier
+                            .size(8.dp)
+                            .clip(CircleShape)
+                            .background(Color.Red)
+                        )
+                        Text(
+                          text = "LIVE配信中",
+                          color = MaterialTheme.colorScheme.onErrorContainer,
+                          style = MaterialTheme.typography.labelSmall,
+                          fontWeight = FontWeight.Bold
+                        )
+                      }
+                    }
+                  }
+
+                  // ニュースタイトル
+                  Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                  )
+
+                  // 配信スケジュール
+                  if (scheduleStr.isNotEmpty()) {
+                    Card(
+                      colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.6f),
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                      ),
+                      shape = RoundedCornerShape(12.dp),
+                      modifier = Modifier.padding(top = 4.dp)
                     ) {
-                      Text(
-                        text = "詳細を読む",
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                      )
-                      Icon(
-                        imageVector = Icons.Rounded.ChevronRight,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(16.dp)
-                      )
+                      Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                      ) {
+                        Icon(
+                          imageVector = Icons.Rounded.AccessTime,
+                          contentDescription = null,
+                          modifier = Modifier.size(16.dp)
+                        )
+                        Text(
+                          text = "配信時間: $scheduleStr",
+                          style = MaterialTheme.typography.bodySmall,
+                          fontWeight = FontWeight.Medium
+                        )
+                      }
+                    }
+                  }
+
+                  // アクションボタンとライブ先リンク
+                  Row(
+                    modifier = Modifier
+                      .fillMaxWidth()
+                      .padding(top = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                  ) {
+                    // Twitchなどの配信URLがある場合のボタン
+                    if (!event.eventLiveUrl.isNullOrBlank()) {
+                      Button(
+                        onClick = { uriHandler.openUri(event.eventLiveUrl) },
+                        shape = CircleShape,
+                        colors = ButtonDefaults.buttonColors(
+                          containerColor = MaterialTheme.colorScheme.primaryContainer,
+                          contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        ),
+                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 4.dp),
+                        modifier = Modifier.height(32.dp)
+                      ) {
+                        Row(
+                          verticalAlignment = Alignment.CenterVertically,
+                          horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                          Icon(
+                            imageVector = Icons.Rounded.LiveTv,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp)
+                          )
+                          Text(
+                            text = "配信を観る",
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.Bold
+                          )
+                        }
+                      }
+                    } else {
+                      Spacer(modifier = Modifier.width(1.dp))
+                    }
+
+                    // 詳細リンク案内
+                    if (!event.prop.isNullOrBlank()) {
+                      TextButton(
+                        onClick = { uriHandler.openUri(event.prop) },
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+                        modifier = Modifier.height(32.dp)
+                      ) {
+                        Row(
+                          verticalAlignment = Alignment.CenterVertically,
+                          horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                          Text(
+                            text = "詳細を読む",
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                          )
+                          Icon(
+                            imageVector = Icons.Rounded.ChevronRight,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(16.dp)
+                          )
+                        }
+                      }
                     }
                   }
                 }
