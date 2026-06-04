@@ -47,7 +47,9 @@ object Translations {
   "Marks of Valiance" to "剛勇の証",
   "Nitain Extract" to "ニタン抽出物",
   "Orokin Catalyst" to "オロキンカタリスト",
+  "OrokinCatalyst" to "オロキンカタリスト",
   "Orokin Reactor" to "オロキンリアクター",
+  "OrokinReactor" to "オロキンリアクター",
   "Exilus Adapter" to "エクシラスアダプター",
   "Forma" to "フォーマ",
   "Detonite Injector" to "デトナイトインジェクター",
@@ -214,7 +216,8 @@ object Translations {
   "DT_LOOT" to "略奪 (ボーナス部屋)",
   "DT_BREAK_TARGETS" to "ホログローブ破壊",
   "DT_BOSS" to "ボス戦",
-  "DT_UNIQUE" to "時の難題(レース)",
+  "DT_UNIQUE" to "バトルケイス",
+  "DT_RACE" to "時の難題(レース)",
   "DT_NETRACELLS" to "標的排除(ネクロマイトドローン)",
   "DT_COLLECTION" to "バイトブラスト収集",
   "DT_SABOTAGE_DEFENSE" to "防衛", // 時のゆりかご
@@ -258,14 +261,20 @@ object Translations {
   "HeadShotsOnly" to "弱点のみにダメージ可能(=封鎖装甲)",
   "SecuritySpin" to "レーザーリンボ",
   "BasicLootCreatures" to "",
-  "RaceHorse" to "バトルケイス",
-  "HorseCombotOnly" to "バトルケイス",
+  "RaceHorse" to "",
+  "HorseCombatOnly" to "",
+  "CoHHorseAura" to "強制騎乗状態(下馬不可)",
+  // "DisableSelfReviveAura" to "一切の蘇生不可",
+  "HorseCombotOnly" to "",
   "VoidAberration" to "バンパイヤ・リミナス",
   "GenericFortifiedFoesWeakpointAura" to "弱点ハイライト",
   "HordeWeakPoints" to "弱点いっぱい",
   "GrenadesOnly" to "アンフォールに弱い敵",
   "GrenadeSpawnAura" to "アンフォールスポーン",
   "BasicRace" to "通常",
+  "NC_MineField" to "地雷原",
+  "Manics" to "マニック・マニア",
+
   
   // エクシマス・カバル
   "BlitzLeech" to "エクシマス・カバル: リーチブリッツ",
@@ -273,6 +282,7 @@ object Translations {
   "FireAndIce" to "エクシマス・カバル: 火と氷",
   "ToxicFire" to "エクシマス・カバル: トキシックフレイム",
   "FreezeInShoot" to "エクシマス・カバル: フローズンライト",
+  "ShockingLeech" to "エクシマス・カバル: ショッキングリーチ",
 
   // ボス
   "HyenaPack" to "Hyenaパック",
@@ -598,11 +608,13 @@ object Translations {
 
   // デイリー
   "SeasonDailyAimGlide" to Pair("グライダー", "エイムグライドで敵を15体倒す"),
-  "SeasonDailyKillEnemiesWithFinishers" to Pair("フィニッシャーによる撃破", "フィニッシャーで敵を10体倒す"),
+  "SeasonDailyKillEnemiesWithFinishers" to Pair("処刑者", "フィニッシャーで敵を10体倒す"),
   "SeasonDailyKillEnemiesWithHeadshots" to Pair("マークスマン", "ヘッドショットで敵を40体倒す"),
   "SeasonDailyKillEnemiesWhileOnKDrive" to Pair("スリルライダー", "K-ドライブ、ケイス、ベロシポッド、アトミサイクルに乗った状態で敵を20体倒す"),
   "SeasonDailyKillEnemiesWithSecondary" to Pair("小は大を征す", "セカンダリ武器で敵を150体倒す"),
   "SeasonDailyMercyKill" to Pair("慈悲なし", "Mercy で敵を1体倒す"),
+  "SeasonDailyPlayEmote" to Pair("表現豊か", "ギアメニューからエモートを1回行う"),
+  "SeasonDailyCollectCredits" to Pair("貯蓄家", "合計 15,000 Cr を拾う"),
 
   "SeasonDailyVisitFeaturedDojo" to Pair("旅行目的", "特選Dojoを訪れる"),
   "SeasonDailyDeployAirSupport" to Pair("風通し良好", "エアリアルサポートチャージを展開する"),
@@ -618,11 +630,17 @@ object Translations {
   "SeasonWeeklyCompleteSpy" to Pair("諜報員", "潜入ミッションを3回クリアする"),
 
   "SeasonWeeklyCompleteClemMission" to Pair("良き友", "Clemの週ミッションを完了する"),
+  "SeasonWeeklyCollector" to Pair("収集者", "デュヴィリで素材を100個集める"),
+  "SeasonWeeklyCatchRareVenusFish" to Pair("金星の釣り人", "オーブ峡谷で3匹のレアなサーボ魚を捕まえる"),
+  // エリートウィークリー
+  "SeasonWeeklyEliteCompleteMission" to Pair("完璧な", "ミッションを1回完了する"),
   "SeasonWeeklyBoardingPartyNoDamage" to Pair("パーフェクト", "レールジャックに突撃した敵をノーダメージで撃破する"),
   "SeasonWeeklyHardKillEnemiesSteelPath" to Pair("冷徹", "鋼の道のりミッションで敵を1,000体倒す"),
   "SeasonWeeklyHardFriendsDefense" to Pair("防衛", "防衛ミッションを最低12ウェーブまで進めてクリアする"),
   "SeasonWeeklyHardRailjackMissions" to Pair("エリート探検者", "レールジャックミッションを8回クリアする"),
   "SeasonWeeklyHardThePriceOfFreedom" to Pair("自由の代償", "任意の Granum クラウンを使用して、コーパス船タイルに囚われたソラリス民を1人救出する"),
+  "SeasonWeeklyHardCompleteSortie" to Pair("ソーティーエキスパート", "ソーティーを3回クリアする"),
+  "SeasonWeeklyHardUnlockRelics" to Pair("レリックの解放", "レリックを10個解放する")
   )
 
   fun translateNightwaveChallenge(challenge: String): Pair<String, String> {
