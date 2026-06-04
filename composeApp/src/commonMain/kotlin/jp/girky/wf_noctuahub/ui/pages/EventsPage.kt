@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -32,6 +33,32 @@ fun EventsPage(
   }
   val now = nowState.value
 
+  // 終了予定時刻（Expiry）超過および耐久値0%で即座に除外するフィルタリング
+  val activeGoals = remember(goals, now) {
+    goals.filter { eventGoal ->
+      // 1. 終了予定時刻（Expiry）超過による即時削除
+      val expiryLong = eventGoal.expiry?.epochMillis ?: 0L
+      if (expiryLong > 0L && expiryLong <= now) {
+        return@filter false // 終了時刻に達したものは即座に非表示
+      }
+
+      // 2. 耐久型イベントの耐久値0%による即時削除
+      val descLower = eventGoal.desc?.lowercase() ?: ""
+      val tagLower = eventGoal.tag?.lowercase() ?: ""
+      val isHealthType = descLower.contains("razorback") || 
+                         descLower.contains("fomorian") || 
+                         tagLower.contains("razorback") || 
+                         tagLower.contains("fomorian")
+      if (isHealthType) {
+        val health = (eventGoal.healthPct ?: 1.0).toFloat()
+        if (health <= 0f) {
+          return@filter false // 耐久が0%になったものは即座に非表示
+        }
+      }
+      true
+    }
+  }
+
   LazyColumn(
     modifier = Modifier.fillMaxSize().padding(16.dp),
     verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -51,7 +78,7 @@ fun EventsPage(
       )
     }
 
-    if (goals.isEmpty()) {
+    if (activeGoals.isEmpty()) {
       item {
         Text(
           text = "現在アクティブなイベントはありません。",
@@ -60,7 +87,7 @@ fun EventsPage(
         )
       }
     } else {
-      items(goals) { eventGoal ->
+      items(activeGoals) { eventGoal ->
         val eventDesc = if (eventGoal.desc != null) {
           val eventNameTranslated = Translations.translateEvent(eventGoal.desc)
           if (eventNameTranslated != eventGoal.desc) {

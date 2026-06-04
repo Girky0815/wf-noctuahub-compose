@@ -276,7 +276,7 @@ fun App() {
     bottomBar = {
       if (currentScreen != Screen.Update) {
       NavigationBar {
-        listOf(Screen.Status, Screen.Fissures, Screen.News, Screen.Settings).forEach { screen ->
+        listOf(Screen.Status, Screen.News, Screen.Events, Screen.Fissures, Screen.Settings).forEach { screen ->
         val isSelected = currentScreen == screen
         NavigationBarItem(
           icon = { Icon(screen.icon, contentDescription = screen.label) },
