@@ -38,7 +38,9 @@ data class WsEvent(
   @SerialName("ImageUrl") val imageUrl: String? = null,
   @SerialName("Date") val date: MongoDate? = null,
   @SerialName("EventStartDate") val eventStartDate: MongoDate? = null,
-  @SerialName("EventEndDate") val eventEndDate: MongoDate? = null
+  @SerialName("EventEndDate") val eventEndDate: MongoDate? = null,
+  @SerialName("Community") val community: Boolean? = false,
+  @SerialName("EventLiveUrl") val eventLiveUrl: String? = null
 )
 
 @Serializable

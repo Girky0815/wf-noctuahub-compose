@@ -53,6 +53,10 @@ import jp.girky.wf_noctuahub.ui.pages.ResurgencePage
 import jp.girky.wf_noctuahub.ui.pages.Calendar1999Page
 import jp.girky.wf_noctuahub.ui.pages.CircuitPage
 import jp.girky.wf_noctuahub.ui.pages.EventsPage
+import jp.girky.wf_noctuahub.ui.pages.NewsPage
+import jp.girky.wf_noctuahub.ui.pages.LinksPage
+import androidx.compose.material.icons.rounded.Newspaper
+import androidx.compose.material.icons.rounded.Link
 import jp.girky.wf_noctuahub.utils.Translations
 import kotlinx.coroutines.launch
 import jp.girky.wf_noctuahub.ui.theme.AppTheme
@@ -66,6 +70,7 @@ import kotlinx.datetime.toLocalDateTime
 
 enum class Screen(val route: String, val icon: androidx.compose.ui.graphics.vector.ImageVector, val label: String) {
   Status("status", Icons.Rounded.Dashboard, "ステータス"),
+  News("news", Icons.Rounded.Newspaper, "ニュース"),
   Events("events", Icons.Rounded.Event, "イベント"),
   Fissures("fissures", Icons.Rounded.Bolt, "亀裂"),
   Nightwave("nightwave", Icons.Rounded.Radio, "Nightwave"),
@@ -74,6 +79,7 @@ enum class Screen(val route: String, val icon: androidx.compose.ui.graphics.vect
   Resurgence("resurgence", Icons.Rounded.Sync, "Prime Resurgence"),
   Calendar1999("calendar1999", Icons.Rounded.CalendarToday, "1999 Calendar"),
   Circuit("circuit", Icons.Rounded.Repeat, "サーキット"),
+  Links("links", Icons.Rounded.Link, "リンク集"),
   ArchonHunt("archon", Icons.Rounded.Adjust, "アルコン討伐戦"),
   Descendia("descendia", Icons.Rounded.Castle, "ディセンディア"),
   Archimedea("archimedea", Icons.Rounded.Science, "アルキメデア"),
@@ -146,13 +152,15 @@ fun App() {
         ListGroup {
         listOf(
           Screen.Status, 
+          Screen.News,
           Screen.Fissures,
           Screen.Events, 
           Screen.Nightwave, 
           Screen.Sortie, 
           Screen.Baro, 
           Screen.Resurgence, 
-          Screen.Calendar1999
+          Screen.Calendar1999,
+          Screen.Links
         ).forEach { screen ->
           val isSelected = currentScreen == screen
           ListTile(
@@ -268,7 +276,7 @@ fun App() {
     bottomBar = {
       if (currentScreen != Screen.Update) {
       NavigationBar {
-        listOf(Screen.Status, Screen.Fissures, Screen.Events, Screen.Settings).forEach { screen ->
+        listOf(Screen.Status, Screen.Fissures, Screen.News, Screen.Settings).forEach { screen ->
         val isSelected = currentScreen == screen
         NavigationBarItem(
           icon = { Icon(screen.icon, contentDescription = screen.label) },
@@ -337,11 +345,20 @@ fun App() {
           onLocalize = { viewModel.localize(it) }
         )
         }
+        Screen.News -> {
+        NewsPage(
+          events = worldState?.events,
+          onLocalize = { viewModel.localize(it) }
+        )
+        }
         Screen.Events -> {
         EventsPage(
           worldState = worldState,
           onLocalize = { viewModel.localize(it) }
         )
+        }
+        Screen.Links -> {
+        LinksPage()
         }
         Screen.Fissures -> {
         FissuresPage(
