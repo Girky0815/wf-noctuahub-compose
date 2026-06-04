@@ -55,21 +55,53 @@ fun NewsPage(
   // 安全にイベントリストを取得
   val safeEvents = events ?: emptyList()
 
-  // 各要素の日本語タイトルを優先的に決定するヘルパー
-  fun getEventTitle(event: WsEvent): String {
+  /**
+   * 各要素の日本語タイトルを優先的に決定するヘルパー。
+   * 日本語、英語の順に確認し、どちらもない場合はnullを返します。
+   */
+  fun getEventTitle(event: WsEvent): String? {
     val jaMsg = event.messages?.find { it.languageCode == "ja" }?.message
-    return if (!jaMsg.isNullOrBlank()) {
-      jaMsg
-    } else {
-      val raw = event.messages?.firstOrNull()?.message ?: "不明なお知らせ"
-      onLocalize(raw)
+    if (!jaMsg.isNullOrBlank()) {
+      return jaMsg
     }
+    val enMsg = event.messages?.find { it.languageCode == "en" }?.message
+    if (!enMsg.isNullOrBlank()) {
+      return enMsg
+    }
+    return null
   }
 
-  // カテゴリ分類ロジック
+  // カテゴリ分類およびフィルタリングロジック
   val filteredEvents = remember(safeEvents, selectedTab) {
-    safeEvents.filter { event ->
-      val title = getEventTitle(event)
+    safeEvents.mapNotNull { event ->
+      val title = getEventTitle(event) ?: return@mapNotNull null
+      val titleLower = title.lowercase()
+
+      // Discord や公式SNSアカウント開設系を判定して除外
+      val isDiscordOrSns = titleLower.contains("discord") ||
+                           titleLower.contains("bluesky") ||
+                           titleLower.contains("公式x") ||
+                           titleLower.contains("公式twitter") ||
+                           titleLower.contains("公式instagram") ||
+                           titleLower.contains("公式threads") ||
+                           titleLower.contains("公式sns") ||
+                           titleLower.contains("xアカウント") ||
+                           titleLower.contains("twitterアカウント") ||
+                           titleLower.contains("blueskyアカウント") ||
+                           titleLower.contains("snsアカウント") ||
+                           titleLower.contains("official x") ||
+                           titleLower.contains("official bluesky") ||
+                           titleLower.contains("official twitter") ||
+                           titleLower.contains("official instagram") ||
+                           titleLower.contains("official tiktok") ||
+                           titleLower.contains("official facebook") ||
+                           titleLower.contains("official sns") ||
+                           titleLower.contains("joindiscord")
+
+      if (isDiscordOrSns) {
+        return@mapNotNull null
+      }
+
       val isPatch = title.contains("アップデート", ignoreCase = true) ||
                     title.contains("ホットフィックス", ignoreCase = true) ||
                     title.contains("修正", ignoreCase = true) ||
@@ -79,10 +111,16 @@ fun NewsPage(
       
       val isCommunity = event.community == true || !event.eventLiveUrl.isNullOrBlank()
 
-      when (selectedTab) {
+      val matchesTab = when (selectedTab) {
         "patch" -> isPatch && !isCommunity // パッチノートカテゴリ
         "community" -> isCommunity // コミュニティ・配信カテゴリ
         else -> !isPatch && !isCommunity // 一般ニュースカテゴリ
+      }
+
+      if (matchesTab) {
+        event to title
+      } else {
+        null
       }
     }
   }
@@ -147,8 +185,7 @@ fun NewsPage(
           }
         }
       } else {
-        items(filteredEvents, key = { it.id?.oid ?: it.hashCode().toString() }) { event ->
-          val title = getEventTitle(event)
+        items(filteredEvents, key = { it.first.id?.oid ?: it.first.hashCode().toString() }) { (event, title) ->
           val dateLong = event.date?.epochMillis ?: 0L
           
           // 日付のJST変換と美フォーマット
