@@ -190,10 +190,15 @@ fun NewsPage(
             filteredEvents.forEach { (event, title) ->
               val dateLong = event.date?.epochMillis ?: 0L
               
-              // 日付のJST変換と美フォーマット
+              // 日付のJST変換と美フォーマット (yyyy/MM/dd HH:mm)
               val dateStr = if (dateLong > 0L) {
                 val dt = Instant.fromEpochMilliseconds(dateLong).toLocalDateTime(TimeZone.currentSystemDefault())
-                "${dt.year}/${dt.monthNumber.toString().padStart(2, '0')}/${dt.dayOfMonth.toString().padStart(2, '0')}"
+                val year = dt.year
+                val month = dt.monthNumber.toString().padStart(2, '0')
+                val day = dt.dayOfMonth.toString().padStart(2, '0')
+                val hour = dt.hour.toString().padStart(2, '0')
+                val minute = dt.minute.toString().padStart(2, '0')
+                "$year/$month/$day $hour:$minute"
               } else {
                 ""
               }
