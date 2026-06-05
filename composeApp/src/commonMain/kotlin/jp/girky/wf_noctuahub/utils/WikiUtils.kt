@@ -8,7 +8,7 @@ object WikiUtils {
   private val incarnonNameMap = mapOf(
     "CeramicDagger" to "Ceramic Dagger",
     "DualToxocyst" to "Dual Toxocyst",
-    "AckBrunt" to "Ack & Brunt",
+    "AckAndBrunt" to "Ack & Brunt",
     "DualRaza" to "Dual Raza",
     "NamiSolo" to "Nami Solo",
     "DualIchor" to "Dual Ichor",
