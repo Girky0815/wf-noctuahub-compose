@@ -104,4 +104,8 @@ class AppSettings(private val pref: ObservableSettings) {
     map["cetus_offset"]?.toIntOrNull()?.let { setCetusOffset(it) }
     map["vallis_offset"]?.toIntOrNull()?.let { setVallisOffset(it) }
   }
+
+  fun clearSettings() {
+    pref.clear()
+  }
 }
