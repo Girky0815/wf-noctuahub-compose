@@ -2,11 +2,18 @@ package jp.girky.wf_noctuahub.data.repository
 
 import jp.girky.wf_noctuahub.data.api.WarframeApiClient
 import jp.girky.wf_noctuahub.data.api.model.*
+import jp.girky.wf_noctuahub.utils.CacheUtils
+import jp.girky.wf_noctuahub.platform.getAppUpdater
+import io.ktor.client.request.get
+import io.ktor.client.statement.readBytes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class WarframeRepository(private val apiClient: WarframeApiClient) {
+class WarframeRepository(
+  private val apiClient: WarframeApiClient,
+  private val appSettings: AppSettings
+) {
 
   private val _worldState = MutableStateFlow<WorldStateResponse?>(null)
   val worldState: StateFlow<WorldStateResponse?> = _worldState.asStateFlow()
@@ -26,25 +33,119 @@ class WarframeRepository(private val apiClient: WarframeApiClient) {
   }
 
   /**
+   * 指定されたマニフェストファイル行（例: ExportCustoms_ja.json!00_...）から
+   * データを取得する。キャッシュが存在し、更新不要であればキャッシュから読み込み、
+   * そうでなければダウンロードしてキャッシュに書き込む。
+   */
+  private suspend inline fun <reified T> getLocalizedData(
+    manifestLine: String,
+    needsDownload: Boolean
+  ): T? {
+    val fileName = manifestLine.substringBefore("!") // 例: "ExportCustoms_ja.json"
+    
+    var jsonString: String? = null
+    
+    // 更新不要であればキャッシュの読み込みを試みる
+    if (!needsDownload) {
+      jsonString = CacheUtils.loadCacheFile(fileName)
+      if (jsonString != null) {
+        println("Load localized data from cache: $fileName")
+      }
+    }
+    
+    // キャッシュがない、または更新が必要な場合はダウンロードする
+    if (jsonString == null) {
+      println("Download localized data: $manifestLine")
+      try {
+        val cleanManifestLine = manifestLine.trim()
+        val url = "http://content.warframe.com/PublicExport/Manifest/$cleanManifestLine"
+        val response = apiClient.client.get(url)
+        jsonString = response.readBytes().decodeToString()
+        
+        // キャッシュへ保存
+        CacheUtils.saveCacheFile(fileName, jsonString)
+      } catch (e: Exception) {
+        e.printStackTrace()
+        // エラー時は、もしあれば古いキャッシュからのロードを試みる
+        jsonString = CacheUtils.loadCacheFile(fileName)
+      }
+    }
+    
+    if (jsonString == null) return null
+    
+    return try {
+      val jsonParser = kotlinx.serialization.json.Json {
+        ignoreUnknownKeys = true
+        isLenient = true
+      }
+      jsonParser.decodeFromString<T>(jsonString)
+    } catch (e: Exception) {
+      e.printStackTrace()
+      null
+    }
+  }
+
+  /**
    * アプリ起動時に Public Export の各種辞書をダウンロード・解凍・パースしオンメモリに保持する
    */
   suspend fun initializeLocalization() {
-    val manifest = apiClient.fetchPublicExportManifest()
+    // すでに辞書がロードされている場合は処理をスキップ（Pull-to-refresh等での無駄な通信を防止）
+    if (localizationDict.isNotEmpty()) {
+      println("initializeLocalization: Already loaded. Skipping.")
+      return
+    }
+
+    var manifest: List<String> = emptyList()
+    var needsDownload = true
+    var currentManifestText = ""
     
+    try {
+      manifest = apiClient.fetchPublicExportManifest()
+      currentManifestText = manifest.joinToString("\n")
+    } catch (e: Exception) {
+      e.printStackTrace()
+      // マニフェスト取得失敗時はキャッシュからのロードのみを試みるため、needsDownloadをfalseにする
+      needsDownload = false
+    }
+
+    if (manifest.isNotEmpty()) {
+      val lastManifestText = appSettings.getLastManifest()
+      val lastAppVersion = appSettings.getLastAppVersion()
+      val currentAppVersion = getAppUpdater().getAppVersionName()
+
+      // マニフェスト内容、アプリバージョン、ローカルのキャッシュファイル存在をチェック
+      val files = listOf(
+        "ExportCustoms_ja.json",
+        "ExportRegions_ja.json",
+        "ExportWarframes_ja.json",
+        "ExportWeapons_ja.json",
+        "ExportResources_ja.json",
+        "ExportGear_ja.json",
+        "ExportSentinels_ja.json"
+      )
+      val allCachesExist = files.all { CacheUtils.loadCacheFile(it) != null }
+
+      needsDownload = (currentManifestText != lastManifestText) || 
+                      (currentAppVersion != lastAppVersion) || 
+                      !allCachesExist
+    }
+
     // Customs (一般的なアイテム名やテキスト) の取得
     val customsLine = manifest.find { it.startsWith("ExportCustoms_ja.json") }
+      ?: if (!needsDownload) "ExportCustoms_ja.json" else null
     if (customsLine != null) {
-      val customsResponse: ExportCustomsResponse = apiClient.fetchExportJson(customsLine)
-      customsResponse.exportCustoms?.forEach { item ->
+      val customsResponse: ExportCustomsResponse? = getLocalizedData(customsLine, needsDownload)
+      customsResponse?.exportCustoms?.forEach { item ->
         localizationDict[item.uniqueName] = formatName(item.name)
       }
     }
 
     // Regions (ノード名など)
     val regionsLine = manifest.find { it.startsWith("ExportRegions_ja.json") }
+      ?: if (!needsDownload) "ExportRegions_ja.json" else null
     if (regionsLine != null) {
-      val regionsResponse: ExportRegionsResponse = apiClient.fetchExportJson(regionsLine)
-      regionsResponse.exportRegions?.forEach { region ->
+      val regionsResponse: ExportRegionsResponse? = getLocalizedData(regionsLine, needsDownload)
+      regionsResponse?.exportRegions?.forEach { region ->
         val planet = region.systemName ?: ""
         val formatted = if (planet.isNotBlank()) "${region.name} ($planet)" else region.name
         localizationDict[region.uniqueName] = formatName(formatted)
@@ -54,51 +155,64 @@ class WarframeRepository(private val apiClient: WarframeApiClient) {
 
     // Warframes (フレーム名) の取得
     val warframesLine = manifest.find { it.startsWith("ExportWarframes_ja.json") }
+      ?: if (!needsDownload) "ExportWarframes_ja.json" else null
     if (warframesLine != null) {
-      val warframesResponse: ExportWarframesResponse = apiClient.fetchExportJson(warframesLine)
-      warframesResponse.exportWarframes?.forEach { item ->
+      val warframesResponse: ExportWarframesResponse? = getLocalizedData(warframesLine, needsDownload)
+      warframesResponse?.exportWarframes?.forEach { item ->
         localizationDict[item.uniqueName] = formatName(item.name)
       }
     }
 
     // Weapons (武器名) の取得
     val weaponsLine = manifest.find { it.startsWith("ExportWeapons_ja.json") }
+      ?: if (!needsDownload) "ExportWeapons_ja.json" else null
     if (weaponsLine != null) {
-      val weaponsResponse: ExportWeaponsResponse = apiClient.fetchExportJson(weaponsLine)
-      weaponsResponse.exportWeapons?.forEach { item ->
+      val weaponsResponse: ExportWeaponsResponse? = getLocalizedData(weaponsLine, needsDownload)
+      weaponsResponse?.exportWeapons?.forEach { item ->
         localizationDict[item.uniqueName] = formatName(item.name)
       }
     }
 
     // Resources (リソース名) の取得
     val resourcesLine = manifest.find { it.startsWith("ExportResources_ja.json") }
+      ?: if (!needsDownload) "ExportResources_ja.json" else null
     if (resourcesLine != null) {
-      val resourcesResponse: ExportResourcesResponse = apiClient.fetchExportJson(resourcesLine)
-      resourcesResponse.exportResources?.forEach { item ->
+      val resourcesResponse: ExportResourcesResponse? = getLocalizedData(resourcesLine, needsDownload)
+      resourcesResponse?.exportResources?.forEach { item ->
         localizationDict[item.uniqueName] = formatName(item.name)
       }
     }
 
     // Gear (ギア名) の取得
     val gearLine = manifest.find { it.startsWith("ExportGear_ja.json") }
+      ?: if (!needsDownload) "ExportGear_ja.json" else null
     if (gearLine != null) {
-      val gearResponse: ExportGearResponse = apiClient.fetchExportJson(gearLine)
-      gearResponse.exportGear?.forEach { item ->
+      val gearResponse: ExportGearResponse? = getLocalizedData(gearLine, needsDownload)
+      gearResponse?.exportGear?.forEach { item ->
         localizationDict[item.uniqueName] = formatName(item.name)
       }
     }
 
     // Sentinels (センチネル・ペット名) の取得
     val sentinelsLine = manifest.find { it.startsWith("ExportSentinels_ja.json") }
+      ?: if (!needsDownload) "ExportSentinels_ja.json" else null
     if (sentinelsLine != null) {
-      val sentinelsResponse: ExportSentinelsResponse = apiClient.fetchExportJson(sentinelsLine)
-      sentinelsResponse.exportSentinels?.forEach { item ->
+      val sentinelsResponse: ExportSentinelsResponse? = getLocalizedData(sentinelsLine, needsDownload)
+      sentinelsResponse?.exportSentinels?.forEach { item ->
         localizationDict[item.uniqueName] = formatName(item.name)
       }
     }
 
     // イベント専用ノードの手動マッピングを追加
     localizationDict["EventNode5"] = "Kronia リレー (土星)"
+
+    // 正常にWebからロードできた場合はマニフェストとアプリバージョン情報を更新保存
+    if (manifest.isNotEmpty() && needsDownload) {
+      appSettings.setLastManifest(currentManifestText)
+      val currentAppVersion = getAppUpdater().getAppVersionName()
+      appSettings.setLastAppVersion(currentAppVersion)
+      println("Saved new manifest & app version ($currentAppVersion)")
+    }
   }
 
   /**

@@ -28,8 +28,9 @@ object LocalCycles {
   /**
    * Cetus: Day 100m -> Night 50m
    */
-  fun getCetusCycle(nowMs: Long): CycleState {
-    val elapsed = nowMs - CETUS_EPOCH
+  fun getCetusCycle(nowMs: Long, offsetSec: Int = 0): CycleState {
+    val adjustedNow = nowMs + offsetSec * 1000L
+    val elapsed = adjustedNow - CETUS_EPOCH
     val cycleTime = elapsed % CETUS_CYCLE_MS
     val dayDuration = 100 * 60 * 1000L
     
@@ -52,8 +53,9 @@ object LocalCycles {
   /**
    * Orb Vallis: Cold 24m -> Warm 6m
    */
-  fun getVallisCycle(nowMs: Long): CycleState {
-    val elapsed = nowMs - VALLIS_EPOCH
+  fun getVallisCycle(nowMs: Long, offsetSec: Int = 0): CycleState {
+    val adjustedNow = nowMs + offsetSec * 1000L
+    val elapsed = adjustedNow - VALLIS_EPOCH
     val cycleTime = elapsed % VALLIS_CYCLE_MS
     val coldDuration = 24 * 60 * 1000L
     
@@ -77,8 +79,9 @@ object LocalCycles {
   /**
    * Cambion Drift: Fass 100m -> Vome 50m
    */
-  fun getCambionCycle(nowMs: Long): CycleState {
-    val elapsed = nowMs - CAMBION_EPOCH
+  fun getCambionCycle(nowMs: Long, offsetSec: Int = 0): CycleState {
+    val adjustedNow = nowMs + offsetSec * 1000L
+    val elapsed = adjustedNow - CAMBION_EPOCH
     val cycleTime = elapsed % CAMBION_CYCLE_MS
     val fassDuration = 100 * 60 * 1000L
     

@@ -108,7 +108,7 @@ fun App() {
   }
   
   val apiClient = remember { WarframeApiClient() }
-  val repository = remember { WarframeRepository(apiClient) }
+  val repository = remember { WarframeRepository(apiClient, appSettings) }
   val viewModel = remember { MainViewModel(repository) }
 
   val fetchState by viewModel.fetchState.collectAsState()
@@ -340,8 +340,12 @@ fun App() {
       } else {
       when (currentScreen) {
         Screen.Status -> {
+        val cetusOffset by appSettings.cetusOffsetFlow.collectAsState(0)
+        val vallisOffset by appSettings.vallisOffsetFlow.collectAsState(0)
         StatusPage(
           worldState = worldState,
+          cetusOffset = cetusOffset,
+          vallisOffset = vallisOffset,
           onLocalize = { viewModel.localize(it) }
         )
         }

@@ -177,6 +177,103 @@ fun SettingsPage(
       )
     }
 
+    SectionTitle(title = "ダッシュボードの設定")
+    ListGroup {
+      val cetusOffset by appSettings.cetusOffsetFlow.collectAsState(0)
+      val vallisOffset by appSettings.vallisOffsetFlow.collectAsState(0)
+
+      ListTile(
+        title = "エイドロン / カンビオン 調整",
+        subtitle = "補正値: ${if (cetusOffset >= 0) "+" else ""}${cetusOffset}秒",
+        leadingIcon = { Icon(Icons.Default.Update, contentDescription = null) },
+        onClick = null
+      )
+      ListItem {
+        Row(
+          modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp),
+          horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+          listOf(-60, -10, -1, 1, 10, 60).forEach { delta ->
+            val label = if (delta > 0) "+${delta}s" else "${delta}s"
+            Button(
+              onClick = { coroutineScope.launch { appSettings.setCetusOffset(cetusOffset + delta) } },
+              colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+              ),
+              contentPadding = PaddingValues(horizontal = 4.dp, vertical = 2.dp),
+              modifier = Modifier.weight(1f).height(32.dp)
+            ) {
+              Text(text = label, style = MaterialTheme.typography.labelSmall)
+            }
+          }
+        }
+      }
+
+      ListTile(
+        title = "オーブ峡谷 調整",
+        subtitle = "補正値: ${if (vallisOffset >= 0) "+" else ""}${vallisOffset}秒",
+        leadingIcon = { Icon(Icons.Default.Update, contentDescription = null) },
+        onClick = null
+      )
+      ListItem {
+        Row(
+          modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp),
+          horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+          listOf(-60, -10, -1, 1, 10, 60).forEach { delta ->
+            val label = if (delta > 0) "+${delta}s" else "${delta}s"
+            Button(
+              onClick = { coroutineScope.launch { appSettings.setVallisOffset(vallisOffset + delta) } },
+              colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+              ),
+              contentPadding = PaddingValues(horizontal = 4.dp, vertical = 2.dp),
+              modifier = Modifier.weight(1f).height(32.dp)
+            ) {
+              Text(text = label, style = MaterialTheme.typography.labelSmall)
+            }
+          }
+        }
+      }
+
+      ListItem {
+        Row(
+          modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp),
+          horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+          Button(
+            onClick = {
+              coroutineScope.launch {
+                appSettings.setCetusOffset(31)
+                appSettings.setVallisOffset(801)
+              }
+            },
+            colors = ButtonDefaults.buttonColors(
+              containerColor = MaterialTheme.colorScheme.primaryContainer,
+              contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            ),
+            modifier = Modifier.weight(1f)
+          ) {
+            Text("おすすめ値に設定", style = MaterialTheme.typography.labelMedium)
+          }
+
+          OutlinedButton(
+            onClick = {
+              coroutineScope.launch {
+                appSettings.setCetusOffset(0)
+                appSettings.setVallisOffset(0)
+              }
+            },
+            modifier = Modifier.weight(1f)
+          ) {
+            Text("リセット", style = MaterialTheme.typography.labelMedium)
+          }
+        }
+      }
+    }
+
     SectionTitle(title = "API 状態")
     ListGroup {
       val statusText = when (fetchState) {

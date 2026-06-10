@@ -22,6 +22,8 @@ import jp.girky.wf_noctuahub.utils.currentTimeMillis
 @Composable
 fun StatusPage(
   worldState: WorldStateResponse?,
+  cetusOffset: Int = 0,
+  vallisOffset: Int = 0,
   onLocalize: (String?) -> String
 ) {
   val scrollState = rememberScrollState()
@@ -51,7 +53,7 @@ fun StatusPage(
       // シータスサイクル
       CycleCard(
         title = "エイドロンの草原",
-        cycleGenerator = { LocalCycles.getCetusCycle(it) },
+        cycleGenerator = { LocalCycles.getCetusCycle(it, cetusOffset) },
         stateTextFormatter = { if (it.isDay) "昼" else "夜" },
         stateColorFormatter = { if (it.isDay) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary }
       )
@@ -59,7 +61,7 @@ fun StatusPage(
       // オーブ峡谷サイクル
       CycleCard(
         title = "オーブ峡谷",
-        cycleGenerator = { LocalCycles.getVallisCycle(it) },
+        cycleGenerator = { LocalCycles.getVallisCycle(it, vallisOffset) },
         stateTextFormatter = { if (it.state == "warm") "温暖" else "寒冷" },
         stateColorFormatter = { if (it.state == "warm") MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.tertiary }
       )
@@ -67,7 +69,7 @@ fun StatusPage(
       // カンビオン荒地サイクル
       CycleCard(
         title = "カンビオン荒地",
-        cycleGenerator = { LocalCycles.getCambionCycle(it) },
+        cycleGenerator = { LocalCycles.getCambionCycle(it, cetusOffset) },
         stateTextFormatter = { if (it.isDay) "Fass" else "Vome" },
         stateColorFormatter = { if (it.isDay) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary }
       )
