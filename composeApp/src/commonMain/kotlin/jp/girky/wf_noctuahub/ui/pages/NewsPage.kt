@@ -219,7 +219,7 @@ fun NewsPage(
 
               ListItem(
                 onClick = {
-                  event.prop?.let { uriHandler.openUri(it) }
+                  event.prop?.let { uriHandler.openUri(localizeNewsUrl(it)) }
                 },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(4.dp),
@@ -350,7 +350,7 @@ fun NewsPage(
                     // 詳細リンク案内
                     if (!event.prop.isNullOrBlank()) {
                       TextButton(
-                        onClick = { uriHandler.openUri(event.prop) },
+                        onClick = { uriHandler.openUri(localizeNewsUrl(event.prop)) },
                         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
                         modifier = Modifier.height(32.dp)
                       ) {
@@ -381,5 +381,27 @@ fun NewsPage(
         }
       }
     }
+  }
+}
+
+/**
+ * ニュースURLを日本語版にローカライズする
+ * /en/や言語指定なしの公式ニュースURLを /ja/ に置換する
+ */
+private fun localizeNewsUrl(url: String): String {
+  val httpsUrl = if (url.startsWith("http://")) {
+    "https://" + url.substring(7)
+  } else {
+    url
+  }
+
+  return when {
+    httpsUrl.startsWith("https://www.warframe.com/en/news/") -> {
+      httpsUrl.replace("https://www.warframe.com/en/news/", "https://www.warframe.com/ja/news/")
+    }
+    httpsUrl.startsWith("https://www.warframe.com/news/") -> {
+      httpsUrl.replace("https://www.warframe.com/news/", "https://www.warframe.com/ja/news/")
+    }
+    else -> httpsUrl
   }
 }
