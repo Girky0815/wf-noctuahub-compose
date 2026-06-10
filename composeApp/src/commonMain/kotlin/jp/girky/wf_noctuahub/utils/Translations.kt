@@ -619,6 +619,9 @@ object Translations {
   "SeasonDailyVisitFeaturedDojo" to Pair("旅行目的", "特選Dojoを訪れる"),
   "SeasonDailyDeployAirSupport" to Pair("風通し良好", "エアリアルサポートチャージを展開する"),
   "SeasonDailyCompleteMissionPrimary" to Pair("手一杯", "プライマリ武器のみを装備してミッションをクリアする"),
+  "SeasonDailyBulletJump" to Pair("トランポリン", "バレットジャンプを150回行う"),
+  "SeasonDailyCompleteMission" to Pair("エージェント", "ミッションを1回クリアする"),
+  
 
 
   // ウィークリー (末尾の数字は関数側で動的に抽出するためキーからは除外)
@@ -632,6 +635,10 @@ object Translations {
   "SeasonWeeklyCompleteClemMission" to Pair("良き友", "Clemの週ミッションを完了する"),
   "SeasonWeeklyCollector" to Pair("収集者", "デュヴィリで素材を100個集める"),
   "SeasonWeeklyCatchRareVenusFish" to Pair("金星の釣り人", "オーブ峡谷で3匹のレアなサーボ魚を捕まえる"),
+  "SeasonWeeklyNightAndDay" to Pair("昼と夜", "カンビオン荒地で Vome または Fass の残余を10個集める"),
+  "SeasonWeeklyFinelyTuned" to Pair("調弦済み", "デュヴィリで異なる Shawzin の曲を3曲演奏する"),
+
+
   // エリートウィークリー
   "SeasonWeeklyEliteCompleteMission" to Pair("完璧な", "ミッションを1回完了する"),
   "SeasonWeeklyBoardingPartyNoDamage" to Pair("パーフェクト", "レールジャックに突撃した敵をノーダメージで撃破する"),
@@ -640,7 +647,9 @@ object Translations {
   "SeasonWeeklyHardRailjackMissions" to Pair("エリート探検者", "レールジャックミッションを8回クリアする"),
   "SeasonWeeklyHardThePriceOfFreedom" to Pair("自由の代償", "任意の Granum クラウンを使用して、コーパス船タイルに囚われたソラリス民を1人救出する"),
   "SeasonWeeklyHardCompleteSortie" to Pair("ソーティーエキスパート", "ソーティーを3回クリアする"),
-  "SeasonWeeklyHardUnlockRelics" to Pair("レリックの解放", "レリックを10個解放する")
+  "SeasonWeeklyHardUnlockRelics" to Pair("レリックの解放", "レリックを10個解放する"),
+  "SeasonWeeklyHardVitalArbiter" to Pair("重要仲裁人", "仲裁ミッションを1回クリアする"),
+  "SeasonWeeklyHardFastCapture" to Pair("スピードスター", "確保ミッションを90秒以内にクリアする")
   )
 
   fun translateNightwaveChallenge(challenge: String): Pair<String, String> {
