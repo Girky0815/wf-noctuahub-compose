@@ -283,11 +283,24 @@ class WarframeRepository(
    * 表記ゆれを正規化したキーでもマップを検索する
    */
   fun localize(uniqueName: String): String {
-    // "/Lotus/StoreItems/" を "/Lotus/" に置換したキーでも検索する
-    val cleaned = uniqueName.replace("/Lotus/StoreItems/", "/Lotus/")
-    localizationDict[cleaned]?.let { return it }
-    
+    // 1. 完全一致で検索
     localizationDict[uniqueName]?.let { return it }
+
+    // 2. "/Lotus/StoreItems/" (大文字小文字無視) を "/Lotus/" に置換したキーで検索
+    val cleaned = uniqueName.replace("/Lotus/StoreItems/", "/Lotus/", ignoreCase = true)
+    localizationDict[cleaned]?.let { return it }
+
+    // 3. 末尾のセグメントで末尾一致検索 (例: "/ElectEventPistolMod")
+    val lastSegment = uniqueName.substringAfterLast("/")
+    if (lastSegment.isNotBlank()) {
+      val suffix = "/$lastSegment"
+      val match = localizationDict.entries.find { (key, _) ->
+        key.endsWith(suffix, ignoreCase = true)
+      }
+      if (match != null) {
+        return match.value
+      }
+    }
 
     // もし uniqueName が /Lotus/ で始まらない rawName（例: "CeramicDagger", "Zylok", "Saryn", "Mirage"）の場合
     if (!uniqueName.startsWith("/Lotus/")) {
