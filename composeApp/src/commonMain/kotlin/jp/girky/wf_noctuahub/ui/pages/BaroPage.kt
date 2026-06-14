@@ -32,7 +32,7 @@ fun BaroPage(
   val expiryLong = baro.expiry?.date?.numberLong?.toLongOrNull()
   val isActive = activationLong != null && expiryLong != null && now >= activationLong && now < expiryLong
 
-  val location = baro.node?.let { onLocalize(it) } ?: "不明"
+  val location = baro.node?.let { Translations.translateRelay(it) } ?: "不明"
   val activationString = activationLong?.let { Instant.fromEpochMilliseconds(it).toString() }
   val expiryString = expiryLong?.let { Instant.fromEpochMilliseconds(it).toString() }
 
@@ -84,18 +84,29 @@ fun BaroPage(
     }
 
     if (isActive && baro.manifest != null && baro.manifest.isNotEmpty()) {
-      item {
-        SectionTitle(title = "販売品リスト", modifier = Modifier.padding(bottom = 8.dp))
-        ListGroup {
-          for (baroItem in baro.manifest) {
-            val name = onLocalize(baroItem.itemType ?: "")
-            val ducats = baroItem.primePrice ?: 0
-            val credits = baroItem.regularPrice ?: 0
-            
-            ListTile(
-              title = name,
-              subtitle = "${ducats} Ducats | ${credits} Credits"
-            )
+      val categories = listOf("武器", "MOD", "Void レリック", "装飾品", "外装", "常設")
+      val groupedItems = baro.manifest.groupBy { item ->
+        val name = onLocalize(item.itemType ?: "")
+        Translations.getItemCategory(item.itemType ?: "", name)
+      }
+
+      for (category in categories) {
+        val itemsInCat = groupedItems[category] ?: emptyList()
+        if (itemsInCat.isNotEmpty()) {
+          item {
+            SectionTitle(title = category, modifier = Modifier.padding(top = 16.dp, bottom = 8.dp))
+            ListGroup {
+              for (baroItem in itemsInCat) {
+                val name = onLocalize(baroItem.itemType ?: "")
+                val ducats = baroItem.primePrice ?: 0
+                val credits = baroItem.regularPrice ?: 0
+                
+                ListTile(
+                  title = name,
+                  subtitle = "${ducats} デュカット | ${credits} Cr"
+                )
+              }
+            }
           }
         }
       }

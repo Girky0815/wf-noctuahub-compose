@@ -712,19 +712,103 @@ object Translations {
   )
 
   fun translateEvent(eventDescOrTag: String): String {
-  val key = eventDescOrTag.substringAfterLast("/")
-  eventNames[key]?.let { return it }
+    val key = eventDescOrTag.substringAfterLast("/")
+    eventNames[key]?.let { return it }
 
-  // 部分一致のチェック
-  val lower = eventDescOrTag.lowercase()
-  if (lower.contains("jadeshadows")) return "獣の巣窟作戦"
-  if (lower.contains("belly")) return "アトラメンタム作戦"
-  if (lower.contains("ghoul")) return "グール粛清"
-  if (lower.contains("heatfissures")) return "サーミアの裂け目"
-  if (lower.contains("razorback")) return "Razorback Armada"
-  if (lower.contains("fomorian")) return "フォーモリアン戦艦の脅威"
+    // 部分一致のチェック
+    val lower = eventDescOrTag.lowercase()
+    if (lower.contains("jadeshadows")) return "獣の巣窟作戦"
+    if (lower.contains("belly")) return "アトラメンタム作戦"
+    if (lower.contains("ghoul")) return "グール粛清"
+    if (lower.contains("heatfissures")) return "サーミアの裂け目"
+    if (lower.contains("razorback")) return "Razorback Armada"
+    if (lower.contains("fomorian")) return "フォーモリアン戦艦の脅威"
 
-  return eventDescOrTag
+    return eventDescOrTag
+  }
+
+  // リレーノードの日本語訳
+  val relayNames = mapOf(
+    "MercuryHUB" to "Larunda リレー (水星)",
+    "VenusHUB" to "Vesper リレー (金星)",
+    "EarthHUB" to "Strata リレー (地球)",
+    "SaturnHUB" to "Kronia リレー (土星)",
+    "EuropaHUB" to "Leonov リレー (ヨーロッパ)",
+    "ErisHUB" to "Kuiper リレー (エリス)",
+    "PlutoHUB" to "Orcus リレー (冥王星)",
+    "TradeHUB1" to "Marooのバザー (地球)",
+    "MarooBazaar" to "Marooのバザー (地球)",
+    "TennoConHUB" to "Tennocon リレー",
+    "TennoconHUB" to "Tennocon リレー"
+  )
+
+  /**
+   * リレーノード名を日本語のリレー名に翻訳する
+   */
+  fun translateRelay(node: String): String {
+    return relayNames[node] ?: relayNames.entries.find { (key, _) ->
+      node.contains(key, ignoreCase = true)
+    }?.value ?: translateNode(node)
+  }
+
+  /**
+   * アイテムのTypeと日本語名からカテゴリ（「武器」「MOD」「Void レリック」「装飾品」「外装」「常設」）を判定する
+   */
+  fun getItemCategory(itemType: String, name: String): String {
+    // 1. 常設
+    if (itemType.contains("MummyQuest", ignoreCase = true) ||
+        itemType.contains("BaroTreasureBox", ignoreCase = true) ||
+        itemType.contains("FaePath", ignoreCase = true) ||
+        name.contains("Fae Path", ignoreCase = true) ||
+        name.contains("Inaros の砂", ignoreCase = true) ||
+        name.contains("Void サープラス", ignoreCase = true) ||
+        name.contains("砂嵐", ignoreCase = true)) {
+      return "常設"
+    }
+
+    // 2. 外装
+    if (itemType.contains("/Skins/", ignoreCase = true) ||
+        itemType.contains("/AvatarImages/", ignoreCase = true) ||
+        itemType.contains("/ArmorSets/", ignoreCase = true) ||
+        itemType.contains("/Armor/", ignoreCase = true) ||
+        itemType.contains("/Syandana/", ignoreCase = true) ||
+        itemType.contains("/Scarves/", ignoreCase = true) ||
+        itemType.contains("/Badges/", ignoreCase = true) ||
+        itemType.contains("/Sigils/", ignoreCase = true) ||
+        itemType.contains("/Emotes/", ignoreCase = true) ||
+        name.contains("シャンダナ") || name.contains("スキン") ||
+        name.contains("ヘルメット") || name.contains("エフェメラ") ||
+        name.contains("アタッチメント") || name.contains("スーツ") ||
+        name.contains("シジル") || name.contains("エモート") ||
+        name.contains("アーマー") || name.contains("エンブレム") ||
+        name.contains("アバター") || name.contains("グリフ")) {
+      return "外装"
+    }
+
+    // 3. 武器
+    if (itemType.contains("/Weapons/", ignoreCase = true) ||
+        itemType.contains("/Recipes/Weapons/", ignoreCase = true) ||
+        name.contains("Wraith") || name.contains("Vandal") ||
+        name.contains("Prisma") || name.contains("Mara")) {
+      return "武器"
+    }
+
+    // 4. MOD
+    if (itemType.contains("/Mods/", ignoreCase = true) ||
+        name.endsWith("Mod") || name.contains("Primed ")) {
+      return "MOD"
+    }
+
+    // 5. Void レリック
+    if (itemType.contains("/Projections/", ignoreCase = true) ||
+        itemType.contains("/Relic", ignoreCase = true) ||
+        name.contains("レリック")) {
+      return "Void レリック"
+    }
+
+    // 6. 装飾品 (その他もここにフォールバック)
+    return "装飾品"
   }
 }
+
 

@@ -57,3 +57,24 @@ data class ExportSentinelsResponse(
   @SerialName("ExportSentinels") val exportSentinels: List<ExportItem>? = emptyList()
 )
 
+@Serializable
+data class ExportUpgradesResponse(
+  @SerialName("ExportUpgrades") val exportUpgrades: List<ExportItem>? = emptyList()
+)
+
+@Serializable
+data class ExportFlavourResponse(
+  @SerialName("ExportFlavour") val exportFlavour: List<ExportItem>? = emptyList()
+)
+
+@Serializable
+data class ExportKeysResponse(
+  @SerialName("ExportKeys") val exportKeys: List<ExportItem>? = emptyList()
+)
+
+@Serializable
+data class ExportRelicArcaneResponse(
+  @SerialName("ExportRelicArcane") val exportRelicArcane: List<ExportItem>? = emptyList()
+)
+
+

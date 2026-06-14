@@ -121,7 +121,11 @@ class WarframeRepository(
         "ExportWeapons_ja.json",
         "ExportResources_ja.json",
         "ExportGear_ja.json",
-        "ExportSentinels_ja.json"
+        "ExportSentinels_ja.json",
+        "ExportUpgrades_ja.json",
+        "ExportFlavour_ja.json",
+        "ExportKeys_ja.json",
+        "ExportRelicArcane_ja.json"
       )
       val allCachesExist = files.all { CacheUtils.loadCacheFile(it) != null }
 
@@ -203,8 +207,58 @@ class WarframeRepository(
       }
     }
 
+    // Upgrades (MOD) の取得
+    val upgradesLine = manifest.find { it.startsWith("ExportUpgrades_ja.json") }
+      ?: if (!needsDownload) "ExportUpgrades_ja.json" else null
+    if (upgradesLine != null) {
+      val upgradesResponse: ExportUpgradesResponse? = getLocalizedData(upgradesLine, needsDownload)
+      upgradesResponse?.exportUpgrades?.forEach { item ->
+        localizationDict[item.uniqueName] = formatName(item.name)
+      }
+    }
+
+    // Flavour (スキン、装飾品など) の取得
+    val flavourLine = manifest.find { it.startsWith("ExportFlavour_ja.json") }
+      ?: if (!needsDownload) "ExportFlavour_ja.json" else null
+    if (flavourLine != null) {
+      val flavourResponse: ExportFlavourResponse? = getLocalizedData(flavourLine, needsDownload)
+      flavourResponse?.exportFlavour?.forEach { item ->
+        localizationDict[item.uniqueName] = formatName(item.name)
+      }
+    }
+
+    // Keys (クエスト・キーなど) の取得
+    val keysLine = manifest.find { it.startsWith("ExportKeys_ja.json") }
+      ?: if (!needsDownload) "ExportKeys_ja.json" else null
+    if (keysLine != null) {
+      val keysResponse: ExportKeysResponse? = getLocalizedData(keysLine, needsDownload)
+      keysResponse?.exportKeys?.forEach { item ->
+        localizationDict[item.uniqueName] = formatName(item.name)
+      }
+    }
+
+    // RelicArcane (レリック・アルケイン) の取得
+    val relicArcaneLine = manifest.find { it.startsWith("ExportRelicArcane_ja.json") }
+      ?: if (!needsDownload) "ExportRelicArcane_ja.json" else null
+    if (relicArcaneLine != null) {
+      val relicArcaneResponse: ExportRelicArcaneResponse? = getLocalizedData(relicArcaneLine, needsDownload)
+      relicArcaneResponse?.exportRelicArcane?.forEach { item ->
+        localizationDict[item.uniqueName] = formatName(item.name)
+      }
+    }
+
     // イベント専用ノードの手動マッピングを追加
     localizationDict["EventNode5"] = "Kronia リレー (土星)"
+
+    // バロ吉関連アイテムの手動フォールバックマッピングを追加
+    localizationDict["/Lotus/Storeitems/Types/BoosterPacks/BaroTreasureBox"] = "Void サープラス"
+    localizationDict["/Lotus/StoreItems/Types/BoosterPacks/BaroTreasureBox"] = "Void サープラス"
+    localizationDict["/Lotus/Storeitems/Types/Keys/MummyQuestKeyBlueprint"] = "Inaros の砂の設計図"
+    localizationDict["/Lotus/StoreItems/Types/Keys/MummyQuestKeyBlueprint"] = "Inaros の砂の設計図"
+    localizationDict["/Lotus/Storeitems/Types/Storeitems/AvatarImages/Factions/GlyphFactionGrineer"] = "グリフ: グリニア勢力"
+    localizationDict["/Lotus/StoreItems/Types/StoreItems/AvatarImages/Factions/GlyphFactionGrineer"] = "グリフ: グリニア勢力"
+    localizationDict["/Lotus/Storeitems/Types/Storeitems/AvatarImages/AvatarImageBaroIcon"] = "プロファイルアイコン: Baro Ki'Teer"
+    localizationDict["/Lotus/StoreItems/Types/StoreItems/AvatarImages/AvatarImageBaroIcon"] = "プロファイルアイコン: Baro Ki'Teer"
 
     // 正常にWebからロードできた場合はマニフェストとアプリバージョン情報を更新保存
     if (manifest.isNotEmpty() && needsDownload) {
