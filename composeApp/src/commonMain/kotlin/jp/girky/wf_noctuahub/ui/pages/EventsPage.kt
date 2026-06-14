@@ -131,10 +131,19 @@ fun EventsPage(
           val min = (totalSec / 60) % 60
           val hour = (totalSec / 3600) % 24
           val day = totalSec / 86400
+
+          val secStr = sec.toString().padStart(2, '0')
+          val minStr = min.toString().padStart(2, '0')
+          val hourStr = hour.toString().padStart(2, '0')
+
           if (day > 0) {
-            "${day}日${hour}時間${min}分${sec}秒"
+            "${day}日${hourStr}時間${minStr}分${secStr}秒"
+          } else if (hour > 0) {
+            "${hour}時間${minStr}分${secStr}秒"
+          } else if (min > 0) {
+            "${min}分${secStr}秒"
           } else {
-            "${hour}時間${min}分${sec}秒"
+            "${sec}秒"
           }
         }
 

@@ -76,9 +76,14 @@ private fun formatDuration(duration: kotlin.time.Duration): String {
   val m = (totalSeconds % 3600) / 60
   val s = totalSeconds % 60
 
-  return buildString {
-    if (d > 0) append("${d}日")
-    if (h > 0 || d > 0) append("${h}時間")
-    append("${m.toString().padStart(2, '0')}分${s.toString().padStart(2, '0')}秒")
+  val secStr = s.toString().padStart(2, '0')
+  val minStr = m.toString().padStart(2, '0')
+  val hourStr = h.toString().padStart(2, '0')
+
+  return when {
+    d > 0 -> "${d}日${hourStr}時間${minStr}分${secStr}秒"
+    h > 0 -> "${h}時間${minStr}分${secStr}秒"
+    m > 0 -> "${m}分${secStr}秒"
+    else -> "${s}秒"
   }
 }
