@@ -6,6 +6,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -319,24 +321,85 @@ fun App() {
       .fillMaxSize()
       .padding(innerPadding)
     ) {
-      if (fetchState == FetchState.ERROR) {
-      Box(modifier = Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
-        Text(text = "エラー: $errorMessage", color = MaterialTheme.colorScheme.error)
+      val isApiPage = when (currentScreen) {
+        Screen.Settings, Screen.Links -> false
+        else -> true
       }
-      } else if (worldState == null || !isInitialized) {
-      Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        @OptIn(androidx.compose.material3.ExperimentalMaterial3ExpressiveApi::class)
-        androidx.compose.material3.LoadingIndicator()
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-          text = loadingMessage ?: "データを取得中...", 
-          color = MaterialTheme.colorScheme.onBackground,
-          textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-          modifier = Modifier.padding(horizontal = 32.dp)
-        )
+
+      if (fetchState == FetchState.ERROR && isApiPage) {
+        Box(
+          modifier = Modifier.fillMaxSize().padding(16.dp),
+          contentAlignment = Alignment.Center
+        ) {
+          Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+          ) {
+            Text(
+              text = "通信エラーが発生しました",
+              style = MaterialTheme.typography.titleLarge,
+              fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+              color = MaterialTheme.colorScheme.error
+            )
+            Box(
+              modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = 240.dp)
+                .background(
+                  color = MaterialTheme.colorScheme.errorContainer,
+                  shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
+                )
+                .border(
+                  width = 1.dp,
+                  color = MaterialTheme.colorScheme.error.copy(alpha = 0.3f),
+                  shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
+                )
+                .padding(12.dp)
+            ) {
+              val errorScrollState = rememberScrollState()
+              Text(
+                text = errorMessage ?: "不明なエラーが発生しました。",
+                color = MaterialTheme.colorScheme.onErrorContainer,
+                fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.verticalScroll(errorScrollState)
+              )
+            }
+            Button(
+              onClick = { viewModel.loadInitialData(coroutineScope) },
+              colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.error,
+                contentColor = MaterialTheme.colorScheme.onError
+              )
+            ) {
+              Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+              ) {
+                Icon(
+                  imageVector = Icons.Rounded.Sync,
+                  contentDescription = "再試行"
+                )
+                Text("再試行")
+              }
+            }
+          }
         }
-      }
+      } else if ((worldState == null || !isInitialized) && isApiPage) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+          Column(horizontalAlignment = Alignment.CenterHorizontally) {
+          @OptIn(androidx.compose.material3.ExperimentalMaterial3ExpressiveApi::class)
+          androidx.compose.material3.LoadingIndicator()
+          Spacer(modifier = Modifier.height(16.dp))
+          Text(
+            text = loadingMessage ?: "データを取得中...", 
+            color = MaterialTheme.colorScheme.onBackground,
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 32.dp)
+          )
+          }
+        }
       } else {
       when (currentScreen) {
         Screen.Status -> {

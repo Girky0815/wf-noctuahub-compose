@@ -332,7 +332,9 @@ fun EventsPage(
             ) {
               Text(
                 text = "残り時間: $timeString",
-                style = MaterialTheme.typography.bodyMedium,
+                style = jp.girky.wf_noctuahub.ui.theme.getAppTypographyCondensed().bodyMedium.copy(
+                  fontFeatureSettings = "tnum"
+                ),
                 fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
               )

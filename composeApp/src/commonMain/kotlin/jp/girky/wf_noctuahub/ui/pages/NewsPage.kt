@@ -222,8 +222,7 @@ fun NewsPage(
                   event.prop?.let { uriHandler.openUri(localizeNewsUrl(it)) }
                 },
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(4.dp),
-                containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                shape = RoundedCornerShape(4.dp)
               ) {
                 Column(
                   modifier = Modifier.fillMaxWidth(),
