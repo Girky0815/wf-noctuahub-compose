@@ -75,7 +75,42 @@ class MainViewModel(val repository: WarframeRepository) {
         _isInitialized.value = true
       } catch (e: Exception) {
         e.printStackTrace()
-        _errorMessage.value = "エラーが発生しました: ${e.message}\n${e.stackTraceToString().take(200)}..."
+        val errorStr = e.toString()
+        val errorMsg = e.message ?: ""
+        val fullErrorDesc = "$errorStr\n$errorMsg".lowercase()
+
+        val friendlyMessage = when {
+          // 1. インターネット未接続 (DNS解決失敗、接続拒否など)
+          fullErrorDesc.contains("unknownhostexception") || 
+          fullErrorDesc.contains("connectexception") ||
+          fullErrorDesc.contains("norouteetohost") ||
+          fullErrorDesc.contains("resolv") -> {
+            "インターネットに接続されていません。\nWi-Fi、モバイルデータ通信、または機内モードの設定を確認してください。"
+          }
+
+          // 2. APIサーバーがダウン (500系)
+          fullErrorDesc.contains("503") || 
+          fullErrorDesc.contains("500") || 
+          fullErrorDesc.contains("502") || 
+          fullErrorDesc.contains("504") ||
+          fullErrorDesc.contains("service unavailable") ||
+          fullErrorDesc.contains("internal server error") -> {
+            "Warframe 公式 API サーバーがダウンしています。\nしばらく時間をおいてから再試行してください。"
+          }
+
+          // 3. APIへ接続できない (タイムアウトなど)
+          fullErrorDesc.contains("timeout") || 
+          fullErrorDesc.contains("socket") -> {
+            "Warframe API または Public Export サーバーへ接続できません。\nネットワークの通信状況を確認し、再度お試しください。"
+          }
+
+          else -> {
+            "予期しないエラーが発生しました。"
+          }
+        }
+
+        val stackTraceExcerpt = e.stackTraceToString().take(250)
+        _errorMessage.value = "$friendlyMessage\n\n[エラー詳細]\n$errorStr: $errorMsg\n$stackTraceExcerpt..."
         _fetchState.value = FetchState.ERROR
       }
     }
