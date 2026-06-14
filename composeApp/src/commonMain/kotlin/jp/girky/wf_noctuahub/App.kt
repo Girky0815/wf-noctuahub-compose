@@ -387,7 +387,8 @@ fun App() {
         Screen.Baro -> {
         BaroPage(
           worldState = worldState,
-          onLocalize = { viewModel.localize(it) }
+          onLocalize = { viewModel.localize(it) },
+          onGetModDescription = { viewModel.getModDescription(it) }
         )
         }
         Screen.Resurgence -> {

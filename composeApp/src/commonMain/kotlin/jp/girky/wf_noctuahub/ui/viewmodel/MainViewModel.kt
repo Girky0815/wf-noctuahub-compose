@@ -47,6 +47,11 @@ class MainViewModel(val repository: WarframeRepository) {
     return repository.getRegionInfo(uniqueName)
   }
 
+  fun getModDescription(uniqueName: String?): String? {
+    if (uniqueName == null) return null
+    return repository.getModDescription(uniqueName)
+  }
+
   /**
    * WorldState と Public Export 辞書を一括で初期ロードする
    */

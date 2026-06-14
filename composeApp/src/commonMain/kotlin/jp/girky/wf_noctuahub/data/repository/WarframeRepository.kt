@@ -9,6 +9,8 @@ import io.ktor.client.statement.readBytes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.jsonPrimitive
 
 class WarframeRepository(
   private val apiClient: WarframeApiClient,
@@ -23,6 +25,9 @@ class WarframeRepository(
   
   // リージョンの詳細情報をそのまま引き出せる辞書 (勢力やレベル帯などを得るため)
   private val regionDict = mutableMapOf<String, ExportRegion>()
+
+  // MODの uniqueName と説明文（効果内容）のマッピング辞書
+  private val modDescriptionDict = mutableMapOf<String, String>()
 
   /**
    * WorldState をフェッチして内部状態を更新する
@@ -220,6 +225,44 @@ class WarframeRepository(
       }
       upgradesResponse?.exportUpgrades?.forEach { item ->
         localizationDict[item.uniqueName] = formatName(item.name)
+        var descStr: String? = null
+        item.description?.let { descElement ->
+          try {
+            val rawStr = when (descElement) {
+              is JsonArray -> {
+                if (descElement.isNotEmpty()) {
+                  descElement[0].jsonPrimitive.content
+                } else {
+                  ""
+                }
+              }
+              else -> descElement.jsonPrimitive.content
+            }
+            if (rawStr.isNotBlank()) {
+              descStr = rawStr
+            }
+          } catch (e: Exception) {
+            val rawStr = descElement.toString().trim().removeSurrounding("\"")
+            if (rawStr.isNotBlank()) {
+              descStr = rawStr
+            }
+          }
+        }
+
+        if (descStr.isNullOrBlank()) {
+          val lastStat = item.levelStats?.lastOrNull()
+          val firstStatText = lastStat?.stats?.firstOrNull()
+          if (!firstStatText.isNullOrBlank()) {
+            descStr = firstStatText
+          }
+        }
+
+        descStr?.let { raw ->
+          val cleaned = raw.replace(Regex("<[^>]*>"), "")
+          if (cleaned.isNotBlank()) {
+            modDescriptionDict[item.uniqueName] = formatName(cleaned)
+          }
+        }
       }
     }
 
@@ -392,5 +435,28 @@ class WarframeRepository(
    */
   fun getRegionInfo(uniqueName: String): ExportRegion? {
     return regionDict[uniqueName]
+  }
+
+  /**
+   * MODの説明文（効果）を取得する
+   */
+  fun getModDescription(uniqueName: String): String? {
+    val cleaned = uniqueName.replace("/Lotus/StoreItems/", "/Lotus/", ignoreCase = true)
+    modDescriptionDict[cleaned]?.let { return it }
+
+    modDescriptionDict[uniqueName]?.let { return it }
+
+    // 末尾一致フォールバック
+    val lastSegment = uniqueName.substringAfterLast("/")
+    if (lastSegment.isNotBlank()) {
+      val suffix = "/$lastSegment"
+      val match = modDescriptionDict.entries.find { (key, _) ->
+        key.endsWith(suffix, ignoreCase = true)
+      }
+      if (match != null) {
+        return match.value
+      }
+    }
+    return null
   }
 }

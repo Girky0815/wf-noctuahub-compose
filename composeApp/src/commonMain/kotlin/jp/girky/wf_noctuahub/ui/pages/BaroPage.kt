@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 import jp.girky.wf_noctuahub.data.api.model.WorldStateResponse
 import jp.girky.wf_noctuahub.ui.components.ui.ListGroup
 import jp.girky.wf_noctuahub.ui.components.ui.ListTile
+import jp.girky.wf_noctuahub.ui.components.ui.ListItem
 import jp.girky.wf_noctuahub.ui.components.ui.SectionTitle
 import jp.girky.wf_noctuahub.ui.components.ui.EtaText
 import jp.girky.wf_noctuahub.utils.Translations
@@ -18,7 +19,8 @@ import kotlinx.datetime.Instant
 @Composable
 fun BaroPage(
   worldState: WorldStateResponse?,
-  onLocalize: (String) -> String
+  onLocalize: (String) -> String,
+  onGetModDescription: (String) -> String?
 ) {
   val baro = worldState?.voidTraders?.firstOrNull() ?: run {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
@@ -100,11 +102,37 @@ fun BaroPage(
                 val name = onLocalize(baroItem.itemType ?: "")
                 val ducats = baroItem.primePrice ?: 0
                 val credits = baroItem.regularPrice ?: 0
+                val description = if (category == "MOD") {
+                  onGetModDescription(baroItem.itemType ?: "")
+                } else null
                 
-                ListTile(
-                  title = name,
-                  subtitle = "${ducats} デュカット | ${credits} Cr"
-                )
+                if (description != null) {
+                  ListItem {
+                    Text(
+                      text = name,
+                      style = MaterialTheme.typography.bodyLarge,
+                      fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
+                      color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                      text = description,
+                      style = MaterialTheme.typography.bodyMedium,
+                      color = MaterialTheme.colorScheme.onSurfaceVariant,
+                      modifier = Modifier.padding(top = 2.dp)
+                    )
+                    Text(
+                      text = "${ducats} デュカット | ${credits} Cr",
+                      style = MaterialTheme.typography.bodyMedium,
+                      color = MaterialTheme.colorScheme.onSurfaceVariant,
+                      modifier = Modifier.padding(top = 2.dp)
+                    )
+                  }
+                } else {
+                  ListTile(
+                    title = name,
+                    subtitle = "${ducats} デュカット | ${credits} Cr"
+                  )
+                }
               }
             }
           }

@@ -2,6 +2,7 @@ package jp.girky.wf_noctuahub.data.api.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 
 @Serializable
 data class ExportCustomsResponse(
@@ -58,10 +59,16 @@ data class ExportSentinelsResponse(
 )
 
 @Serializable
+data class LevelStat(
+  @SerialName("stats") val stats: List<String>? = emptyList()
+)
+
+@Serializable
 data class ExportSimpleItem(
   @SerialName("uniqueName") val uniqueName: String,
   @SerialName("name") val name: String,
-  @SerialName("description") val description: String? = null
+  @SerialName("description") val description: JsonElement? = null,
+  @SerialName("levelStats") val levelStats: List<LevelStat>? = null
 )
 
 @Serializable
