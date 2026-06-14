@@ -211,7 +211,13 @@ class WarframeRepository(
     val upgradesLine = manifest.find { it.startsWith("ExportUpgrades_ja.json") }
       ?: if (!needsDownload) "ExportUpgrades_ja.json" else null
     if (upgradesLine != null) {
-      val upgradesResponse: ExportUpgradesResponse? = getLocalizedData(upgradesLine, needsDownload)
+      var upgradesResponse: ExportUpgradesResponse? = getLocalizedData(upgradesLine, needsDownload)
+      if (upgradesResponse?.exportUpgrades.isNullOrEmpty() && !needsDownload && manifest.isNotEmpty()) {
+        val forceLine = manifest.find { it.startsWith("ExportUpgrades_ja.json") }
+        if (forceLine != null) {
+          upgradesResponse = getLocalizedData(forceLine, true)
+        }
+      }
       upgradesResponse?.exportUpgrades?.forEach { item ->
         localizationDict[item.uniqueName] = formatName(item.name)
       }
@@ -221,7 +227,13 @@ class WarframeRepository(
     val flavourLine = manifest.find { it.startsWith("ExportFlavour_ja.json") }
       ?: if (!needsDownload) "ExportFlavour_ja.json" else null
     if (flavourLine != null) {
-      val flavourResponse: ExportFlavourResponse? = getLocalizedData(flavourLine, needsDownload)
+      var flavourResponse: ExportFlavourResponse? = getLocalizedData(flavourLine, needsDownload)
+      if (flavourResponse?.exportFlavour.isNullOrEmpty() && !needsDownload && manifest.isNotEmpty()) {
+        val forceLine = manifest.find { it.startsWith("ExportFlavour_ja.json") }
+        if (forceLine != null) {
+          flavourResponse = getLocalizedData(forceLine, true)
+        }
+      }
       flavourResponse?.exportFlavour?.forEach { item ->
         localizationDict[item.uniqueName] = formatName(item.name)
       }
@@ -231,7 +243,13 @@ class WarframeRepository(
     val keysLine = manifest.find { it.startsWith("ExportKeys_ja.json") }
       ?: if (!needsDownload) "ExportKeys_ja.json" else null
     if (keysLine != null) {
-      val keysResponse: ExportKeysResponse? = getLocalizedData(keysLine, needsDownload)
+      var keysResponse: ExportKeysResponse? = getLocalizedData(keysLine, needsDownload)
+      if (keysResponse?.exportKeys.isNullOrEmpty() && !needsDownload && manifest.isNotEmpty()) {
+        val forceLine = manifest.find { it.startsWith("ExportKeys_ja.json") }
+        if (forceLine != null) {
+          keysResponse = getLocalizedData(forceLine, true)
+        }
+      }
       keysResponse?.exportKeys?.forEach { item ->
         localizationDict[item.uniqueName] = formatName(item.name)
       }
@@ -241,7 +259,13 @@ class WarframeRepository(
     val relicArcaneLine = manifest.find { it.startsWith("ExportRelicArcane_ja.json") }
       ?: if (!needsDownload) "ExportRelicArcane_ja.json" else null
     if (relicArcaneLine != null) {
-      val relicArcaneResponse: ExportRelicArcaneResponse? = getLocalizedData(relicArcaneLine, needsDownload)
+      var relicArcaneResponse: ExportRelicArcaneResponse? = getLocalizedData(relicArcaneLine, needsDownload)
+      if (relicArcaneResponse?.exportRelicArcane.isNullOrEmpty() && !needsDownload && manifest.isNotEmpty()) {
+        val forceLine = manifest.find { it.startsWith("ExportRelicArcane_ja.json") }
+        if (forceLine != null) {
+          relicArcaneResponse = getLocalizedData(forceLine, true)
+        }
+      }
       relicArcaneResponse?.exportRelicArcane?.forEach { item ->
         localizationDict[item.uniqueName] = formatName(item.name)
       }

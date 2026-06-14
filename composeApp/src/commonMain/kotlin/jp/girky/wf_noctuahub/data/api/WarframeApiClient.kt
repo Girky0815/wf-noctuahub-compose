@@ -18,9 +18,9 @@ class WarframeApiClient(private val platformInfo: String = "pc") {
       agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 NoctuaHub/1.0"
     }
     install(HttpTimeout) {
-      requestTimeoutMillis = 15000
-      connectTimeoutMillis = 10000
-      socketTimeoutMillis = 10000
+      requestTimeoutMillis = 60000
+      connectTimeoutMillis = 30000
+      socketTimeoutMillis = 30000
     }
     install(ContentNegotiation) {
       json(
