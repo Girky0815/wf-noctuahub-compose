@@ -39,14 +39,15 @@ object WikiUtils {
   }
 
   /**
-   * Prime Resurgence の武器用 Wiki URL を生成する
-   * @param localizedName 表示名（例: "Cobra & Crane Prime"）
+   * 武器用 Wiki URL を生成する
+   * @param localizedName 表示名（例: "Prisma Grinlok"）
    * 規則: すべて大文字に変換し、空白は "%20"、「&」は全角「＆」(%EF%BC%86) に変換する
    */
-  fun getResurgenceWeaponUrl(localizedName: String): String {
+  fun getWeaponUrl(localizedName: String): String {
     // 設計図などがある場合は取り除く
     val cleanName = localizedName
       .replace("(?i)\\s+Blueprint$".toRegex(), "")
+      .replace("(?i)\\s+設計図$".toRegex(), "")
       .trim()
       
     val encoded = cleanName.uppercase()
@@ -54,6 +55,14 @@ object WikiUtils {
       .replace(" ", "%20")
       .replace("＆", "%EF%BC%86")
     return "https://wikiwiki.jp/warframe/$encoded"
+  }
+
+  /**
+   * Prime Resurgence の武器用 Wiki URL を生成する
+   * @param localizedName 表示名（例: "Cobra & Crane Prime"）
+   */
+  fun getResurgenceWeaponUrl(localizedName: String): String {
+    return getWeaponUrl(localizedName)
   }
 
   /**

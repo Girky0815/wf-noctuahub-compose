@@ -14,7 +14,11 @@ import jp.girky.wf_noctuahub.ui.components.ui.SectionTitle
 import jp.girky.wf_noctuahub.ui.components.ui.EtaText
 import jp.girky.wf_noctuahub.utils.Translations
 import jp.girky.wf_noctuahub.utils.currentTimeMillis
+import jp.girky.wf_noctuahub.utils.WikiUtils
 import kotlinx.datetime.Instant
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ChevronRight
 
 @Composable
 fun BaroPage(
@@ -22,6 +26,7 @@ fun BaroPage(
   onLocalize: (String) -> String,
   onGetModDescription: (String) -> String?
 ) {
+  val uriHandler = LocalUriHandler.current
   val baro = worldState?.voidTraders?.firstOrNull() ?: run {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
       Text("Baro Ki'Teer 情報を取得できませんでした。")
@@ -128,9 +133,33 @@ fun BaroPage(
                     )
                   }
                 } else {
+                  val isWeapon = category == "武器"
+                  val onClickAction = if (isWeapon) {
+                    {
+                      try {
+                        val url = WikiUtils.getWeaponUrl(name)
+                        uriHandler.openUri(url)
+                      } catch (e: Exception) {
+                        e.printStackTrace()
+                      }
+                    }
+                  } else null
+
+                  val trailingContent: @Composable (() -> Unit)? = if (isWeapon) {
+                    {
+                      Icon(
+                        imageVector = Icons.Rounded.ChevronRight,
+                        contentDescription = "Wikiを開く",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                      )
+                    }
+                  } else null
+
                   ListTile(
                     title = name,
-                    subtitle = "${ducats} デュカット | ${credits} Cr"
+                    subtitle = "${ducats} デュカット | ${credits} Cr",
+                    trailingContent = trailingContent,
+                    onClick = onClickAction
                   )
                 }
               }
