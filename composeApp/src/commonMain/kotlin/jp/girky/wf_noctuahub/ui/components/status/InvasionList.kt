@@ -2,6 +2,7 @@ package jp.girky.wf_noctuahub.ui.components.status
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -128,19 +129,13 @@ fun InvasionList(
           Spacer(modifier = Modifier.height(8.dp))
 
           // プログレスバー
-          Box(
-            modifier = Modifier
-              .fillMaxWidth()
-              .height(8.dp)
-              .background(MaterialTheme.colorScheme.surfaceContainerHighest, shape = androidx.compose.foundation.shape.CircleShape)
-          ) {
-            Box(
-              modifier = Modifier
-                .fillMaxWidth(fraction = progressFraction)
-                .height(8.dp)
-                .background(MaterialTheme.colorScheme.primary, shape = androidx.compose.foundation.shape.CircleShape)
-            )
-          }
+          LinearProgressIndicator(
+            progress = { progressFraction },
+            modifier = Modifier.fillMaxWidth().height(8.dp),
+            color = MaterialTheme.colorScheme.primary,
+            trackColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+            strokeCap = androidx.compose.ui.graphics.StrokeCap.Round
+          )
         }
       }
     }
