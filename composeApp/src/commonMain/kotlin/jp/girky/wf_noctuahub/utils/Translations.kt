@@ -621,6 +621,8 @@ object Translations {
   "SeasonDailyCompleteMissionPrimary" to Pair("手一杯", "プライマリ武器のみを装備してミッションをクリアする"),
   "SeasonDailyBulletJump" to Pair("トランポリン", "バレットジャンプを150回行う"),
   "SeasonDailyCompleteMission" to Pair("エージェント", "ミッションを1回クリアする"),
+  "SeasonDailyDeployGlyph" to Pair("グラフィティ", "ギアメニューに「グリフプリズム」を装備し、ミッション中に使用してグリフを展開する"),
+  "SeasonDailyKillEnemiesWithAbilities" to Pair("力の誇示", "アビリティで敵を150体倒す")
   
 
 
@@ -637,6 +639,8 @@ object Translations {
   "SeasonWeeklyCatchRareVenusFish" to Pair("金星の釣り人", "オーブ峡谷で3匹のレアなサーボ魚を捕まえる"),
   "SeasonWeeklyNightAndDay" to Pair("昼と夜", "カンビオン荒地で Vome または Fass の残余を10個集める"),
   "SeasonWeeklyFinelyTuned" to Pair("調弦済み", "デュヴィリで異なる Shawzin の曲を3曲演奏する"),
+  "SeasonWeeklyUnlockDragonVaults" to Pair("お宝収集", "ダイモス・遺跡船タイル(抹殺/防衛除く)でドラゴンキー貯蔵庫を4個解放する"),
+  "SeasonWeeklySanctuaryOnslaught" to Pair("テスト被験者", "サンクチュアリ交戦を8ゾーンクリアする"),
 
 
   // エリートウィークリー
@@ -649,7 +653,9 @@ object Translations {
   "SeasonWeeklyHardCompleteSortie" to Pair("ソーティーエキスパート", "ソーティーを3回クリアする"),
   "SeasonWeeklyHardUnlockRelics" to Pair("レリックの解放", "レリックを10個解放する"),
   "SeasonWeeklyHardVitalArbiter" to Pair("重要仲裁人", "仲裁ミッションを1回クリアする"),
-  "SeasonWeeklyHardFastCapture" to Pair("スピードスター", "確保ミッションを90秒以内にクリアする")
+  "SeasonWeeklyHardFastCapture" to Pair("スピードスター", "確保ミッションを90秒以内にクリアする"),
+  "SeasonWeeklyHardLuaPuzzles" to Pair("試練", "ルアで試練の間を4個クリアする"),
+  "SeasonWeeklyHardFriendsSurvival" to Pair("耐久", "耐久系ミッションを最低20分進めてクリアする"),
   )
 
   fun translateNightwaveChallenge(challenge: String): Pair<String, String> {
