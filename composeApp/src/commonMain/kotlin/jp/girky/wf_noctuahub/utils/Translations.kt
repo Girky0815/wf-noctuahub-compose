@@ -622,7 +622,7 @@ object Translations {
   "SeasonDailyBulletJump" to Pair("トランポリン", "バレットジャンプを150回行う"),
   "SeasonDailyCompleteMission" to Pair("エージェント", "ミッションを1回クリアする"),
   "SeasonDailyDeployGlyph" to Pair("グラフィティ", "ギアメニューに「グリフプリズム」を装備し、ミッション中に使用してグリフを展開する"),
-  "SeasonDailyKillEnemiesWithAbilities" to Pair("力の誇示", "アビリティで敵を150体倒す")
+  "SeasonDailyKillEnemiesWithAbilities" to Pair("力の誇示", "アビリティで敵を150体倒す"),
   
 
 
