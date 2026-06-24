@@ -20,6 +20,7 @@ data class WorldStateResponse(
   @SerialName("VoidTraders") val voidTraders: List<WsVoidTrader>? = emptyList(),
   @SerialName("PrimeVaultTraders") val primeVaultTraders: List<WsPrimeVaultTrader>? = emptyList(),
   @SerialName("DailyDeals") val dailyDeals: List<WsDailyDeal>? = emptyList(),
+  @SerialName("EndlessXpSchedule") val endlessXpSchedule: List<WsEndlessXpSchedule>? = emptyList(),
   @SerialName("CategoryChoices") val categoryChoices: List<WsEndlessXpChoice>? = emptyList(),
   @SerialName("EndlessXpChoices") val endlessXpChoicesOld: List<WsEndlessXpChoice>? = emptyList(),
   @SerialName("ProjectPct") val projectPct: List<Double>? = emptyList(),
@@ -31,7 +32,16 @@ data class WorldStateResponse(
 ) {
   @kotlinx.serialization.Transient
   val endlessXpChoices: List<WsEndlessXpChoice>?
-    get() = if (!categoryChoices.isNullOrEmpty()) categoryChoices else endlessXpChoicesOld
+    get() {
+      val scheduleChoices = endlessXpSchedule?.firstOrNull()?.endlessXpChoices
+      if (!scheduleChoices.isNullOrEmpty()) {
+        return scheduleChoices
+      }
+      if (!categoryChoices.isNullOrEmpty()) {
+        return categoryChoices
+      }
+      return endlessXpChoicesOld
+    }
 }
 
 @Serializable
@@ -206,6 +216,18 @@ data class WsEndlessXpChoice(
   @SerialName("Category") val circuitCategory: String? = null, // "EXC_NORMAL", "EXC_HARD"
   @SerialName("Choices") val choices: List<String>? = emptyList()
 )
+
+@Serializable
+data class WsEndlessXpSchedule(
+  @SerialName("Activation") val activation: MongoDate? = null,
+  @SerialName("Expiry") val expiry: MongoDate? = null,
+  @SerialName("CategoryChoices") val categoryChoices: List<WsEndlessXpChoice>? = emptyList(),
+  @SerialName("EndlessXpChoices") val endlessXpChoicesOld: List<WsEndlessXpChoice>? = emptyList()
+) {
+  @kotlinx.serialization.Transient
+  val endlessXpChoices: List<WsEndlessXpChoice>?
+    get() = if (!categoryChoices.isNullOrEmpty()) categoryChoices else endlessXpChoicesOld
+}
 
 @Serializable
 data class WsSeasonInfo(
