@@ -36,6 +36,7 @@ import jp.girky.wf_noctuahub.ui.components.ui.ListGroup
 import jp.girky.wf_noctuahub.ui.components.ui.ListItem
 import jp.girky.wf_noctuahub.ui.components.ui.ListTile
 import jp.girky.wf_noctuahub.ui.components.ui.SectionTitle
+import jp.girky.wf_noctuahub.platform.BackHandler
 
 import jp.girky.wf_noctuahub.data.api.model.WorldStateResponse
 import jp.girky.wf_noctuahub.ui.viewmodel.FetchState
@@ -66,6 +67,11 @@ fun SettingsPage(
 
   var currentSubPage by remember { mutableStateOf(SettingsSubPage.MAIN) }
   var showDeleteConfirmDialog by remember { mutableStateOf(false) }
+
+  // サブページが開いている場合は、戻るボタンでメイン設定画面に戻る
+  BackHandler(enabled = currentSubPage != SettingsSubPage.MAIN) {
+    currentSubPage = SettingsSubPage.MAIN
+  }
 
   // 設定消去の確認ダイアログ
   if (showDeleteConfirmDialog) {

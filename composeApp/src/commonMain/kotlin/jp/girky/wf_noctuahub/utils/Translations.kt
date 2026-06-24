@@ -67,7 +67,8 @@ object Translations {
   "Blueprint" to "設計図",
   "Systems Component" to "システム",
   "Systems" to "システム",
-  "AscensionEventResourceItem" to "ボラタイル・モート"
+  "AscensionEventResourceItem" to "ボラタイル・モート",
+  "GuardianTitle" to "ホノリア"
   )
 
   // 敵勢力の日本語訳

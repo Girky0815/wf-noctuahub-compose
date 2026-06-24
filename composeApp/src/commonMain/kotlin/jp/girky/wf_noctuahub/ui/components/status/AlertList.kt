@@ -73,7 +73,11 @@ fun AlertList(
           // 内部パスから最後のアイテム名部分を抽出して翻訳
           val itemName = item.itemType?.substringAfterLast("/") ?: "アイテム"
           val translatedName = Translations.translateResource(itemName)
-          rewardParts.add("$translatedName x${item.itemCount}")
+          if (item.itemCount == null || item.itemCount <= 1) {
+            rewardParts.add(translatedName)
+          } else {
+            rewardParts.add("$translatedName x${item.itemCount}")
+          }
         }
         reward?.items?.forEach { item ->
           val itemName = item.substringAfterLast("/")

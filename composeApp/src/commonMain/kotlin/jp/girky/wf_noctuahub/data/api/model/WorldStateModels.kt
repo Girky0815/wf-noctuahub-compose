@@ -20,14 +20,19 @@ data class WorldStateResponse(
   @SerialName("VoidTraders") val voidTraders: List<WsVoidTrader>? = emptyList(),
   @SerialName("PrimeVaultTraders") val primeVaultTraders: List<WsPrimeVaultTrader>? = emptyList(),
   @SerialName("DailyDeals") val dailyDeals: List<WsDailyDeal>? = emptyList(),
-  @SerialName("EndlessXpChoices") val endlessXpChoices: List<WsEndlessXpChoice>? = emptyList(),
+  @SerialName("CategoryChoices") val categoryChoices: List<WsEndlessXpChoice>? = emptyList(),
+  @SerialName("EndlessXpChoices") val endlessXpChoicesOld: List<WsEndlessXpChoice>? = emptyList(),
   @SerialName("ProjectPct") val projectPct: List<Double>? = emptyList(),
   @SerialName("LiteSorties") val liteSorties: List<WsSortie>? = emptyList(),
   @SerialName("SeasonInfo") val seasonInfo: WsSeasonInfo? = null,
   @SerialName("KnownCalendarSeasons") val calendarSeasons: List<WsCalendarSeason>? = emptyList(),
   @SerialName("Descents") val descents: List<WsDescent>? = emptyList(),
   @SerialName("Conquests") val conquests: List<WsConquest>? = emptyList()
-)
+) {
+  @kotlinx.serialization.Transient
+  val endlessXpChoices: List<WsEndlessXpChoice>?
+    get() = if (!categoryChoices.isNullOrEmpty()) categoryChoices else endlessXpChoicesOld
+}
 
 @Serializable
 data class WsEvent(

@@ -69,6 +69,8 @@ import jp.girky.wf_noctuahub.ui.components.ui.SectionTitle
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import jp.girky.wf_noctuahub.platform.BackHandler
+import jp.girky.wf_noctuahub.platform.rememberAppExiter
 
 enum class Screen(val route: String, val icon: androidx.compose.ui.graphics.vector.ImageVector, val label: String) {
   Status("status", Icons.Rounded.Dashboard, "ステータス"),
@@ -123,7 +125,28 @@ fun App() {
   viewModel.loadInitialData(coroutineScope)
   }
 
-  var currentScreen by remember { mutableStateOf(Screen.Status) }
+  val screenHistory = remember { mutableStateListOf(Screen.Status) }
+  val currentScreen = screenHistory.lastOrNull() ?: Screen.Status
+
+  val navigateTo: (Screen) -> Unit = { screen ->
+    if (screen == Screen.Status) {
+      screenHistory.clear()
+      screenHistory.add(Screen.Status)
+    } else {
+      if (screenHistory.lastOrNull() != screen) {
+        screenHistory.add(screen)
+      }
+    }
+  }
+
+  val appExiter = rememberAppExiter()
+  BackHandler(enabled = true) {
+    if (screenHistory.size > 1) {
+      screenHistory.removeAt(screenHistory.lastIndex)
+    } else {
+      appExiter()
+    }
+  }
 
   AppTheme(
   darkTheme = isDark,
@@ -178,7 +201,7 @@ fun App() {
           },
           containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
           onClick = {
-            currentScreen = screen
+            navigateTo(screen)
             coroutineScope.launch { drawerState.close() }
           }
           )
@@ -202,7 +225,7 @@ fun App() {
           },
           containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
           onClick = {
-            currentScreen = screen
+            navigateTo(screen)
             coroutineScope.launch { drawerState.close() }
           }
           )
@@ -225,7 +248,7 @@ fun App() {
           },
           containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
           onClick = {
-          currentScreen = Screen.Settings
+          navigateTo(Screen.Settings)
           coroutineScope.launch { drawerState.close() }
           }
         )
@@ -244,7 +267,13 @@ fun App() {
       title = { Text(currentScreen.label) },
       navigationIcon = {
         if (currentScreen == Screen.Update) {
-        IconButton(onClick = { currentScreen = Screen.Settings }) {
+        IconButton(onClick = {
+          if (screenHistory.size > 1) {
+            screenHistory.removeAt(screenHistory.lastIndex)
+          } else {
+            navigateTo(Screen.Settings)
+          }
+        }) {
           Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
         }
         } else {
@@ -289,7 +318,7 @@ fun App() {
           ) 
           },
           selected = isSelected,
-          onClick = { currentScreen = screen },
+          onClick = { navigateTo(screen) },
           colors = androidx.compose.material3.NavigationBarItemDefaults.colors(
           selectedIconColor = MaterialTheme.colorScheme.primary,
           selectedTextColor = MaterialTheme.colorScheme.primary,
@@ -497,12 +526,18 @@ fun App() {
           worldState = worldState,
           errorMessage = errorMessage,
           fetchState = fetchState,
-          onNavigateToUpdate = { currentScreen = Screen.Update }
+          onNavigateToUpdate = { navigateTo(Screen.Update) }
         )
         }
         Screen.Update -> {
         jp.girky.wf_noctuahub.ui.pages.UpdatePage(
-          onBack = { currentScreen = Screen.Settings }
+          onBack = {
+            if (screenHistory.size > 1) {
+              screenHistory.removeAt(screenHistory.lastIndex)
+            } else {
+              navigateTo(Screen.Settings)
+            }
+          }
         )
         }
       }
