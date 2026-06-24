@@ -135,3 +135,50 @@ compose.desktop {
         }
     }
 }
+
+val generateLibraryVersions by tasks.registering {
+    val outputFile = file("src/commonMain/kotlin/jp/girky/wf_noctuahub/platform/LibraryVersions.kt")
+    inputs.file("../gradle/libs.versions.toml")
+    outputs.file(outputFile)
+
+    val agpVersion = libs.versions.agp.get()
+    val composeVersion = libs.versions.composeMultiplatform.get()
+    val kotlinVersion = libs.versions.kotlin.get()
+    val ktorVersion = libs.versions.ktor.get()
+    val serializationVersion = libs.versions.kotlinx.serialization.get()
+    val datetimeVersion = libs.versions.kotlinx.datetime.get()
+    val materialKolorVersion = libs.versions.materialKolor.get()
+    val jnaVersion = libs.versions.jna.get()
+    val tukaaniXzVersion = libs.versions.tukaani.xz.get()
+    val settingsVersion = libs.versions.multiplatformSettings.get()
+    val yamlktVersion = libs.versions.yamlkt.get()
+
+    doLast {
+        outputFile.parentFile.mkdirs()
+        outputFile.writeText("""
+            package jp.girky.wf_noctuahub.platform
+
+            object LibraryVersions {
+                const val AGP = "$agpVersion"
+                const val COMPOSE = "$composeVersion"
+                const val KOTLIN = "$kotlinVersion"
+                const val KTOR = "$ktorVersion"
+                const val SERIALIZATION = "$serializationVersion"
+                const val DATETIME = "$datetimeVersion"
+                const val MATERIAL_KOLOR = "$materialKolorVersion"
+                const val JNA = "$jnaVersion"
+                const val TUKAANI_XZ = "$tukaaniXzVersion"
+                const val SETTINGS = "$settingsVersion"
+                const val YAMLKT = "$yamlktVersion"
+            }
+        """.trimIndent())
+    }
+}
+
+tasks.matching { 
+    it.name.startsWith("compileKotlin") || 
+    it.name.startsWith("compileDebugKotlin") || 
+    it.name.startsWith("compileReleaseKotlin") 
+}.configureEach {
+    dependsOn(generateLibraryVersions)
+}

@@ -37,6 +37,7 @@ import jp.girky.wf_noctuahub.ui.components.ui.ListItem
 import jp.girky.wf_noctuahub.ui.components.ui.ListTile
 import jp.girky.wf_noctuahub.ui.components.ui.SectionTitle
 import jp.girky.wf_noctuahub.platform.BackHandler
+import jp.girky.wf_noctuahub.platform.LibraryVersions
 
 import jp.girky.wf_noctuahub.data.api.model.WorldStateResponse
 import jp.girky.wf_noctuahub.ui.viewmodel.FetchState
@@ -491,27 +492,27 @@ fun SettingsPage(
         // ライセンス情報サブ画面 (グループ化 & バージョン明示)
         SectionTitle(title = "フレームワーク & 言語")
         ListGroup {
-          ListTile(title = "Kotlin / Kotlin Multiplatform (v2.3.0)", subtitle = "Apache License 2.0\nhttps://github.com/JetBrains/kotlin", onClick = null)
-          ListTile(title = "Compose Multiplatform (v1.12.0-alpha01)", subtitle = "Apache License 2.0\nhttps://github.com/JetBrains/compose-multiplatform", onClick = null)
-          ListTile(title = "Android Gradle Plugin (v9.1.1)", subtitle = "Apache License 2.0\nhttps://developer.android.com/studio/build", onClick = null)
+          ListTile(title = "Kotlin / Kotlin Multiplatform (v${LibraryVersions.KOTLIN})", subtitle = "Apache License 2.0\nhttps://github.com/JetBrains/kotlin", onClick = null)
+          ListTile(title = "Compose Multiplatform (v${LibraryVersions.COMPOSE})", subtitle = "Apache License 2.0\nhttps://github.com/JetBrains/compose-multiplatform", onClick = null)
+          ListTile(title = "Android Gradle Plugin (v${LibraryVersions.AGP})", subtitle = "Apache License 2.0\nhttps://developer.android.com/studio/build", onClick = null)
         }
 
         Spacer(modifier = Modifier.height(8.dp))
         SectionTitle(title = "ネットワーク & シリアライズ")
         ListGroup {
-          ListTile(title = "Ktor HTTP Client (v3.5.0)", subtitle = "Apache License 2.0\nhttps://github.com/ktorio/ktor", onClick = null)
-          ListTile(title = "Kotlinx Serialization (v1.11.0)", subtitle = "Apache License 2.0\nhttps://github.com/Kotlin/kotlinx.serialization", onClick = null)
-          ListTile(title = "Kotlinx Datetime (v0.8.0)", subtitle = "Apache License 2.0\nhttps://github.com/Kotlin/kotlinx-datetime", onClick = null)
-          ListTile(title = "Yamlkt (v0.13.0)", subtitle = "Apache License 2.0\nhttps://github.com/him188/yamlkt", onClick = null)
+          ListTile(title = "Ktor HTTP Client (v${LibraryVersions.KTOR})", subtitle = "Apache License 2.0\nhttps://github.com/ktorio/ktor", onClick = null)
+          ListTile(title = "Kotlinx Serialization (v${LibraryVersions.SERIALIZATION})", subtitle = "Apache License 2.0\nhttps://github.com/Kotlin/kotlinx.serialization", onClick = null)
+          ListTile(title = "Kotlinx Datetime (v${LibraryVersions.DATETIME})", subtitle = "Apache License 2.0\nhttps://github.com/Kotlin/kotlinx-datetime", onClick = null)
+          ListTile(title = "Yamlkt (v${LibraryVersions.YAMLKT})", subtitle = "Apache License 2.0\nhttps://github.com/him188/yamlkt", onClick = null)
         }
 
         Spacer(modifier = Modifier.height(8.dp))
         SectionTitle(title = "ユーティリティ")
         ListGroup {
-          ListTile(title = "Multiplatform Settings (v1.3.0)", subtitle = "Apache License 2.0\nhttps://github.com/russhwolf/multiplatform-settings", onClick = null)
-          ListTile(title = "Material Kolor (v4.1.1)", subtitle = "Apache License 2.0\nhttps://github.com/MaterialKolor/Input", onClick = null)
-          ListTile(title = "JNA (v5.19.0)", subtitle = "Apache License 2.0 / LGPL 2.1\nhttps://github.com/java-native-access/jna", onClick = null)
-          ListTile(title = "XZ for Java (v1.10)", subtitle = "Public Domain\nhttps://tukaani.org/xz/java.html", onClick = null)
+          ListTile(title = "Multiplatform Settings (v${LibraryVersions.SETTINGS})", subtitle = "Apache License 2.0\nhttps://github.com/russhwolf/multiplatform-settings", onClick = null)
+          ListTile(title = "Material Kolor (v${LibraryVersions.MATERIAL_KOLOR})", subtitle = "Apache License 2.0\nhttps://github.com/MaterialKolor/Input", onClick = null)
+          ListTile(title = "JNA (v${LibraryVersions.JNA})", subtitle = "Apache License 2.0 / LGPL 2.1\nhttps://github.com/java-native-access/jna", onClick = null)
+          ListTile(title = "XZ for Java (v${LibraryVersions.TUKAANI_XZ})", subtitle = "Public Domain\nhttps://tukaani.org/xz/java.html", onClick = null)
         }
 
         Spacer(modifier = Modifier.height(8.dp))
