@@ -608,6 +608,7 @@ object Translations {
   "SeasonDailyKillEnemiesWithGas" to Pair("バイオハザード", "敵を150体ガス属性で倒す"),
 
   // デイリー
+  "SeasonDailyKillEnemies" to Pair("これは警告だ", "敵を200体倒す"),
   "SeasonDailyAimGlide" to Pair("グライダー", "エイムグライドで敵を15体倒す"),
   "SeasonDailyKillEnemiesWithFinishers" to Pair("処刑者", "フィニッシャーで敵を10体倒す"),
   "SeasonDailyKillEnemiesWithHeadshots" to Pair("マークスマン", "ヘッドショットで敵を40体倒す"),
@@ -641,7 +642,9 @@ object Translations {
   "SeasonWeeklyNightAndDay" to Pair("昼と夜", "カンビオン荒地で Vome または Fass の残余を10個集める"),
   "SeasonWeeklyFinelyTuned" to Pair("調弦済み", "デュヴィリで異なる Shawzin の曲を3曲演奏する"),
   "SeasonWeeklyUnlockDragonVaults" to Pair("お宝収集", "ダイモス・遺跡船タイル(抹殺/防衛除く)でドラゴンキー貯蔵庫を4個解放する"),
-  "SeasonWeeklySanctuaryOnslaught" to Pair("テスト被験者", "サンクチュアリ交戦を8ゾーンクリアする"),
+  "SeasonWeeklySanctuaryOnslaught" to Pair("テスト被験者", "サンクチュアリ交戦(通常/エリート)を8ゾーンクリアする"),
+  "SeasonWeeklyUseForma" to Pair("極性付与", "シミュラクラム以外の場所で任意の武器や Warframe にフォーマを使用して極性を付与する"),
+  "SeasonWeeklySolveCiphers" to Pair("ハッカー", "コンソールを10個ハッキングする"),
 
 
   // エリートウィークリー
@@ -657,6 +660,8 @@ object Translations {
   "SeasonWeeklyHardFastCapture" to Pair("スピードスター", "確保ミッションを90秒以内にクリアする"),
   "SeasonWeeklyHardLuaPuzzles" to Pair("試練", "ルアで試練の間を4個クリアする"),
   "SeasonWeeklyHardFriendsSurvival" to Pair("耐久", "耐久系ミッションを最低20分進めてクリアする"),
+  "SeasonWeeklyHardEliteSanctuaryOnslaught" to Pair("エリートテスト被験者", "エリートサンクチュアリ交戦を8ゾーンクリアする"),
+  "SeasonWeeklyHardEliteBeastSlayer" to Pair("エリート獣殺し", "鋼の道のり版デュヴィリ(エクスペリエンス or ローン・ストーリー)でオロワームを倒す"),
   )
 
   fun translateNightwaveChallenge(challenge: String): Pair<String, String> {
