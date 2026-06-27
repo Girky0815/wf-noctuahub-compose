@@ -66,6 +66,7 @@ class MainViewModel(val repository: WarframeRepository) {
 
     scope.launch(Dispatchers.Default) {
       try {
+        _errorMessage.value = null
         // 1. WorldState のフェッチ (軽量)
         _loadingMessage.value = "最新のゲーム状況を取得中..."
         _fetchState.value = FetchState.LOADING_WORLDSTATE
