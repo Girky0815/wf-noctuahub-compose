@@ -29,6 +29,9 @@ class WarframeRepository(
   // MODの uniqueName と説明文（効果内容）のマッピング辞書
   private val modDescriptionDict = mutableMapOf<String, String>()
 
+  // MODの uniqueName と対象（compatName / type）のマッピング辞書
+  private val modCompatMap = mutableMapOf<String, String>()
+
   /**
    * WorldState をフェッチして内部状態を更新する
    */
@@ -225,6 +228,10 @@ class WarframeRepository(
       }
       upgradesResponse?.exportUpgrades?.forEach { item ->
         localizationDict[item.uniqueName] = formatName(item.name)
+        val target = item.compatName ?: item.type
+        if (target != null) {
+          modCompatMap[item.uniqueName] = target
+        }
         var descStr: String? = null
         item.description?.let { descElement ->
           try {
@@ -451,6 +458,29 @@ class WarframeRepository(
     if (lastSegment.isNotBlank()) {
       val suffix = "/$lastSegment"
       val match = modDescriptionDict.entries.find { (key, _) ->
+        key.endsWith(suffix, ignoreCase = true)
+      }
+      if (match != null) {
+        return match.value
+      }
+    }
+    return null
+  }
+
+  /**
+   * MODの対象（装備スロット）を取得する
+   */
+  fun getModCompat(uniqueName: String): String? {
+    val cleaned = uniqueName.replace("/Lotus/StoreItems/", "/Lotus/", ignoreCase = true)
+    modCompatMap[cleaned]?.let { return it }
+
+    modCompatMap[uniqueName]?.let { return it }
+
+    // 末尾一致フォールバック
+    val lastSegment = uniqueName.substringAfterLast("/")
+    if (lastSegment.isNotBlank()) {
+      val suffix = "/$lastSegment"
+      val match = modCompatMap.entries.find { (key, _) ->
         key.endsWith(suffix, ignoreCase = true)
       }
       if (match != null) {

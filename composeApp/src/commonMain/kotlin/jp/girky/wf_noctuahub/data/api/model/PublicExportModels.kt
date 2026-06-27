@@ -68,7 +68,9 @@ data class ExportSimpleItem(
   @SerialName("uniqueName") val uniqueName: String,
   @SerialName("name") val name: String,
   @SerialName("description") val description: JsonElement? = null,
-  @SerialName("levelStats") val levelStats: List<LevelStat>? = null
+  @SerialName("levelStats") val levelStats: List<LevelStat>? = null,
+  @SerialName("compatName") val compatName: String? = null,
+  @SerialName("type") val type: String? = null
 )
 
 @Serializable

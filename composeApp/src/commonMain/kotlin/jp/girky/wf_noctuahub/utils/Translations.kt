@@ -821,6 +821,65 @@ object Translations {
     // 6. 装飾品 (その他もここにフォールバック)
     return "装飾品"
   }
+
+  // Modの装備対象（compatName）やタイプ（type）の日本語訳
+  val modTargetTypes = mapOf(
+    "WARFRAME" to "Warframe",
+    "PRIMARY" to "プライマリ",
+    "SECONDARY" to "セカンダリ",
+    "MELEE" to "近接",
+    "RIFLE" to "ライフル",
+    "SHOTGUN" to "ショットガン",
+    "PISTOL" to "ピストル",
+    "ARCHWING" to "アークウイング",
+    "ARCH-GUN" to "アークガン",
+    "ARCH-MELEE" to "アーク近接",
+    "SENTINEL" to "センチネル/ペット",
+    "COMPANION" to "コンパニオン",
+    "STANCE" to "スタンス",
+    "PARAZON" to "パラゾン",
+    "NECRAMECH" to "ネクロメカ",
+    "AURA" to "オーラ",
+    "EXILUS" to "エクシラス",
+    "K-DRIVE" to "K-ドライブ",
+    "AMP" to "アンプ",
+    "ARCHGUN" to "アークガン",
+    "ARCHMELEE" to "アーク近接"
+  )
+
+  /**
+   * Modの装備対象を日本語に翻訳する
+   */
+  fun translateModTarget(target: String?): String? {
+    if (target == null) return null
+    val upper = target.uppercase().trim()
+    modTargetTypes[upper]?.let { return it }
+    if (upper.startsWith("/LOTUS/")) {
+      val last = upper.substringAfterLast("/")
+      return "${last.lowercase().replaceFirstChar { it.uppercase() }} 専用"
+    }
+    return target
+  }
+
+  /**
+   * 数値を3桁カンマ区切りにする
+   */
+  fun formatComma(number: Long): String {
+    val str = number.toString()
+    val sb = StringBuilder()
+    val len = str.length
+    for (i in 0 until len) {
+      if (i > 0 && (len - i) % 3 == 0) {
+        sb.append(',')
+      }
+      sb.append(str[i])
+    }
+    return sb.toString()
+  }
+
+  fun formatComma(number: Int): String {
+    return formatComma(number.toLong())
+  }
 }
 
 

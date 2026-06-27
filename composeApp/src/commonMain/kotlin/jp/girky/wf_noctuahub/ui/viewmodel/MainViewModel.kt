@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import jp.girky.wf_noctuahub.utils.Translations
 
 enum class FetchState {
   IDLE, LOADING_WORLDSTATE, LOADING_EXPORT, SUCCESS, ERROR
@@ -50,6 +51,11 @@ class MainViewModel(val repository: WarframeRepository) {
   fun getModDescription(uniqueName: String?): String? {
     if (uniqueName == null) return null
     return repository.getModDescription(uniqueName)
+  }
+
+  fun getModCompat(uniqueName: String?): String? {
+    if (uniqueName == null) return null
+    return repository.getModCompat(uniqueName)?.let { Translations.translateModTarget(it) }
   }
 
   /**

@@ -24,7 +24,8 @@ import androidx.compose.material.icons.rounded.ChevronRight
 fun BaroPage(
   worldState: WorldStateResponse?,
   onLocalize: (String) -> String,
-  onGetModDescription: (String) -> String?
+  onGetModDescription: (String) -> String?,
+  onGetModCompat: (String) -> String?
 ) {
   val uriHandler = LocalUriHandler.current
   val baro = worldState?.voidTraders?.firstOrNull() ?: run {
@@ -107,18 +108,40 @@ fun BaroPage(
                 val name = onLocalize(baroItem.itemType ?: "")
                 val ducats = baroItem.primePrice ?: 0
                 val credits = baroItem.regularPrice ?: 0
+                val formattedCredits = Translations.formatComma(credits)
                 val description = if (category == "MOD") {
                   onGetModDescription(baroItem.itemType ?: "")
+                } else null
+                val compat = if (category == "MOD") {
+                  onGetModCompat(baroItem.itemType ?: "")
                 } else null
                 
                 if (description != null) {
                   ListItem {
-                    Text(
-                      text = name,
-                      style = MaterialTheme.typography.bodyLarge,
-                      fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
-                      color = MaterialTheme.colorScheme.onSurface
-                    )
+                    Row(
+                      verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                      horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                      Text(
+                        text = name,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSurface
+                      )
+                      compat?.let {
+                        Surface(
+                          color = MaterialTheme.colorScheme.secondaryContainer,
+                          shape = androidx.compose.foundation.shape.RoundedCornerShape(4.dp)
+                        ) {
+                          Text(
+                            text = it,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                          )
+                        }
+                      }
+                    }
                     Text(
                       text = description,
                       style = MaterialTheme.typography.bodyMedium,
@@ -126,7 +149,7 @@ fun BaroPage(
                       modifier = Modifier.padding(top = 2.dp)
                     )
                     Text(
-                      text = "${ducats} デュカット | ${credits} Cr",
+                      text = "${ducats} デュカット | ${formattedCredits} Cr",
                       style = MaterialTheme.typography.bodyMedium,
                       color = MaterialTheme.colorScheme.onSurfaceVariant,
                       modifier = Modifier.padding(top = 2.dp)
@@ -157,7 +180,7 @@ fun BaroPage(
 
                   ListTile(
                     title = name,
-                    subtitle = "${ducats} デュカット | ${credits} Cr",
+                    subtitle = "${ducats} デュカット | ${formattedCredits} Cr",
                     trailingContent = trailingContent,
                     onClick = onClickAction
                   )
