@@ -2,6 +2,8 @@ package jp.girky.wf_noctuahub.data.repository
 
 import com.russhwolf.settings.ObservableSettings
 import jp.girky.wf_noctuahub.utils.ThemeMode
+import jp.girky.wf_noctuahub.utils.AppThemeStyle
+import jp.girky.wf_noctuahub.utils.AppThemeContrast
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -46,6 +48,14 @@ class AppSettings(private val pref: ObservableSettings) {
 
   val seedColorFlow: Flow<Int> = getIntFlow("seed_color", 0xFF6750A4.toInt())
   val isDynamicColorFlow: Flow<Boolean> = getBooleanFlow("is_dynamic_color", true)
+  val themeStyleFlow: Flow<AppThemeStyle> = getStringFlow("theme_style", AppThemeStyle.TONAL_SPOT.name)
+    .map {
+      try { AppThemeStyle.valueOf(it) } catch (e: Exception) { AppThemeStyle.TONAL_SPOT }
+    }
+  val themeContrastFlow: Flow<AppThemeContrast> = getStringFlow("theme_contrast", AppThemeContrast.MEDIUM.name)
+    .map {
+      try { AppThemeContrast.valueOf(it) } catch (e: Exception) { AppThemeContrast.MEDIUM }
+    }
   val cetusOffsetFlow: Flow<Int> = getIntFlow("cetus_offset", 0)
   val vallisOffsetFlow: Flow<Int> = getIntFlow("vallis_offset", 0)
 
@@ -59,6 +69,14 @@ class AppSettings(private val pref: ObservableSettings) {
 
   fun setDynamicColor(enabled: Boolean) {
     pref.putBoolean("is_dynamic_color", enabled)
+  }
+
+  fun setThemeStyle(style: AppThemeStyle) {
+    pref.putString("theme_style", style.name)
+  }
+
+  fun setThemeContrast(contrast: AppThemeContrast) {
+    pref.putString("theme_contrast", contrast.name)
   }
 
   fun setCetusOffset(offset: Int) {
@@ -90,6 +108,8 @@ class AppSettings(private val pref: ObservableSettings) {
       "theme_mode" to pref.getString("theme_mode", ThemeMode.SYSTEM_DEFAULT.name),
       "seed_color" to pref.getInt("seed_color", 0xFF6750A4.toInt()).toString(),
       "is_dynamic_color" to pref.getBoolean("is_dynamic_color", true).toString(),
+      "theme_style" to pref.getString("theme_style", AppThemeStyle.TONAL_SPOT.name),
+      "theme_contrast" to pref.getString("theme_contrast", AppThemeContrast.MEDIUM.name),
       "cetus_offset" to pref.getInt("cetus_offset", 0).toString(),
       "vallis_offset" to pref.getInt("vallis_offset", 0).toString()
     )
@@ -101,6 +121,12 @@ class AppSettings(private val pref: ObservableSettings) {
     }
     map["seed_color"]?.toIntOrNull()?.let { setSeedColor(it) }
     map["is_dynamic_color"]?.toBooleanStrictOrNull()?.let { setDynamicColor(it) }
+    map["theme_style"]?.let {
+      try { setThemeStyle(AppThemeStyle.valueOf(it)) } catch (e: Exception) {}
+    }
+    map["theme_contrast"]?.let {
+      try { setThemeContrast(AppThemeContrast.valueOf(it)) } catch (e: Exception) {}
+    }
     map["cetus_offset"]?.toIntOrNull()?.let { setCetusOffset(it) }
     map["vallis_offset"]?.toIntOrNull()?.let { setVallisOffset(it) }
   }

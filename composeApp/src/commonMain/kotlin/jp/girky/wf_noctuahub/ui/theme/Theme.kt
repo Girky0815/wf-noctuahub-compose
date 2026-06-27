@@ -9,6 +9,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.materialkolor.dynamiccolor.ColorSpec
+import com.materialkolor.PaletteStyle
 import com.materialkolor.rememberDynamicColorScheme
 
 private val lightScheme = lightColorScheme(
@@ -94,6 +95,8 @@ fun AppTheme(
   seedColor: Color = Color.White,
   useDynamicColor: Boolean = true,
   blackTheme: Boolean = false,
+  style: PaletteStyle = PaletteStyle.TonalSpot,
+  contrastLevel: Double = 0.0,
   content: @Composable () -> Unit
 ) {
   val colorScheme = if (darkTheme) darkScheme else lightScheme
@@ -109,10 +112,18 @@ fun AppTheme(
     colorScheme.primary
   }
 
+  val specVersion = if (style == PaletteStyle.Monochrome) {
+    ColorSpec.SpecVersion.SPEC_2021
+  } else {
+    ColorSpec.SpecVersion.SPEC_2025
+  }
+
   val dynamicColorScheme = rememberDynamicColorScheme(
     seedColor = finalSeedColor,
     isDark = darkTheme,
-    specVersion =  ColorSpec.SpecVersion.SPEC_2025,
+    style = style,
+    contrastLevel = contrastLevel,
+    specVersion = specVersion,
     isAmoled = blackTheme && darkTheme
   )
 

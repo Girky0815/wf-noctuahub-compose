@@ -103,6 +103,8 @@ fun App() {
   val themeMode by appSettings.themeModeFlow.collectAsState(jp.girky.wf_noctuahub.utils.ThemeMode.SYSTEM_DEFAULT)
   val seedColorArgb by appSettings.seedColorFlow.collectAsState(0xFF6750A4.toInt())
   val useDynamicColor by appSettings.isDynamicColorFlow.collectAsState(true)
+  val themeStyle by appSettings.themeStyleFlow.collectAsState(jp.girky.wf_noctuahub.utils.AppThemeStyle.TONAL_SPOT)
+  val themeContrast by appSettings.themeContrastFlow.collectAsState(jp.girky.wf_noctuahub.utils.AppThemeContrast.MEDIUM)
   val seedColor = Color(seedColorArgb.toLong())
   
   val isDark = when (themeMode) {
@@ -149,10 +151,12 @@ fun App() {
   }
 
   AppTheme(
-  darkTheme = isDark,
-  seedColor = seedColor,
-  useDynamicColor = useDynamicColor,
-  blackTheme = themeMode == jp.girky.wf_noctuahub.utils.ThemeMode.AMOLED_BLACK
+    darkTheme = isDark,
+    seedColor = seedColor,
+    useDynamicColor = useDynamicColor,
+    blackTheme = themeMode == jp.girky.wf_noctuahub.utils.ThemeMode.AMOLED_BLACK,
+    style = themeStyle.style,
+    contrastLevel = themeContrast.value
   ) {
   val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
@@ -480,7 +484,8 @@ fun App() {
         BaroPage(
           worldState = worldState,
           onLocalize = { viewModel.localize(it) },
-          onGetModDescription = { viewModel.getModDescription(it) }
+          onGetModDescription = { viewModel.getModDescription(it) },
+          onGetModCompat = { viewModel.getModCompat(it) }
         )
         }
         Screen.Resurgence -> {

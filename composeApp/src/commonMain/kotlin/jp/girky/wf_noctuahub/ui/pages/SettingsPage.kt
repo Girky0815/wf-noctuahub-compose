@@ -3,6 +3,8 @@ package jp.girky.wf_noctuahub.ui.pages
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
@@ -17,10 +19,13 @@ import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.DeleteForever
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalUriHandler
@@ -28,6 +33,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import jp.girky.wf_noctuahub.data.repository.AppSettings
 import jp.girky.wf_noctuahub.utils.ThemeMode
+import jp.girky.wf_noctuahub.utils.AppThemeStyle
+import jp.girky.wf_noctuahub.utils.AppThemeContrast
 import jp.girky.wf_noctuahub.platform.BackupRestoreButtons
 import kotlinx.coroutines.launch
 import jp.girky.wf_noctuahub.ui.components.ui.ExpressiveButtonGroup
@@ -240,6 +247,220 @@ fun SettingsPage(
         val themeMode by appSettings.themeModeFlow.collectAsState(ThemeMode.SYSTEM_DEFAULT)
         val seedColorArgb by appSettings.seedColorFlow.collectAsState(0xFF6750A4.toInt())
         val useDynamicColor by appSettings.isDynamicColorFlow.collectAsState(true)
+        val themeStyle by appSettings.themeStyleFlow.collectAsState(AppThemeStyle.TONAL_SPOT)
+        val themeContrast by appSettings.themeContrastFlow.collectAsState(AppThemeContrast.MEDIUM)
+
+        var showStyleDialog by remember { mutableStateOf(false) }
+        var showContrastDialog by remember { mutableStateOf(false) }
+        var showColorPickerDialog by remember { mutableStateOf(false) }
+
+        // スタイル選択ダイアログ
+        if (showStyleDialog) {
+          AlertDialog(
+            onDismissRequest = { showStyleDialog = false },
+            title = { Text("テーマのスタイル") },
+            text = {
+              Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                AppThemeStyle.entries.forEach { style ->
+                  Row(
+                    modifier = Modifier
+                      .fillMaxWidth()
+                      .clickable {
+                        coroutineScope.launch {
+                          appSettings.setThemeStyle(style)
+                          showStyleDialog = false
+                        }
+                      }
+                      .padding(vertical = 12.dp, horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                  ) {
+                    RadioButton(
+                      selected = themeStyle == style,
+                      onClick = {
+                        coroutineScope.launch {
+                          appSettings.setThemeStyle(style)
+                          showStyleDialog = false
+                        }
+                      }
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(style.label)
+                  }
+                }
+              }
+            },
+            confirmButton = {
+              TextButton(onClick = { showStyleDialog = false }) { Text("キャンセル") }
+            }
+          )
+        }
+
+        // コントラスト選択ダイアログ
+        if (showContrastDialog) {
+          AlertDialog(
+            onDismissRequest = { showContrastDialog = false },
+            title = { Text("コントラストの設定") },
+            text = {
+              Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                AppThemeContrast.entries.forEach { contrast ->
+                  Row(
+                    modifier = Modifier
+                      .fillMaxWidth()
+                      .clickable {
+                        coroutineScope.launch {
+                          appSettings.setThemeContrast(contrast)
+                          showContrastDialog = false
+                        }
+                      }
+                      .padding(vertical = 12.dp, horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                  ) {
+                    RadioButton(
+                      selected = themeContrast == contrast,
+                      onClick = {
+                        coroutineScope.launch {
+                          appSettings.setThemeContrast(contrast)
+                          showContrastDialog = false
+                        }
+                      }
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(contrast.label)
+                  }
+                }
+              }
+            },
+            confirmButton = {
+              TextButton(onClick = { showContrastDialog = false }) { Text("キャンセル") }
+            }
+          )
+        }
+
+        // カラー選択ツール（Android Canary 2606 風）ダイアログ
+        if (showColorPickerDialog) {
+          val initialColor = Color(seedColorArgb.toLong())
+          var currentHue by remember { mutableStateOf(jp.girky.wf_noctuahub.utils.ColorUtils.colorToHue(initialColor)) }
+          val selectedPickerColor = remember(currentHue) { jp.girky.wf_noctuahub.utils.ColorUtils.hsvToColor(currentHue) }
+
+          AlertDialog(
+            onDismissRequest = { showColorPickerDialog = false },
+            properties = androidx.compose.ui.window.DialogProperties(usePlatformDefaultWidth = true),
+            confirmButton = {},
+            title = null,
+            text = {
+              Column(
+                modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(vertical = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(24.dp)
+              ) {
+                Row(
+                  modifier = Modifier.fillMaxWidth(),
+                  horizontalArrangement = Arrangement.SpaceBetween,
+                  verticalAlignment = Alignment.CenterVertically
+                ) {
+                  Text(
+                    "色を選択する",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                  )
+                  IconButton(
+                    onClick = { showColorPickerDialog = false },
+                    modifier = Modifier.size(36.dp)
+                  ) {
+                    Icon(
+                      imageVector = Icons.Default.Close,
+                      contentDescription = "閉じる",
+                      tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                  }
+                }
+
+                val rainbowColors = listOf(
+                  Color(0xFFFF0000),
+                  Color(0xFFFFB300),
+                  Color(0xFF00FF00),
+                  Color(0xFF00FFFF),
+                  Color(0xFF0000FF),
+                  Color(0xFFFF00FF),
+                  Color(0xFFFF0000)
+                )
+
+                @OptIn(ExperimentalMaterial3Api::class)
+                Slider(
+                  value = currentHue,
+                  onValueChange = { currentHue = it },
+                  valueRange = 0f..360f,
+                  modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                  thumb = {
+                    Surface(
+                      modifier = Modifier
+                        .size(36.dp)
+                        .shadow(4.dp, shape = androidx.compose.foundation.shape.CircleShape),
+                      shape = androidx.compose.foundation.shape.CircleShape,
+                      color = selectedPickerColor,
+                      border = androidx.compose.foundation.BorderStroke(3.dp, Color.White)
+                    ) {}
+                  },
+                  track = {
+                    Box(
+                      modifier = Modifier
+                        .fillMaxWidth()
+                        .height(20.dp)
+                        .clip(androidx.compose.foundation.shape.CircleShape)
+                        .background(androidx.compose.ui.graphics.Brush.horizontalGradient(rainbowColors))
+                    )
+                  }
+                )
+
+                Row(
+                  modifier = Modifier.fillMaxWidth(),
+                  horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
+                  verticalAlignment = Alignment.CenterVertically
+                ) {
+                  FilledIconButton(
+                    onClick = { showColorPickerDialog = false },
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                      containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                      contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    ),
+                    modifier = Modifier.size(56.dp)
+                  ) {
+                    Icon(
+                      imageVector = Icons.Default.Close,
+                      contentDescription = "キャンセル",
+                      modifier = Modifier.size(24.dp)
+                    )
+                  }
+
+                  FilledIconButton(
+                    onClick = {
+                      coroutineScope.launch {
+                        appSettings.setSeedColor(selectedPickerColor.toArgb())
+                        showColorPickerDialog = false
+                      }
+                    },
+                    colors = IconButtonDefaults.filledIconButtonColors(
+                      containerColor = selectedPickerColor,
+                      contentColor = if (currentHue in 60f..180f) Color.Black else Color.White
+                    ),
+                    modifier = Modifier.size(56.dp)
+                  ) {
+                    Icon(
+                      imageVector = Icons.Default.Check,
+                      contentDescription = "確定",
+                      modifier = Modifier.size(24.dp)
+                    )
+                  }
+                }
+              }
+            }
+          )
+        }
 
         ListGroup {
           ListTile(
@@ -300,6 +521,20 @@ fun SettingsPage(
             onClick = { coroutineScope.launch { appSettings.setDynamicColor(!useDynamicColor) } }
           )
 
+          ListTile(
+            title = "テーマのスタイル",
+            subtitle = themeStyle.label,
+            leadingIcon = { Icon(Icons.Default.Palette, contentDescription = null) },
+            onClick = { showStyleDialog = true }
+          )
+
+          ListTile(
+            title = "コントラスト設定",
+            subtitle = themeContrast.label,
+            leadingIcon = { Icon(Icons.Default.ColorLens, contentDescription = null) },
+            onClick = { showContrastDialog = true }
+          )
+
           if (!useDynamicColor) {
             HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = MaterialTheme.colorScheme.outlineVariant)
             Text(
@@ -331,6 +566,29 @@ fun SettingsPage(
                   onClick = { coroutineScope.launch { appSettings.setSeedColor(color.toArgb()) } },
                   border = if (seedColorArgb == color.toArgb()) androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.onSurface) else null
                 ) {}
+              }
+
+              // 自由色選択ダイアログを開くための + ボタン
+              val isCustomColorSelected = colors.none { it.first.toArgb() == seedColorArgb }
+              Surface(
+                modifier = Modifier.size(40.dp),
+                shape = MaterialTheme.shapes.small,
+                color = if (isCustomColorSelected) Color(seedColorArgb.toLong()) else MaterialTheme.colorScheme.surfaceVariant,
+                onClick = { showColorPickerDialog = true },
+                border = if (isCustomColorSelected) androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.onSurface) else null
+              ) {
+                Box(contentAlignment = Alignment.Center) {
+                  Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "色をカスタマイズ",
+                    tint = if (isCustomColorSelected) {
+                      val hue = jp.girky.wf_noctuahub.utils.ColorUtils.colorToHue(Color(seedColorArgb.toLong()))
+                      if (hue in 60f..180f) Color.Black else Color.White
+                    } else {
+                      MaterialTheme.colorScheme.onSurfaceVariant
+                    }
+                  )
+                }
               }
             }
           }
