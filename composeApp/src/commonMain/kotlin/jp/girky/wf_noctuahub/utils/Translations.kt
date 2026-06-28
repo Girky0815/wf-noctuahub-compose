@@ -1063,6 +1063,81 @@ object Translations {
   fun formatComma(number: Int): String {
     return formatComma(number.toLong())
   }
+
+  // --- レールジャック (CrewBattleNode) 専用のマッピングデータとヘルパー関数 ---
+  data class CrewBattleNodeInfo(
+    val englishName: String,
+    val japaneseName: String,
+    val missionType: String,
+    val faction: String,
+    val proxima: String
+  )
+
+  private val crewBattleNodes = mapOf(
+    "CrewBattleNode502" to CrewBattleNodeInfo("Sover Strait", "ソバー海峡", "Skirmish", "Grineer", "Earth"),
+    "CrewBattleNode509" to CrewBattleNodeInfo("Iota Temple", "イオタ神殿", "Skirmish", "Grineer", "Earth"),
+    "CrewBattleNode518" to CrewBattleNodeInfo("Ogal Cluster", "オーガル・クラスター", "Skirmish", "Grineer", "Earth"),
+    "CrewBattleNode519" to CrewBattleNodeInfo("Korm's Belt", "コームの帯", "Skirmish", "Grineer", "Earth"),
+    "CrewBattleNode522" to CrewBattleNodeInfo("Bendar Cluster", "ベンダー・クラスター", "Skirmish", "Grineer", "Earth"),
+
+    "CrewBattleNode503" to CrewBattleNodeInfo("Bifrost Echo", "ビフレストのエコー", "Extermination", "Corpus", "Venus"),
+    "CrewBattleNode511" to CrewBattleNodeInfo("Beacon Shield Ring", "ビーコン・シールドリング", "Volatile", "Corpus", "Venus"),
+    "CrewBattleNode512" to CrewBattleNodeInfo("Orvin-Haarc", "オービンハーク", "Spy", "Corpus", "Venus"),
+    "CrewBattleNode513" to CrewBattleNodeInfo("Vesper Strait", "ヴェスパー海峡", "Orphix", "Corpus", "Venus"),
+    "CrewBattleNode514" to CrewBattleNodeInfo("Falling Glory", "フォーリング・グローリー", "Defense", "Corpus", "Venus"),
+    "CrewBattleNode515" to CrewBattleNodeInfo("Luckless Expanse", "ラックレス大空間", "Survival", "Corpus", "Venus"),
+
+    "CrewBattleNode501" to CrewBattleNodeInfo("Mordo Cluster", "モルド・クラスター", "Skirmish", "Grineer", "Saturn"),
+    "CrewBattleNode530" to CrewBattleNodeInfo("Kasio's Rest", "カシオの安息地", "Skirmish", "Grineer", "Saturn"),
+    "CrewBattleNode533" to CrewBattleNodeInfo("Nodo Gap", "ノード間隙", "Skirmish", "Grineer", "Saturn"),
+    "CrewBattleNode534" to CrewBattleNodeInfo("Lupal Pass", "ルパル峠", "Skirmish", "Grineer", "Saturn"),
+    "CrewBattleNode535" to CrewBattleNodeInfo("Vand Cluster", "ヴァンド・クラスター", "Skirmish", "Grineer", "Saturn"),
+
+    "CrewBattleNode504" to CrewBattleNodeInfo("Arva Vector", "アルバ・ベクトル", "Defense", "Corpus", "Neptune"),
+    "CrewBattleNode516" to CrewBattleNodeInfo("Nu-gua Mines", "ヌグア採掘場", "Extermination", "Corpus", "Neptune"),
+    "CrewBattleNode521" to CrewBattleNodeInfo("Enkidu Ice Drifts", "エンキドゥ氷流", "Survival", "Corpus", "Neptune"),
+    "CrewBattleNode523" to CrewBattleNodeInfo("Mammon's Prospect", "マモンの展望地", "Orphix", "Corpus", "Neptune"),
+    "CrewBattleNode524" to CrewBattleNodeInfo("Sovereign Grasp", "サヴレン・グラスプ", "Volatile", "Corpus", "Neptune"),
+    "CrewBattleNode525" to CrewBattleNodeInfo("Brom Cluster", "ブロム・クラスター", "Spy", "Corpus", "Neptune"),
+
+    "CrewBattleNode526" to CrewBattleNodeInfo("Khufu Envoy", "クフ使節", "Orphix", "Corpus", "Pluto"),
+    "CrewBattleNode527" to CrewBattleNodeInfo("Seven Sirens", "セブン・サイレンス", "Extermination", "Corpus", "Pluto"),
+    "CrewBattleNode528" to CrewBattleNodeInfo("Obol Crossing", "オボル交差路", "Defense", "Corpus", "Pluto"),
+    "CrewBattleNode529" to CrewBattleNodeInfo("Profit Margin", "プロフィット・マージン", "Volatile", "Corpus", "Pluto"),
+    "CrewBattleNode531" to CrewBattleNodeInfo("Fenton's Field", "フェントンの野", "Survival", "Corpus", "Pluto"),
+    "CrewBattleNode536" to CrewBattleNodeInfo("Peregrine Axis", "ペレグリン軸", "Spy", "Corpus", "Pluto"),
+
+    "CrewBattleNode505" to CrewBattleNodeInfo("Ruse War Field", "ルース戦域", "Skirmish", "Grineer", "Veil"),
+    "CrewBattleNode510" to CrewBattleNodeInfo("Gian Point", "ジャイアン・ポイント", "Skirmish", "Grineer", "Veil"),
+    "CrewBattleNode538" to CrewBattleNodeInfo("Calabash", "カラバッシュ", "Extermination", "Corpus", "Veil"),
+    "CrewBattleNode539" to CrewBattleNodeInfo("Numina", "ヌミナ", "Volatile", "Corpus", "Veil"),
+    "CrewBattleNode540" to CrewBattleNodeInfo("Arc Silver", "アーク・シルバー", "Defense", "Corpus", "Veil"),
+    "CrewBattleNode541" to CrewBattleNodeInfo("Erato", "エラト", "Orphix", "Corpus", "Veil"),
+    "CrewBattleNode542" to CrewBattleNodeInfo("Lu-yan", "ルーヤン", "Survival", "Corpus", "Veil"),
+    "CrewBattleNode543" to CrewBattleNodeInfo("Sambir Cloud", "サンビル星雲", "Spy", "Corpus", "Veil"),
+    "CrewBattleNode550" to CrewBattleNodeInfo("Nsu Grid", "ヌスー・グリッド", "Skirmish", "Grineer", "Veil"),
+    "CrewBattleNode551" to CrewBattleNodeInfo("Ganalen's Grave", "ガナレンの墓", "Skirmish", "Grineer", "Veil"),
+    "CrewBattleNode552" to CrewBattleNodeInfo("Rya", "リア", "Skirmish", "Grineer", "Veil"),
+    "CrewBattleNode553" to CrewBattleNodeInfo("Flexa", "フレクサ", "Skirmish", "Grineer", "Veil"),
+    "CrewBattleNode554" to CrewBattleNodeInfo("H-2 Cloud", "H-2 星雲", "Skirmish", "Grineer", "Veil"),
+    "CrewBattleNode555" to CrewBattleNodeInfo("R-9 Cloud", "R-9 星雲", "Skirmish", "Grineer", "Veil")
+  )
+
+  fun getCrewBattleNodeInfo(nodeKey: String): CrewBattleNodeInfo? {
+    return crewBattleNodes[nodeKey]
+  }
+
+  fun getCrewBattleLevelRange(proxima: String): Pair<Int, Int> {
+    return when (proxima.lowercase()) {
+      "earth" -> Pair(40, 50)
+      "venus" -> Pair(45, 55)
+      "saturn" -> Pair(60, 70)
+      "neptune" -> Pair(65, 75)
+      "pluto" -> Pair(80, 90)
+      "veil" -> Pair(90, 100)
+      else -> Pair(0, 0)
+    }
+  }
 }
 
 

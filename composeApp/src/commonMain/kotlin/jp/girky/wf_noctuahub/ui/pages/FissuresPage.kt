@@ -187,15 +187,37 @@ private fun mapFissures(
     val tierNum = parseTierNum(tierStr)
     val resolvedTier = tierNumToTierName(tierNum)
 
-    val region = onGetRegionInfo(storm.node)
-    val factionName = Translations.translateFactionIndex(region?.factionIndex)
-    val minL = region?.minEnemyLevel ?: 0
-    val maxL = region?.maxEnemyLevel ?: 0
+    val nodeKey = storm.node ?: ""
+    val isCrewBattle = nodeKey.startsWith("CrewBattleNode")
+
+    val nodeName: String
+    val missionType: String
+    val factionName: String
+    val minL: Int
+    val maxL: Int
+
+    if (isCrewBattle) {
+      val info = Translations.getCrewBattleNodeInfo(nodeKey)
+      val proximaJP = Translations.planetNames[info?.proxima ?: ""] ?: (info?.proxima ?: "不明")
+      nodeName = "${info?.englishName ?: nodeKey} ($proximaJP)"
+      missionType = Translations.translateMissionType(info?.missionType ?: "不明")
+      factionName = Translations.translateFaction(info?.faction ?: "不明")
+      val lvl = Translations.getCrewBattleLevelRange(info?.proxima ?: "")
+      minL = lvl.first
+      maxL = lvl.second
+    } else {
+      val region = onGetRegionInfo(nodeKey)
+      nodeName = Translations.translateNode(onLocalize(nodeKey))
+      missionType = "小戦"
+      factionName = Translations.translateFactionIndex(region?.factionIndex)
+      minL = region?.minEnemyLevel ?: 0
+      maxL = region?.maxEnemyLevel ?: 0
+    }
 
     FissureItem(
       id = storm.id?.oid ?: "",
-      node = Translations.translateNode(onLocalize(storm.node)),
-      missionType = "小戦", // Void嵐の場合はだいたいSkirmish(小戦)かVolatile等。今回は雑に固定か空文字
+      node = nodeName,
+      missionType = missionType,
       tier = resolvedTier,
       expiry = storm.expiry?.epochMillis ?: 0L,
       isHard = false, 
