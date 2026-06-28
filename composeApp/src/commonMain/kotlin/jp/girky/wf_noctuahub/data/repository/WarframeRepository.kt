@@ -3,14 +3,39 @@ package jp.girky.wf_noctuahub.data.repository
 import jp.girky.wf_noctuahub.data.api.WarframeApiClient
 import jp.girky.wf_noctuahub.data.api.model.*
 import jp.girky.wf_noctuahub.utils.CacheUtils
+import jp.girky.wf_noctuahub.utils.FormatUtils.format
 import jp.girky.wf_noctuahub.platform.getAppUpdater
 import io.ktor.client.request.get
+import io.ktor.client.request.head
+import io.ktor.client.plugins.onDownload
 import io.ktor.client.statement.readBytes
+import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.Dispatchers
+import kotlin.time.TimeSource
+import kotlin.time.DurationUnit
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.jsonPrimitive
+import jp.girky.wf_noctuahub.utils.Translations
+
+data class DownloadProgress(
+  val totalFiles: Int,
+  val completedFiles: Int,
+  val currentFileName: String,
+  val currentFileBytes: Long,
+  val currentFileTotalBytes: Long,
+  val speedText: String,
+  val etaText: String,
+  val taskName: String,
+  val progressPercent: Float,       // 現在のファイルの進捗率 0f..1f
+  val overallProgressPercent: Float // 全体の進捗率 0f..1f
+)
 
 class WarframeRepository(
   private val apiClient: WarframeApiClient,
@@ -19,6 +44,8 @@ class WarframeRepository(
 
   private val _worldState = MutableStateFlow<WorldStateResponse?>(null)
   val worldState: StateFlow<WorldStateResponse?> = _worldState.asStateFlow()
+
+  val showRawPathsFlow: Flow<Boolean> = appSettings.showRawPathsFlow
 
   // Public Export の uniqueName (e.g. /Lotus/Language/...) と日本語名のマッピング辞書
   private val localizationDict = mutableMapOf<String, String>()
@@ -47,7 +74,8 @@ class WarframeRepository(
    */
   private suspend inline fun <reified T> getLocalizedData(
     manifestLine: String,
-    needsDownload: Boolean
+    needsDownload: Boolean,
+    crossinline onDownloadProgress: (fileName: String, bytes: Long, total: Long, speedText: String, etaText: String) -> Unit
   ): T? {
     val fileName = manifestLine.substringBefore("!") // 例: "ExportCustoms_ja.json"
     
@@ -67,7 +95,16 @@ class WarframeRepository(
       try {
         val cleanManifestLine = manifestLine.trim()
         val url = "http://content.warframe.com/PublicExport/Manifest/$cleanManifestLine"
-        val response = apiClient.client.get(url)
+        val startTime = TimeSource.Monotonic.markNow()
+        val response = apiClient.client.get(url) {
+          onDownload { bytes, total ->
+            val elapsed = startTime.elapsedNow().toDouble(DurationUnit.SECONDS)
+            val speedBps = if (elapsed > 0.0) bytes.toDouble() / elapsed else 0.0
+            val speedText = formatSpeed(speedBps)
+            val etaText = formatEta(bytes, total ?: 0L, speedBps)
+            onDownloadProgress(fileName, bytes, total ?: 0L, speedText, etaText)
+          }
+        }
         jsonString = response.readBytes().decodeToString()
         
         // キャッシュへ保存
@@ -93,10 +130,28 @@ class WarframeRepository(
     }
   }
 
+  private fun formatSpeed(speedBps: Double): String {
+    return if (speedBps > 1024 * 1024) {
+      "${(speedBps / (1024.0 * 1024.0)).toFloat().format(1)} MB/s"
+    } else {
+      "${(speedBps / 1024.0).toFloat().format(1)} KB/s"
+    }
+  }
+
+  private fun formatEta(bytes: Long, total: Long, speedBps: Double): String {
+    if (total <= 0 || speedBps <= 0) return "残り -- 秒"
+    val remainingBytes = total - bytes
+    val remainingSeconds = (remainingBytes / speedBps).toInt()
+    return "残り ${remainingSeconds} 秒"
+  }
+
   /**
    * アプリ起動時に Public Export の各種辞書をダウンロード・解凍・パースしオンメモリに保持する
    */
-  suspend fun initializeLocalization() {
+  suspend fun initializeLocalization(
+    onConfirmDownload: suspend (totalSize: Long) -> Boolean,
+    onProgress: (DownloadProgress) -> Unit
+  ) {
     // すでに辞書がロードされている場合は処理をスキップ（Pull-to-refresh等での無駄な通信を防止）
     if (localizationDict.isNotEmpty()) {
       println("initializeLocalization: Already loaded. Skipping.")
@@ -107,6 +162,7 @@ class WarframeRepository(
     var needsDownload = true
     var currentManifestText = ""
     
+    onProgress(DownloadProgress(0, 0, "Public Export", 0L, 0L, "0.0 KB/s", "残り -- 秒", "マニフェストを取得中...", 0f, 0f))
     try {
       manifest = apiClient.fetchPublicExportManifest()
       currentManifestText = manifest.joinToString("\n")
@@ -116,115 +172,268 @@ class WarframeRepository(
       needsDownload = false
     }
 
+    val files = listOf(
+      "ExportCustoms_ja.json",
+      "ExportRegions_ja.json",
+      "ExportWarframes_ja.json",
+      "ExportWeapons_ja.json",
+      "ExportResources_ja.json",
+      "ExportGear_ja.json",
+      "ExportSentinels_ja.json",
+      "ExportUpgrades_ja.json",
+      "ExportFlavour_ja.json",
+      "ExportKeys_ja.json",
+      "ExportRelicArcane_ja.json"
+    )
+    val lastManifestText = appSettings.getLastManifest()
+    val lastAppVersion = appSettings.getLastAppVersion()
+    val currentAppVersion = getAppUpdater().getAppVersionName()
+    val allCachesExist = files.all { CacheUtils.loadCacheFile(it) != null }
+
     if (manifest.isNotEmpty()) {
-      val lastManifestText = appSettings.getLastManifest()
-      val lastAppVersion = appSettings.getLastAppVersion()
-      val currentAppVersion = getAppUpdater().getAppVersionName()
-
-      // マニフェスト内容、アプリバージョン、ローカルのキャッシュファイル存在をチェック
-      val files = listOf(
-        "ExportCustoms_ja.json",
-        "ExportRegions_ja.json",
-        "ExportWarframes_ja.json",
-        "ExportWeapons_ja.json",
-        "ExportResources_ja.json",
-        "ExportGear_ja.json",
-        "ExportSentinels_ja.json",
-        "ExportUpgrades_ja.json",
-        "ExportFlavour_ja.json",
-        "ExportKeys_ja.json",
-        "ExportRelicArcane_ja.json"
-      )
-      val allCachesExist = files.all { CacheUtils.loadCacheFile(it) != null }
-
       needsDownload = (currentManifestText != lastManifestText) || 
                       (currentAppVersion != lastAppVersion) || 
                       !allCachesExist
     }
 
-    // Customs (一般的なアイテム名やテキスト) の取得
-    val customsLine = manifest.find { it.startsWith("ExportCustoms_ja.json") }
-      ?: if (!needsDownload) "ExportCustoms_ja.json" else null
-    if (customsLine != null) {
-      val customsResponse: ExportCustomsResponse? = getLocalizedData(customsLine, needsDownload)
-      customsResponse?.exportCustoms?.forEach { item ->
-        localizationDict[item.uniqueName] = formatName(item.name)
+    if (needsDownload && manifest.isNotEmpty()) {
+      onProgress(DownloadProgress(files.size, 0, "Public Export", 0L, 0L, "0.0 KB/s", "残り -- 秒", "最新ハッシュを確認中...", 0f, 0f))
+      
+      // ダウンロードが必要なファイルを抽出
+      val linesToDownload = files.mapNotNull { fileName ->
+        manifest.find { it.startsWith(fileName) }
+      }.filter { line ->
+        val fileName = line.substringBefore("!")
+        val lastLine = lastManifestText.lines().find { it.startsWith(fileName) }
+        (line != lastLine) || (CacheUtils.loadCacheFile(fileName) == null)
+      }
+
+      if (linesToDownload.isNotEmpty()) {
+        // 各ファイルの Content-Length を HEAD で取得して合計サイズを計算
+        var totalSize = 0L
+        try {
+          coroutineScope {
+            val deferreds = linesToDownload.map { line ->
+              async(Dispatchers.Default) {
+                try {
+                  val url = "http://content.warframe.com/PublicExport/Manifest/${line.trim()}"
+                  val response = apiClient.client.head(url)
+                  response.headers[HttpHeaders.ContentLength]?.toLongOrNull() ?: 0L
+                } catch (e: Exception) {
+                  0L
+                }
+              }
+            }
+            totalSize = deferreds.awaitAll().sum()
+          }
+        } catch (e: Exception) {
+          e.printStackTrace()
+        }
+
+        // ユーザーに確認
+        val allowed = onConfirmDownload(totalSize)
+        if (!allowed) {
+          needsDownload = false
+        }
+      } else {
+        needsDownload = false
       }
     }
 
-    // Regions (ノード名など)
+    var completedFiles = 0
+    val totalFiles = files.size
+
+    val updateProgress = { fileName: String, taskName: String, bytes: Long, total: Long, speedText: String, etaText: String ->
+      val progress = if (total > 0) bytes.toFloat() / total.toFloat() else 0f
+      val overall = (completedFiles.toFloat() + progress) / totalFiles.toFloat()
+      onProgress(
+        DownloadProgress(
+          totalFiles = totalFiles,
+          completedFiles = completedFiles,
+          currentFileName = fileName,
+          currentFileBytes = bytes,
+          currentFileTotalBytes = total,
+          speedText = speedText.ifBlank { "0.0 KB/s" },
+          etaText = etaText.ifBlank { "残り -- 秒" },
+          taskName = taskName,
+          progressPercent = progress,
+          overallProgressPercent = overall
+        )
+      )
+    }
+
+    // 1. Customs (一般的なアイテム名やテキスト)
+    val customsLine = manifest.find { it.startsWith("ExportCustoms_ja.json") }
+      ?: if (!needsDownload) "ExportCustoms_ja.json" else null
+    if (customsLine != null) {
+      if (needsDownload) {
+        updateProgress("ExportCustoms_ja.json", "ダウンロード中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      } else {
+        updateProgress("ExportCustoms_ja.json", "キャッシュからロード中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      }
+      val customsResponse: ExportCustomsResponse? = getLocalizedData(customsLine, needsDownload) { file, bytes, total, speed, eta ->
+        updateProgress(file, "ダウンロード中...", bytes, total, speed, eta)
+      }
+      if (needsDownload) {
+        updateProgress("ExportCustoms_ja.json", "保存中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      }
+      customsResponse?.exportCustoms?.forEach { item ->
+        localizationDict[item.uniqueName] = formatName(item.name)
+      }
+      completedFiles++
+    }
+
+    // 2. Regions (ノード名など)
     val regionsLine = manifest.find { it.startsWith("ExportRegions_ja.json") }
       ?: if (!needsDownload) "ExportRegions_ja.json" else null
     if (regionsLine != null) {
-      val regionsResponse: ExportRegionsResponse? = getLocalizedData(regionsLine, needsDownload)
+      if (needsDownload) {
+        updateProgress("ExportRegions_ja.json", "ダウンロード中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      } else {
+        updateProgress("ExportRegions_ja.json", "キャッシュからロード中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      }
+      val regionsResponse: ExportRegionsResponse? = getLocalizedData(regionsLine, needsDownload) { file, bytes, total, speed, eta ->
+        updateProgress(file, "ダウンロード中...", bytes, total, speed, eta)
+      }
+      if (needsDownload) {
+        updateProgress("ExportRegions_ja.json", "保存中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      }
       regionsResponse?.exportRegions?.forEach { region ->
         val planet = region.systemName ?: ""
         val formatted = if (planet.isNotBlank()) "${region.name} ($planet)" else region.name
         localizationDict[region.uniqueName] = formatName(formatted)
         regionDict[region.uniqueName] = region
       }
+      completedFiles++
     }
 
-    // Warframes (フレーム名) の取得
+    // 3. Warframes (フレーム名)
     val warframesLine = manifest.find { it.startsWith("ExportWarframes_ja.json") }
       ?: if (!needsDownload) "ExportWarframes_ja.json" else null
     if (warframesLine != null) {
-      val warframesResponse: ExportWarframesResponse? = getLocalizedData(warframesLine, needsDownload)
+      if (needsDownload) {
+        updateProgress("ExportWarframes_ja.json", "ダウンロード中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      } else {
+        updateProgress("ExportWarframes_ja.json", "キャッシュからロード中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      }
+      val warframesResponse: ExportWarframesResponse? = getLocalizedData(warframesLine, needsDownload) { file, bytes, total, speed, eta ->
+        updateProgress(file, "ダウンロード中...", bytes, total, speed, eta)
+      }
+      if (needsDownload) {
+        updateProgress("ExportWarframes_ja.json", "保存中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      }
       warframesResponse?.exportWarframes?.forEach { item ->
         localizationDict[item.uniqueName] = formatName(item.name)
       }
+      completedFiles++
     }
 
-    // Weapons (武器名) の取得
+    // 4. Weapons (武器名)
     val weaponsLine = manifest.find { it.startsWith("ExportWeapons_ja.json") }
       ?: if (!needsDownload) "ExportWeapons_ja.json" else null
     if (weaponsLine != null) {
-      val weaponsResponse: ExportWeaponsResponse? = getLocalizedData(weaponsLine, needsDownload)
+      if (needsDownload) {
+        updateProgress("ExportWeapons_ja.json", "ダウンロード中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      } else {
+        updateProgress("ExportWeapons_ja.json", "キャッシュからロード中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      }
+      val weaponsResponse: ExportWeaponsResponse? = getLocalizedData(weaponsLine, needsDownload) { file, bytes, total, speed, eta ->
+        updateProgress(file, "ダウンロード中...", bytes, total, speed, eta)
+      }
+      if (needsDownload) {
+        updateProgress("ExportWeapons_ja.json", "保存中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      }
       weaponsResponse?.exportWeapons?.forEach { item ->
         localizationDict[item.uniqueName] = formatName(item.name)
       }
+      completedFiles++
     }
 
-    // Resources (リソース名) の取得
+    // 5. Resources (リソース名)
     val resourcesLine = manifest.find { it.startsWith("ExportResources_ja.json") }
       ?: if (!needsDownload) "ExportResources_ja.json" else null
     if (resourcesLine != null) {
-      val resourcesResponse: ExportResourcesResponse? = getLocalizedData(resourcesLine, needsDownload)
+      if (needsDownload) {
+        updateProgress("ExportResources_ja.json", "ダウンロード中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      } else {
+        updateProgress("ExportResources_ja.json", "キャッシュからロード中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      }
+      val resourcesResponse: ExportResourcesResponse? = getLocalizedData(resourcesLine, needsDownload) { file, bytes, total, speed, eta ->
+        updateProgress(file, "ダウンロード中...", bytes, total, speed, eta)
+      }
+      if (needsDownload) {
+        updateProgress("ExportResources_ja.json", "保存中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      }
       resourcesResponse?.exportResources?.forEach { item ->
         localizationDict[item.uniqueName] = formatName(item.name)
       }
+      completedFiles++
     }
 
-    // Gear (ギア名) の取得
+    // 6. Gear (ギア名)
     val gearLine = manifest.find { it.startsWith("ExportGear_ja.json") }
       ?: if (!needsDownload) "ExportGear_ja.json" else null
     if (gearLine != null) {
-      val gearResponse: ExportGearResponse? = getLocalizedData(gearLine, needsDownload)
+      if (needsDownload) {
+        updateProgress("ExportGear_ja.json", "ダウンロード中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      } else {
+        updateProgress("ExportGear_ja.json", "キャッシュからロード中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      }
+      val gearResponse: ExportGearResponse? = getLocalizedData(gearLine, needsDownload) { file, bytes, total, speed, eta ->
+        updateProgress(file, "ダウンロード中...", bytes, total, speed, eta)
+      }
+      if (needsDownload) {
+        updateProgress("ExportGear_ja.json", "保存中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      }
       gearResponse?.exportGear?.forEach { item ->
         localizationDict[item.uniqueName] = formatName(item.name)
       }
+      completedFiles++
     }
 
-    // Sentinels (センチネル・ペット名) の取得
+    // 7. Sentinels (センチネル・ペット名)
     val sentinelsLine = manifest.find { it.startsWith("ExportSentinels_ja.json") }
       ?: if (!needsDownload) "ExportSentinels_ja.json" else null
     if (sentinelsLine != null) {
-      val sentinelsResponse: ExportSentinelsResponse? = getLocalizedData(sentinelsLine, needsDownload)
+      if (needsDownload) {
+        updateProgress("ExportSentinels_ja.json", "ダウンロード中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      } else {
+        updateProgress("ExportSentinels_ja.json", "キャッシュからロード中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      }
+      val sentinelsResponse: ExportSentinelsResponse? = getLocalizedData(sentinelsLine, needsDownload) { file, bytes, total, speed, eta ->
+        updateProgress(file, "ダウンロード中...", bytes, total, speed, eta)
+      }
+      if (needsDownload) {
+        updateProgress("ExportSentinels_ja.json", "保存中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      }
       sentinelsResponse?.exportSentinels?.forEach { item ->
         localizationDict[item.uniqueName] = formatName(item.name)
       }
+      completedFiles++
     }
 
-    // Upgrades (MOD) の取得
+    // 8. Upgrades (MOD)
     val upgradesLine = manifest.find { it.startsWith("ExportUpgrades_ja.json") }
       ?: if (!needsDownload) "ExportUpgrades_ja.json" else null
     if (upgradesLine != null) {
-      var upgradesResponse: ExportUpgradesResponse? = getLocalizedData(upgradesLine, needsDownload)
+      if (needsDownload) {
+        updateProgress("ExportUpgrades_ja.json", "ダウンロード中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      } else {
+        updateProgress("ExportUpgrades_ja.json", "キャッシュからロード中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      }
+      var upgradesResponse: ExportUpgradesResponse? = getLocalizedData(upgradesLine, needsDownload) { file, bytes, total, speed, eta ->
+        updateProgress(file, "ダウンロード中...", bytes, total, speed, eta)
+      }
       if (upgradesResponse?.exportUpgrades.isNullOrEmpty() && !needsDownload && manifest.isNotEmpty()) {
         val forceLine = manifest.find { it.startsWith("ExportUpgrades_ja.json") }
         if (forceLine != null) {
-          upgradesResponse = getLocalizedData(forceLine, true)
+          upgradesResponse = getLocalizedData(forceLine, true) { file, bytes, total, speed, eta ->
+            updateProgress(file, "ダウンロード中...", bytes, total, speed, eta)
+          }
         }
+      }
+      if (needsDownload) {
+        updateProgress("ExportUpgrades_ja.json", "保存中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
       }
       upgradesResponse?.exportUpgrades?.forEach { item ->
         localizationDict[item.uniqueName] = formatName(item.name)
@@ -271,54 +480,94 @@ class WarframeRepository(
           }
         }
       }
+      completedFiles++
     }
 
-    // Flavour (スキン、装飾品など) の取得
+    // 9. Flavour (スキン、装飾品など)
     val flavourLine = manifest.find { it.startsWith("ExportFlavour_ja.json") }
       ?: if (!needsDownload) "ExportFlavour_ja.json" else null
     if (flavourLine != null) {
-      var flavourResponse: ExportFlavourResponse? = getLocalizedData(flavourLine, needsDownload)
+      if (needsDownload) {
+        updateProgress("ExportFlavour_ja.json", "ダウンロード中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      } else {
+        updateProgress("ExportFlavour_ja.json", "キャッシュからロード中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      }
+      var flavourResponse: ExportFlavourResponse? = getLocalizedData(flavourLine, needsDownload) { file, bytes, total, speed, eta ->
+        updateProgress(file, "ダウンロード中...", bytes, total, speed, eta)
+      }
       if (flavourResponse?.exportFlavour.isNullOrEmpty() && !needsDownload && manifest.isNotEmpty()) {
         val forceLine = manifest.find { it.startsWith("ExportFlavour_ja.json") }
         if (forceLine != null) {
-          flavourResponse = getLocalizedData(forceLine, true)
+          flavourResponse = getLocalizedData(forceLine, true) { file, bytes, total, speed, eta ->
+            updateProgress(file, "ダウンロード中...", bytes, total, speed, eta)
+          }
         }
+      }
+      if (needsDownload) {
+        updateProgress("ExportFlavour_ja.json", "保存中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
       }
       flavourResponse?.exportFlavour?.forEach { item ->
         localizationDict[item.uniqueName] = formatName(item.name)
       }
+      completedFiles++
     }
 
-    // Keys (クエスト・キーなど) の取得
+    // 10. Keys (クエスト・キーなど)
     val keysLine = manifest.find { it.startsWith("ExportKeys_ja.json") }
       ?: if (!needsDownload) "ExportKeys_ja.json" else null
     if (keysLine != null) {
-      var keysResponse: ExportKeysResponse? = getLocalizedData(keysLine, needsDownload)
+      if (needsDownload) {
+        updateProgress("ExportKeys_ja.json", "ダウンロード中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      } else {
+        updateProgress("ExportKeys_ja.json", "キャッシュからロード中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      }
+      var keysResponse: ExportKeysResponse? = getLocalizedData(keysLine, needsDownload) { file, bytes, total, speed, eta ->
+        updateProgress(file, "ダウンロード中...", bytes, total, speed, eta)
+      }
       if (keysResponse?.exportKeys.isNullOrEmpty() && !needsDownload && manifest.isNotEmpty()) {
         val forceLine = manifest.find { it.startsWith("ExportKeys_ja.json") }
         if (forceLine != null) {
-          keysResponse = getLocalizedData(forceLine, true)
+          keysResponse = getLocalizedData(forceLine, true) { file, bytes, total, speed, eta ->
+            updateProgress(file, "ダウンロード中...", bytes, total, speed, eta)
+          }
         }
+      }
+      if (needsDownload) {
+        updateProgress("ExportKeys_ja.json", "保存中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
       }
       keysResponse?.exportKeys?.forEach { item ->
         localizationDict[item.uniqueName] = formatName(item.name)
       }
+      completedFiles++
     }
 
-    // RelicArcane (レリック・アルケイン) の取得
+    // 11. RelicArcane (レリック・アルケイン)
     val relicArcaneLine = manifest.find { it.startsWith("ExportRelicArcane_ja.json") }
       ?: if (!needsDownload) "ExportRelicArcane_ja.json" else null
     if (relicArcaneLine != null) {
-      var relicArcaneResponse: ExportRelicArcaneResponse? = getLocalizedData(relicArcaneLine, needsDownload)
+      if (needsDownload) {
+        updateProgress("ExportRelicArcane_ja.json", "ダウンロード中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      } else {
+        updateProgress("ExportRelicArcane_ja.json", "キャッシュからロード中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
+      }
+      var relicArcaneResponse: ExportRelicArcaneResponse? = getLocalizedData(relicArcaneLine, needsDownload) { file, bytes, total, speed, eta ->
+        updateProgress(file, "ダウンロード中...", bytes, total, speed, eta)
+      }
       if (relicArcaneResponse?.exportRelicArcane.isNullOrEmpty() && !needsDownload && manifest.isNotEmpty()) {
         val forceLine = manifest.find { it.startsWith("ExportRelicArcane_ja.json") }
         if (forceLine != null) {
-          relicArcaneResponse = getLocalizedData(forceLine, true)
+          relicArcaneResponse = getLocalizedData(forceLine, true) { file, bytes, total, speed, eta ->
+            updateProgress(file, "ダウンロード中...", bytes, total, speed, eta)
+          }
         }
+      }
+      if (needsDownload) {
+        updateProgress("ExportRelicArcane_ja.json", "保存中...", 0L, 0L, "0.0 KB/s", "残り -- 秒")
       }
       relicArcaneResponse?.exportRelicArcane?.forEach { item ->
         localizationDict[item.uniqueName] = formatName(item.name)
       }
+      completedFiles++
     }
 
     // イベント専用ノードの手動マッピングを追加
@@ -357,12 +606,15 @@ class WarframeRepository(
    * 表記ゆれを正規化したキーでもマップを検索する
    */
   fun localize(uniqueName: String): String {
+    // 0. 1999カレンダー固有のキーであれば Translations から直接引く
+    Translations.translateCalendarContent(uniqueName)?.let { return it }
+
     // 1. 完全一致で検索
-    localizationDict[uniqueName]?.let { return it }
+    localizationDict[uniqueName]?.let { return formatLocalizedResult(it) }
 
     // 2. "/Lotus/StoreItems/" (大文字小文字無視) を "/Lotus/" に置換したキーで検索
     val cleaned = uniqueName.replace("/Lotus/StoreItems/", "/Lotus/", ignoreCase = true)
-    localizationDict[cleaned]?.let { return it }
+    localizationDict[cleaned]?.let { return formatLocalizedResult(it) }
 
     // 3. 末尾のセグメントで末尾一致検索 (例: "/ElectEventPistolMod")
     val lastSegment = uniqueName.substringAfterLast("/")
@@ -372,7 +624,7 @@ class WarframeRepository(
         key.endsWith(suffix, ignoreCase = true)
       }
       if (match != null) {
-        return match.value
+        return formatLocalizedResult(match.value)
       }
     }
 
@@ -388,7 +640,7 @@ class WarframeRepository(
         key.startsWith("/Lotus/Powersuits/", ignoreCase = true) && value.equals(uniqueName, ignoreCase = true)
       }
       if (valuePowersuitsMatch != null) {
-        return valuePowersuitsMatch.value
+        return formatLocalizedResult(valuePowersuitsMatch.value)
       }
 
       // 優先順位 2: キーの値 (value) が rawName と大文字小文字無視で完全一致し、
@@ -397,7 +649,7 @@ class WarframeRepository(
         key.startsWith("/Lotus/Weapons/", ignoreCase = true) && value.equals(uniqueName, ignoreCase = true)
       }
       if (valueWeaponsMatch != null) {
-        return valueWeaponsMatch.value
+        return formatLocalizedResult(valueWeaponsMatch.value)
       }
 
       // 優先順位 3: Warframe（フレーム）のパスでの末尾一致（例: /Lotus/Powersuits/...）
@@ -406,7 +658,7 @@ class WarframeRepository(
         (key.endsWith(suffix, ignoreCase = true) || key.endsWith(cleanSuffix, ignoreCase = true))
       }
       if (warframeMatch != null) {
-        return warframeMatch.value
+        return formatLocalizedResult(warframeMatch.value)
       }
 
       // 優先順位 4: Weapon（武器）のパスでの末尾一致（例: /Lotus/Weapons/...）
@@ -415,7 +667,7 @@ class WarframeRepository(
         (key.endsWith(suffix, ignoreCase = true) || key.endsWith(cleanSuffix, ignoreCase = true))
       }
       if (weaponMatch != null) {
-        return weaponMatch.value
+        return formatLocalizedResult(weaponMatch.value)
       }
 
       // 優先順位 5: 一般的な末尾一致
@@ -423,18 +675,25 @@ class WarframeRepository(
         key.endsWith(suffix, ignoreCase = true)
       }
       if (suffixMatch != null) {
-        return suffixMatch.value
+        return formatLocalizedResult(suffixMatch.value)
       }
 
       val cleanSuffixMatch = localizationDict.entries.find { (key, _) ->
         key.endsWith(cleanSuffix, ignoreCase = true)
       }
       if (cleanSuffixMatch != null) {
-        return cleanSuffixMatch.value
+        return formatLocalizedResult(cleanSuffixMatch.value)
       }
     }
     
     return uniqueName
+  }
+
+  /**
+   * ローカライズされた文字列のタグなどを最終クリーンアップする
+   */
+  private fun formatLocalizedResult(name: String): String {
+    return name.replace(Regex("<[^>]*>\\s*"), "")
   }
 
   /**

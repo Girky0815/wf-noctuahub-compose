@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import jp.girky.wf_noctuahub.utils.Translations
+import jp.girky.wf_noctuahub.data.repository.DownloadProgress
 
 enum class FetchState {
   IDLE, LOADING_WORLDSTATE, LOADING_EXPORT, SUCCESS, ERROR
@@ -32,6 +33,26 @@ class MainViewModel(val repository: WarframeRepository) {
   // 詳細な進捗メッセージ
   private val _loadingMessage = MutableStateFlow<String?>("初期化中...")
   val loadingMessage: StateFlow<String?> = _loadingMessage.asStateFlow()
+
+  // ダウンロード確認用
+  private val _showDownloadPrompt = MutableStateFlow(false)
+  val showDownloadPrompt: StateFlow<Boolean> = _showDownloadPrompt.asStateFlow()
+
+  private val _downloadTotalSize = MutableStateFlow(0L)
+  val downloadTotalSize: StateFlow<Long> = _downloadTotalSize.asStateFlow()
+
+  private var downloadConfirmResult: kotlinx.coroutines.CompletableDeferred<Boolean>? = null
+
+  // ダウンロード進捗ダイアログ用
+  private val _showDownloadProgress = MutableStateFlow(false)
+  val showDownloadProgress: StateFlow<Boolean> = _showDownloadProgress.asStateFlow()
+
+  private val _downloadProgressState = MutableStateFlow<DownloadProgress?>(null)
+  val downloadProgressState: StateFlow<DownloadProgress?> = _downloadProgressState.asStateFlow()
+
+  fun confirmDownload(allow: Boolean) {
+    downloadConfirmResult?.complete(allow)
+  }
 
   val worldState: StateFlow<WorldStateResponse?> = repository.worldState
 
@@ -73,10 +94,29 @@ class MainViewModel(val repository: WarframeRepository) {
         repository.refreshWorldState()
 
         // 2. Public Export のローカライズ辞書フェッチ (重量)
-        _loadingMessage.value = "翻訳データをダウンロード中 (これには時間がかかる場合があります)..."
+        _loadingMessage.value = "Public Export が最新か確認中..."
         _fetchState.value = FetchState.LOADING_EXPORT
-        repository.initializeLocalization()
+        
+        repository.initializeLocalization(
+          onConfirmDownload = { totalSize ->
+            _downloadTotalSize.value = totalSize
+            _showDownloadPrompt.value = true
+            val deferred = kotlinx.coroutines.CompletableDeferred<Boolean>()
+            downloadConfirmResult = deferred
+            val allowed = deferred.await()
+            _showDownloadPrompt.value = false
+            if (allowed) {
+              _showDownloadProgress.value = true
+            }
+            allowed
+          },
+          onProgress = { progress ->
+            _downloadProgressState.value = progress
+            _loadingMessage.value = progress.taskName
+          }
+        )
 
+        _showDownloadProgress.value = false
         _loadingMessage.value = null
         _fetchState.value = FetchState.SUCCESS
         _isInitialized.value = true

@@ -58,6 +58,11 @@ class AppSettings(private val pref: ObservableSettings) {
     }
   val cetusOffsetFlow: Flow<Int> = getIntFlow("cetus_offset", 0)
   val vallisOffsetFlow: Flow<Int> = getIntFlow("vallis_offset", 0)
+  val showRawPathsFlow: Flow<Boolean> = getBooleanFlow("show_raw_paths", false)
+
+  fun setShowRawPaths(enabled: Boolean) {
+    pref.putBoolean("show_raw_paths", enabled)
+  }
 
   fun setThemeMode(mode: ThemeMode) {
     pref.putString("theme_mode", mode.name)

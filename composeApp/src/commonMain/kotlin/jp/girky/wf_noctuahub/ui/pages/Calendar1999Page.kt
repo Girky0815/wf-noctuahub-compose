@@ -17,7 +17,8 @@ import jp.girky.wf_noctuahub.utils.Translations
 @Composable
 fun Calendar1999Page(
   worldState: WorldStateResponse?,
-  onLocalize: (String) -> String
+  onLocalize: (String) -> String,
+  showRawPaths: Boolean = false
 ) {
   val season = worldState?.calendarSeasons?.firstOrNull() ?: run {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = androidx.compose.ui.Alignment.Center) {
@@ -49,34 +50,115 @@ fun Calendar1999Page(
 
     for (day in days) {
       item {
-        SectionTitle(title = formatDayOfYear(day.day), modifier = Modifier.padding(bottom = 8.dp))
-        ListGroup {
-          val events: List<WsCalendarEvent> = day.events ?: emptyList<WsCalendarEvent>()
-          for (calEvent in events) {
-            val typeRaw = calEvent.type ?: "不明"
-            val typeName = Translations.translateCalendarType(typeRaw)
-            val content = if (calEvent.challenge != null) {
-              onLocalize(calEvent.challenge)
-            } else if (calEvent.reward != null) {
-              onLocalize(calEvent.reward)
-            } else if (calEvent.upgrade != null) {
-              onLocalize(calEvent.upgrade)
-            } else {
-              "不明"
+        val events: List<WsCalendarEvent> = day.events ?: emptyList<WsCalendarEvent>()
+        
+        Row(
+          modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+          verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+          horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+          SectionTitle(title = formatDayOfYear(day.day))
+          
+          if (events.isEmpty()) {
+            Surface(
+              shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
+              color = MaterialTheme.colorScheme.secondaryContainer,
+              contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+            ) {
+              Text(
+                text = "誕生日",
+                style = MaterialTheme.typography.labelSmall,
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+              )
             }
-            
-            val color = when (typeRaw) {
-              "CET_CHALLENGE" -> MaterialTheme.colorScheme.primary
-              "CET_REWARD" -> MaterialTheme.colorScheme.tertiary
-              "CET_UPGRADE" -> MaterialTheme.colorScheme.secondary
-              else -> MaterialTheme.colorScheme.onSurface
+          } else {
+            val eventTypes = events.mapNotNull { it.type }.distinct()
+            for (type in eventTypes) {
+              val label = Translations.translateCalendarType(type)
+              val containerColor = when (type) {
+                "CET_CHALLENGE" -> MaterialTheme.colorScheme.primaryContainer
+                "CET_REWARD" -> MaterialTheme.colorScheme.tertiaryContainer
+                "CET_UPGRADE" -> MaterialTheme.colorScheme.secondaryContainer
+                else -> MaterialTheme.colorScheme.surfaceVariant
+              }
+              val contentColor = when (type) {
+                "CET_CHALLENGE" -> MaterialTheme.colorScheme.onPrimaryContainer
+                "CET_REWARD" -> MaterialTheme.colorScheme.onTertiaryContainer
+                "CET_UPGRADE" -> MaterialTheme.colorScheme.onSecondaryContainer
+                else -> MaterialTheme.colorScheme.onSurfaceVariant
+              }
+              Surface(
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
+                color = containerColor,
+                contentColor = contentColor
+              ) {
+                Text(
+                  text = label,
+                  style = MaterialTheme.typography.labelSmall,
+                  modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                )
+              }
             }
+          }
+        }
 
-            ListTile(
-              title = content,
-              subtitle = typeName,
-              titleColor = color
+        ListGroup {
+          if (events.isEmpty()) {
+            val birthdayMap = mapOf(
+              1 to "Kaya の誕生日",
+              45 to "Lettie の誕生日",
+              74 to "Minerva の誕生日",
+              143 to "Amir の誕生日",
+              166 to "Flare の誕生日",
+              191 to "Aoi の誕生日",
+              306 to "Eleanor の誕生日",
+              307 to "Arthur の誕生日",
+              338 to "Quincy の誕生日",
+              355 to "Velimir の誕生日"
             )
+            val birthdayName = birthdayMap[day.day] ?: "Protoframe の誕生日"
+            ListTile(
+              title = birthdayName,
+              subtitle = if (showRawPaths) "Day ${day.day}" else null,
+              titleColor = MaterialTheme.colorScheme.secondary
+            )
+          } else {
+            for (calEvent in events) {
+              val typeRaw = calEvent.type ?: "不明"
+              val rawPath = calEvent.challenge ?: calEvent.reward ?: calEvent.upgrade ?: ""
+              
+              val (title, description) = if (rawPath.isNotBlank()) {
+                val translation = Translations.translateCalendarEvent(rawPath)
+                if (translation.first == rawPath.substringAfterLast("/")) {
+                  // マップに翻訳がない場合は汎用 localize を使い説明は空にする
+                  Pair(onLocalize(rawPath), "")
+                } else {
+                  translation
+                }
+              } else {
+                Pair("不明", "")
+              }
+              
+              val color = when (typeRaw) {
+                "CET_CHALLENGE" -> MaterialTheme.colorScheme.primary
+                "CET_REWARD" -> MaterialTheme.colorScheme.tertiary
+                "CET_UPGRADE" -> MaterialTheme.colorScheme.secondary
+                else -> MaterialTheme.colorScheme.onSurface
+              }
+
+              val subtitleText = when {
+                showRawPaths && description.isNotBlank() -> "$description\n($rawPath)"
+                showRawPaths && description.isBlank() -> "($rawPath)"
+                !showRawPaths && description.isNotBlank() -> description
+                else -> null
+              }
+
+              ListTile(
+                title = title,
+                subtitle = subtitleText,
+                titleColor = color
+              )
+            }
           }
         }
         Spacer(modifier = Modifier.height(24.dp))

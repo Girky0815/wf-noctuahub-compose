@@ -60,11 +60,16 @@ import jp.girky.wf_noctuahub.ui.pages.LinksPage
 import androidx.compose.material.icons.rounded.Newspaper
 import androidx.compose.material.icons.rounded.Link
 import jp.girky.wf_noctuahub.utils.Translations
+import jp.girky.wf_noctuahub.utils.FormatUtils.format
+import jp.girky.wf_noctuahub.utils.FormatUtils.formatBytes
+import androidx.compose.ui.draw.clip
 import kotlinx.coroutines.launch
 import jp.girky.wf_noctuahub.ui.theme.AppTheme
 import jp.girky.wf_noctuahub.ui.theme.getAccentColor
 import jp.girky.wf_noctuahub.ui.viewmodel.FetchState
 import jp.girky.wf_noctuahub.ui.viewmodel.MainViewModel
+import jp.girky.wf_noctuahub.data.repository.DownloadProgress
+import androidx.compose.ui.text.font.FontWeight
 import jp.girky.wf_noctuahub.ui.components.ui.SectionTitle
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
@@ -106,7 +111,7 @@ fun App() {
   val themeStyle by appSettings.themeStyleFlow.collectAsState(jp.girky.wf_noctuahub.utils.AppThemeStyle.TONAL_SPOT)
   val themeContrast by appSettings.themeContrastFlow.collectAsState(jp.girky.wf_noctuahub.utils.AppThemeContrast.MEDIUM)
   val seedColor = Color(seedColorArgb.toLong())
-  
+
   val isDark = when (themeMode) {
     jp.girky.wf_noctuahub.utils.ThemeMode.LIGHT -> false
     jp.girky.wf_noctuahub.utils.ThemeMode.DARK, jp.girky.wf_noctuahub.utils.ThemeMode.AMOLED_BLACK -> true
@@ -122,6 +127,11 @@ fun App() {
   val loadingMessage by viewModel.loadingMessage.collectAsState()
   val worldState by viewModel.worldState.collectAsState()
   val isInitialized by viewModel.isInitialized.collectAsState()
+
+  val showDownloadPrompt by viewModel.showDownloadPrompt.collectAsState()
+  val downloadTotalSize by viewModel.downloadTotalSize.collectAsState()
+  val showDownloadProgress by viewModel.showDownloadProgress.collectAsState()
+  val downloadProgress by viewModel.downloadProgressState.collectAsState()
   
   LaunchedEffect(Unit) {
   viewModel.loadInitialData(coroutineScope)
@@ -158,6 +168,99 @@ fun App() {
     style = themeStyle.style,
     contrastLevel = themeContrast.value
   ) {
+    if (showDownloadPrompt) {
+      val sizeText = formatBytes(downloadTotalSize)
+      AlertDialog(
+        onDismissRequest = { viewModel.confirmDownload(false) },
+        title = { Text("翻訳データのダウンロード") },
+        text = { Text("アプリの翻訳用データを最新にするため、Public Exportのダウンロードが必要です。\n\nダウンロードサイズ: $sizeText\n\nダウンロードを開始しますか？") },
+        confirmButton = {
+          Button(onClick = { viewModel.confirmDownload(true) }) {
+            Text("ダウンロード")
+          }
+        },
+        dismissButton = {
+          TextButton(onClick = { viewModel.confirmDownload(false) }) {
+            Text("キャンセル")
+          }
+        }
+      )
+    }
+
+    if (showDownloadProgress && downloadProgress != null) {
+      val p = downloadProgress!!
+      AlertDialog(
+        onDismissRequest = {}, // キャンセル不可
+        confirmButton = {},
+        properties = androidx.compose.ui.window.DialogProperties(
+          dismissOnBackPress = false,
+          dismissOnClickOutside = false
+        ),
+        title = { Text("データをダウンロード中...") },
+        text = {
+          Column(
+            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+          ) {
+            Text("全体進捗 (${p.completedFiles}/${p.totalFiles} ファイル)", style = MaterialTheme.typography.labelMedium)
+            
+            LinearProgressIndicator(
+              progress = p.overallProgressPercent,
+              modifier = Modifier.fillMaxWidth().height(8.dp).clip(androidx.compose.foundation.shape.CircleShape),
+              strokeCap = androidx.compose.ui.graphics.StrokeCap.Round
+            )
+            
+            Text(p.taskName.ifBlank { "準備中..." }, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+            
+            val fileProgressText = if (p.currentFileTotalBytes > 0) {
+              "${formatBytes(p.currentFileBytes)} / ${formatBytes(p.currentFileTotalBytes)} (${(p.progressPercent * 100).format(1)}%)"
+            } else if (p.currentFileBytes > 0) {
+              "${formatBytes(p.currentFileBytes)} / -- (0.0%)"
+            } else {
+              "0.0 B / 0.0 B (0.0%)"
+            }
+            
+            Column(
+              modifier = Modifier.fillMaxWidth().heightIn(min = 76.dp),
+              verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+              Text(
+                text = p.currentFileName.ifBlank { "準備中..." },
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+              )
+              
+              Text(
+                text = fileProgressText,
+                style = MaterialTheme.typography.bodySmall.copy(
+                  fontFeatureSettings = "tnum, wdth 85"
+                )
+              )
+              
+              Text(
+                text = "${p.speedText}, ${p.etaText}",
+                style = MaterialTheme.typography.bodySmall.copy(
+                  fontFeatureSettings = "tnum, wdth 85"
+                ),
+                color = MaterialTheme.colorScheme.primary
+              )
+            }
+            
+            if (p.currentFileTotalBytes > 0) {
+              LinearProgressIndicator(
+                progress = p.progressPercent,
+                modifier = Modifier.fillMaxWidth().height(6.dp).clip(androidx.compose.foundation.shape.CircleShape),
+                strokeCap = androidx.compose.ui.graphics.StrokeCap.Round,
+                color = MaterialTheme.colorScheme.secondary
+              )
+            } else {
+              Spacer(modifier = Modifier.fillMaxWidth().height(6.dp))
+            }
+          }
+        }
+      )
+    }
+
   val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
   Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.surfaceContainerHigh) {
@@ -495,9 +598,11 @@ fun App() {
         )
         }
         Screen.Calendar1999 -> {
+        val showRawPaths by viewModel.repository.showRawPathsFlow.collectAsState(false)
         Calendar1999Page(
           worldState = worldState,
-          onLocalize = { viewModel.localize(it) }
+          onLocalize = { viewModel.localize(it) },
+          showRawPaths = showRawPaths
         )
         }
         Screen.Circuit -> {

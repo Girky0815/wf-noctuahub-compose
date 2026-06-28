@@ -693,11 +693,192 @@ object Translations {
   "CST_SPRING" to "春",
   "CST_SUMMER" to "夏",
   "CST_AUTUMN" to "秋",
+  "CST_FALL" to "秋",
   "CST_WINTER" to "冬"
+  )
+
+  val calendarUpgrades = mapOf(
+    // ヘックスブースト (パッシブ効果)
+    "MeleeAttackSpeed" to Pair("容赦なし", "近接攻撃速度+25%。"),
+    "MeleeCriticalChance" to Pair("熟練の精度", "近接クリティカル率+20% (ヘビー攻撃は2倍)。"),
+    "Armor" to Pair("分厚い皮膚", "装甲値+250。"),
+    "CompanionDamage" to Pair("援助は任せろ", "スペクターとコンパニオンのダメージが+250%増加する。"),
+    "PsionicFeedback" to Pair("サイオニックフィードバック", "ダメージ時 被ダメージ時、10%の確率で半径5mの放射線爆発 (250ダメージ) を起こす。"),
+    "MagazineCapacity" to Pair("ヘビーマガジン", "マガジンサイズを25%増やす。"),
+    "GasChanceToPrimaryAndSecondary" to Pair("毒性弾", "プライマリ武器とセカンダリ武器は25%のガス状態異常確率を追加で得る。"),
+    "Punchcard" to Pair("パンチカード", "プライマリ武器の貫通距離を1.5m追加する。"),
+    "HealingEffects" to Pair("エスプレッソショット", "エネルギー回復 +2EN/s"),
+    "RecoveryBoost" to Pair("救急医療", "オーブピックアップがもたらすすべての回復効果が25%増加する。"),
+    "EnergyOrbToAbilityRange" to Pair("視野拡大", "エネルギーオーブ回収時10秒間、アビリティ範囲が10%増加する。"),
+    "PowerGains" to Pair("パワーゲイン", "アビリティ威力+25%。"),
+    "BottledLightning" to Pair("瓶詰めの稲妻", "すべての武器に25%の状態異常ダメージと電気状態異常確率を追加する。"),
+    "HardenUp" to Pair("硬化", "オーバーシールドの上限が50%上昇する(オーバーシールド上限 1,800)。キル時に50シールド回復する。"),
+    
+    // ヘックスファクター (条件発動効果)
+    "ComboKiller" to Pair("コンボキラー", "コンボ倍率は、近接攻撃後に敵がフィニッシャー待機状態になる確率を高める。コンボ倍率ごとに5%増加し、Venka Primeの場合は最大65%まで上昇する。"),
+    "HeavyJavelin" to Pair("ヘビージャベリン", "ヘビー近接攻撃は、3m範囲で1000ダメージ（コンボ倍率で変動）与えるRadial Javelinを発動する。"),
+    "SliceAndDice" to Pair("スライス＆ダイス", "近接スライディング攻撃は、スライディング攻撃のクリティカル確率を5%、スライディング速度を20%増加させ、スライディング近接攻撃ごとに10秒間スライディング摩擦を10%減少させる。最大10まで重複。"),
+    "EnergyWavesOnCombo" to Pair("コンボウェーブ", "コンボ倍率が7倍になると、すべての近接攻撃はエネルギー波を放つ。"),
+    "MoreTheMerrier" to Pair("大は小を兼ねる", "20m以内の非テンノの味方全員が、範囲内の味方ごとに近接攻撃速度5%と発射速度20%を得る。"),
+    "CompanionsRadiationChance" to Pair("有効なフォールアウト", "スペクターまたはコンパニオンの攻撃は25%の確率で放射線状態異常を引き起こす。"),
+    "AtonementOpportunity" to Pair("つぐなう機会", "倒した敵は、状態異常のスタックごとに1%の確率で味方のスペクターとして復活する。スペクターは30秒間活動する。"),
+    "CopyAndPaste" to Pair("コピー＆ペースト", "125エネルギーを消費するごとに、現在展開されているスペクターかコンパニオンのスペクトルクローンをランダムに生み出す。"),
+    "BlastEveryXShots" to Pair("楽しんでこい", "10発ごとにヒット時爆発スタックが10追加される。"),
+    "CumulativeCartridges" to Pair("累積カートリッジ", "リロードするまで、ショットごとに状態異常確率が1%増加する。"),
+    "FreeShot" to Pair("フリーショット", "状態異常を引き起こすと、10%の確率で起こした状態異常の弾丸をマガジンに充填する。"),
+    "TrickShot" to Pair("トリックショット", "弾がヒットする度に、追尾弾を発射する確率が10%増加する。発砲する度に追尾弾確率は5%低下する。"),
+    "MagneticMenace" to Pair("磁気の脅威", "アビリティを5回使うたびに前方50m以内の敵は磁気状態異常を受ける。"),
+    "SharingIsCaring" to Pair("分け合いは大事", "アビリティを10回発動するたびに、自身と味方が次に発動するアビリティのコストを0にする。"),
+    "Overpower" to Pair("圧倒的な力", "アビリティ発動時、アビリティの規定消費エネルギー単位ごとに、5秒間アビリティ威力が2%増加し、アビリティ効率が1%悪化する。上限：アビリティ威力 +150%、効率 -75%。"),
+    "ForceOfAttraction" to Pair("引力", "磁気状態異常は、スタック毎1m範囲で周辺の敵を引き寄せる。"),
+    "ElectricalDamageOnBulletJump" to Pair("ダイナモジャンプ", "バレットジャンプから着地後の5秒間は電気ダメージが50%増加する。"),
+    "StaticAccumulation" to Pair("静電気蓄積", "移動距離1mごとに電気ダメージが付与される。攻撃時に蓄積した静電気の10%が消費される。"),
+    "FrequentFlyerBenefits" to Pair("フリークエントフライヤー特典", "空中では、リロード速度、発射速度、発動速度、近接攻撃速度が100%増加する。"),
+    "HitAndSplit" to Pair("ヒット＆スプリット", "近接攻撃のクリティカルヒットは、確率で攻撃速度と移動速度を10秒間5%上昇させる。"),
+    "TargetedTherapeutics" to Pair("標的治療薬", "ヘルスオーブを撃つと回収できる。回収時にヘルスオーブは25%の確率で分裂する。"),
+    "GenerateOmniOrbsOnWeakKill" to Pair("強制輸血", "弱点への攻撃で敵を倒すとユニバーサルオーブが25%の確率で生成される。"),
+    "ShieldRefill" to Pair("シールド充填", "エネルギーオーブは100シールドとオーバーシールドを与える。"),
+    "BadMedicine" to Pair("悪い薬品", "ヘルスオーブは拾うと範囲10mの爆発を起こし、敵にダメージを与える。爆発に巻き込まれた敵一体につき30秒間50装甲値を得る。")
+  )
+
+  val calendarChallenges = mapOf(
+    // フェアなゲーム (Even the Odds)
+    "CalendarKillEnemiesEasy" to Pair("フェアなゲーム (簡単)", "250体の敵を倒す"),
+    "CalendarKillEnemiesMedium" to Pair("フェアなゲーム (普通)", "500体の敵を倒す"),
+    "CalendarKillEnemiesHard" to Pair("フェアなゲーム (難しい)", "1000体の敵を倒す"),
+
+    // 刃にかけて (By the Blade)
+    "CalendarKillEnemiesWithMeleeEasy" to Pair("刃にかけて (簡単)", "75体の敵を近接武器で倒す"),
+    "CalendarKillEnemiesWithMeleeMedium" to Pair("刃にかけて (普通)", "150体の敵を近接武器で倒す"),
+    "CalendarKillEnemiesWithMeleeHard" to Pair("刃にかけて (難しい)", "300体の敵を近接武器で倒す"),
+
+    // 力の照明 (Demonstration of Power)
+    "CalendarKillEnemiesWithAbilitiesEasy" to Pair("力の照明 (簡単)", "150体の敵をアビリティで倒す"),
+    "CalendarKillEnemiesWithAbilitiesMedium" to Pair("力の照明 (普通)", "300体の敵をアビリティで倒す"),
+    "CalendarKillEnemiesWithAbilitiesHard" to Pair("力の照明 (難しい)", "500体の敵をアビリティで倒す"),
+
+    // エクスエクシマス (Ex-Eximus)
+    "CalendarKillEximusEasy" to Pair("エクスエクシマス (簡単)", "10体のエクシマスを倒す"),
+    "CalendarKillEximusMedium" to Pair("エクスエクシマス (普通)", "15体のエクシマスを倒す"),
+    "CalendarKillEximusHard" to Pair("エクスエクシマス (難しい)", "20体のエクシマスを倒す"),
+
+    // スカルドラ懲罰 (Punish Scaldra)
+    "CalendarKillScaldraEnemiesEasy" to Pair("スカルドラ懲罰 (簡単)", "75体のスカルドラ部隊を倒す"),
+    "CalendarKillScaldraEnemiesMedium" to Pair("スカルドラ懲罰 (普通)", "250体のスカルドラ部隊を倒す"),
+    "CalendarKillScaldraEnemiesHard" to Pair("スカルドラ懲罰 (難しい)", "500体のスカルドラ部隊を倒す"),
+
+    // 緊密に (Make It Personal)
+    "CalendarKillScaldraEnemiesWithMeleeEasy" to Pair("緊密に (簡単)", "75体のスカルドラ部隊を近接武器で倒す"),
+    "CalendarKillScaldraEnemiesWithMeleeMedium" to Pair("緊密に (普通)", "250体のスカルドラ部隊を近接武器で倒す"),
+    "CalendarKillScaldraEnemiesWithMeleeHard" to Pair("緊密に (難しい)", "500体のスカルドラ部隊を近接武器で倒す"),
+
+    // 衝撃と畏怖 (Shock and Awe)
+    "CalendarKillScaldraEnemiesWithAbilitiesEasy" to Pair("衝撃と畏怖 (簡単)", "75体のスカルドラ部隊をアビリティで倒す"),
+    "CalendarKillScaldraEnemiesWithAbilitiesMedium" to Pair("衝撃と畏怖 (普通)", "250体のスカルドラ部隊をアビリティで倒す"),
+    "CalendarKillScaldraEnemiesWithAbilitiesHard" to Pair("衝撃と畏怖 (難しい)", "500体のスカルドラ部隊をアビリティで倒す"),
+
+    // 感染体を一掃する (Purge the Infection)
+    "CalendarKillTechrotEnemiesEasy" to Pair("感染体を一掃する (簡単)", "250体のテックロットを倒す"),
+    "CalendarKillTechrotEnemiesMedium" to Pair("感染体を一掃する (普通)", "500体のテックロットを倒す"),
+    "CalendarKillTechrotEnemiesHard" to Pair("感染体を一掃する (難しい)", "750体のテックロットを倒す"),
+
+    // 電子廃棄物処理 (Electronic Waste Disposal)
+    "CalendarKillTechrotEnemiesWithMeleeEasy" to Pair("電子廃棄物処理 (簡単)", "100体のテックロットを近接武器で倒す"),
+    "CalendarKillTechrotEnemiesWithMeleeMedium" to Pair("電子廃棄物処理 (普通)", "200体のテックロットを近接武器で倒す"),
+    "CalendarKillTechrotEnemiesWithMeleeHard" to Pair("電子廃棄物処理 (難しい)", "300体のテックロットを近接武器で倒す"),
+
+    // 契約無効 (Null And Void)
+    "CalendarKillTechrotEnemiesWithAbilitiesEasy" to Pair("契約無効 (簡単)", "100体のテックロットをアビリティで倒す"),
+    "CalendarKillTechrotEnemiesWithAbilitiesMedium" to Pair("契約無効 (普通)", "200体のテックロットをアビリティで倒す"),
+    "CalendarKillTechrotEnemiesWithAbilitiesHard" to Pair("契約無効 (難しい)", "300体のテックロットをアビリティで倒す"),
+
+    // 戦車洗車 (Tankless Work)
+    "CalendarDestroyTankEasy" to Pair("戦車洗車", "1体の戦車を破壊する"),
+    "CalendarDestroyTankMedium" to Pair("戦車洗車", "1体の戦車を破壊する"),
+    "CalendarDestroyTankHard" to Pair("戦車洗車", "1体の戦車を破壊する"),
+
+    // 兵糧攻め (Starve the Beast)
+    "CalendarDestroyPropsEasy" to Pair("兵糧攻め (簡単)", "75個のコンテナを破壊する"),
+    "CalendarDestroyPropsMedium" to Pair("兵糧攻め (普通)", "150個のコンテナを破壊する"),
+    "CalendarDestroyPropsHard" to Pair("兵糧攻め (難しい)", "300個のコンテナを破壊する")
+  )
+
+  val calendarRewards = mapOf(
+    "CalendarKuvaBundleSmall" to "2,000 クバ",
+    "CalendarMajorArtifactPack" to "アルケインパック",
+    "CalendarVosforPack" to "ヴォスフォル",
+    "CalendarRivenPack" to "Riven MOD",
+    "CalendarArtifactPack" to "ヘックストレジャーパック",
+    "ResourceDropChance3DayStoreItem" to "リソースドロップブースター (3日間)",
+    "ModDropChanceBooster3DayStoreItem" to "MODドロップブースター (3日間)",
+    "AffinityBooster3DayStoreItem" to "アフィニティブースター (3日間)",
+    "FormaBlueprint" to "フォーマの設計図",
+    "FormaAuraBlueprint" to "オムニフォーマの設計図",
+    "Forma" to "フォーマ",
+    "FormaAura" to "オムニフォーマ",
+    // "OmniFormaBlueprint" to "オムニフォーマの設計図",
+    "WeaponUtilityUnlockerBlueprint" to "武器エクシラスアダプターの設計図",
+    "WeaponUtilityUnlocker" to "武器エクシラスアダプター",
+    "AdapterBlueprint" to "エクシラスアダプターの設計図",
+    "Adapter" to "エクシラスアダプター",
+    "PrimaryArcaneAdapter" to "プライマリ アルケインアダプター",
+    "SecondaryArcaneAdapter" to "セカンダリ アルケインアダプター",
+    "MeleeArcaneAdapter" to "近接アルケインアダプター",
+    "OrokinCatalystBlueprint" to "オロキンカタリストの設計図",
+    "OrokinReactorBlueprint" to "オロキンリアクターの設計図",
+    
+    // アルケイン
+    "ArcaneBellicose" to "アルケイン ベリコーズ",
+    "ArcaneTruculence" to "アルケイン トゥルキュレンス",
+    "ArcaneImpetus" to "アルケイン インペタス",
+    "ArcaneCrepuscular" to "アルケイン クレプスキュラー",
+    "ArcaneCamisado" to "アルケイン カミサド",
+    "PrimaryCrux" to "プライマリ クラックス",
+    "SecondaryEnervate" to "セカンダリ エナベート",
+    "MeleeDoughty" to "メレー ダウティ",
+    
+    // アルコンの欠片
+    "ArchonShardRed" to "アルコンの欠片 (真紅)",
+    "ArchonShardBlue" to "アルコンの欠片 (蒼天)",
+    "ArchonShardAmber" to "アルコンの欠片 (琥珀)",
+    "ArchonShardOrange" to "アルコンの欠片 (黄玉)",
+    "ArchonShardPurple" to "アルコンの欠片 (紫紺)",
+    "ArchonShardGreen" to "アルコンの欠片 (翠玉)",
+    "ShardRedSimple" to "アルコンの欠片 (真紅)",
+    "ShardBlueSimple" to "アルコンの欠片 (蒼天)",
+    "ShardAmberSimple" to "アルコンの欠片 (琥珀)",
+    "ShardOrangeSimple" to "アルコンの欠片 (黄玉)",
+    "ShardPurpleSimple" to "アルコンの欠片 (紫紺)",
+    "ShardGreenSimple" to "アルコンの欠片 (翠玉)",
+    
+    // 素材・通貨
+    "Kuva" to "クバ",
+    "Vosfor" to "ヴォスフォル",
+    "Endo" to "Endo"
   )
 
   fun translateCalendarType(type: String): String = calendarEventTypes[type] ?: type
   fun translateCalendarSeason(season: String): String = calendarSeasons[season] ?: season
+
+  fun translateCalendarContent(uniqueName: String): String? {
+    val key = uniqueName.substringAfterLast("/")
+    calendarUpgrades[key]?.first?.let { return it }
+    calendarChallenges[key]?.first?.let { return it }
+    calendarRewards[key]?.let { return it }
+    return null
+  }
+
+  /**
+   * 1999 Calendar 用のパス（uniqueName）から日本語のタイトルと説明のペアを返す。
+   * 翻訳マップに存在しない場合は Pair(末尾のキー, "") を返す。
+   */
+  fun translateCalendarEvent(uniqueName: String): Pair<String, String> {
+    val key = uniqueName.substringAfterLast("/")
+    calendarChallenges[key]?.let { return it }
+    calendarUpgrades[key]?.let { return it }
+    calendarRewards[key]?.let { return Pair(it, "") }
+    return Pair(key, "")
+  }
 
   // ------ サーキット関連の翻訳 ------
   val circuitCategories = mapOf(

@@ -596,6 +596,7 @@ fun SettingsPage(
       }
 
       SettingsSubPage.DATA_MANAGEMENT -> {
+        val showRawPaths by appSettings.showRawPathsFlow.collectAsState(false)
         // データ管理サブ画面
         ListGroup {
           BackupRestoreButtons(
@@ -610,6 +611,29 @@ fun SettingsPage(
                 parts[0].trim() to parts[1].trim()
               }
               appSettings.importSettingsFromMap(map)
+            }
+          )
+
+          HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = MaterialTheme.colorScheme.outlineVariant)
+
+          ListTile(
+            title = "1999カレンダーの内部表記を表示",
+            subtitle = "デバッグ用にミッションや報酬の生のパスを表示します",
+            leadingIcon = { Icon(Icons.Default.Code, contentDescription = null) },
+            trailingContent = {
+              Switch(
+                checked = showRawPaths,
+                onCheckedChange = { checked ->
+                  coroutineScope.launch {
+                    appSettings.setShowRawPaths(checked)
+                  }
+                }
+              )
+            },
+            onClick = {
+              coroutineScope.launch {
+                appSettings.setShowRawPaths(!showRawPaths)
+              }
             }
           )
 
