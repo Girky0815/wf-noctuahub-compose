@@ -621,6 +621,8 @@ object Translations {
   "SeasonDailyVisitFeaturedDojo" to Pair("旅行目的", "特選Dojoを訪れる"),
   "SeasonDailyDeployAirSupport" to Pair("風通し良好", "エアリアルサポートチャージを展開する"),
   "SeasonDailyCompleteMissionPrimary" to Pair("手一杯", "プライマリ武器のみを装備してミッションをクリアする"),
+  "SeasonDailyCompleteMissionSecondary" to Pair("サイドアーム", "セカンダリ武器のみを装備してミッションをクリアする"),
+  "SeasonDailyCompleteMissionMelee" to Pair("剣客", "近接武器のみを装備してミッションをクリアする"),
   "SeasonDailyBulletJump" to Pair("トランポリン", "バレットジャンプを150回行う"),
   "SeasonDailyCompleteMission" to Pair("エージェント", "ミッションを1回クリアする"),
   "SeasonDailyDeployGlyph" to Pair("グラフィティ", "ギアメニューに「グリフプリズム」を装備し、ミッション中に使用してグリフを展開する"),
