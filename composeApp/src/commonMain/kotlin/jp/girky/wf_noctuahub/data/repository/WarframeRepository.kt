@@ -617,14 +617,16 @@ class WarframeRepository(
     localizationDict[cleaned]?.let { return formatLocalizedResult(it) }
 
     // 3. 末尾のセグメントで末尾一致検索 (例: "/ElectEventPistolMod")
-    val lastSegment = uniqueName.substringAfterLast("/")
-    if (lastSegment.isNotBlank()) {
-      val suffix = "/$lastSegment"
-      val match = localizationDict.entries.find { (key, _) ->
-        key.endsWith(suffix, ignoreCase = true)
-      }
-      if (match != null) {
-        return formatLocalizedResult(match.value)
+    if (uniqueName.startsWith("/Lotus/")) {
+      val lastSegment = uniqueName.substringAfterLast("/")
+      if (lastSegment.isNotBlank()) {
+        val suffix = "/$lastSegment"
+        val match = localizationDict.entries.find { (key, _) ->
+          key.endsWith(suffix, ignoreCase = true)
+        }
+        if (match != null) {
+          return formatLocalizedResult(match.value)
+        }
       }
     }
 
