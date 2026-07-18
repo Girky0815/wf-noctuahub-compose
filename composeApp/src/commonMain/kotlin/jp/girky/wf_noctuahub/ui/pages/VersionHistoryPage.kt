@@ -153,10 +153,9 @@ fun VersionHistoryPage(
                       Spacer(modifier = Modifier.height(12.dp))
                       HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
                       Spacer(modifier = Modifier.height(8.dp))
-                      Text(
-                        text = bodyText,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                      MarkdownText(
+                        markdown = bodyText,
+                        modifier = Modifier.fillMaxWidth()
                       )
                     }
                   }
