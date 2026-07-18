@@ -927,6 +927,12 @@ object Translations {
     if (lower.contains("razorback")) return "Razorback Armada"
     if (lower.contains("fomorian")) return "フォーモリアン戦艦の脅威"
 
+    // リレー名としての翻訳を試みる
+    val relayName = translateRelay(eventDescOrTag)
+    if (relayName != eventDescOrTag) {
+      return relayName
+    }
+
     return eventDescOrTag
   }
 
@@ -942,7 +948,11 @@ object Translations {
     "TradeHUB1" to "Marooのバザー (地球)",
     "MarooBazaar" to "Marooのバザー (地球)",
     "TennoConHUB" to "Tennocon リレー",
-    "TennoconHUB" to "Tennocon リレー"
+    "TennoconHUB" to "Tennocon リレー",
+    "/Lotus/Language/Locations/RelayStationTennoConB" to "TennoLive リレー",
+    "/Lotus/Language/Locations/RelayStationTennoCon" to "Baro のTennoconリレー",
+    "RelayStationTennoConB" to "TennoLive リレー",
+    "RelayStationTennoCon" to "Baro のTennoconリレー"
   )
 
   /**

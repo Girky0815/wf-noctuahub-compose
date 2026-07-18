@@ -33,6 +33,52 @@ fun EventsPage(
   }
   val now = nowState.value
 
+  val baro = worldState?.voidTraders?.firstOrNull()
+  val baroActivationLong = baro?.activation?.date?.numberLong?.toLongOrNull()
+  val baroExpiryLong = baro?.expiry?.date?.numberLong?.toLongOrNull()
+  val isBaroActive = baro != null && baroActivationLong != null && baroExpiryLong != null && now >= baroActivationLong && now < baroExpiryLong
+
+  val baroProgress = if (isBaroActive && baroActivationLong != null && baroExpiryLong != null) {
+    val total = baroExpiryLong - baroActivationLong
+    val remaining = baroExpiryLong - now
+    if (total > 0) {
+      remaining.toFloat() / total.toFloat()
+    } else {
+      0f
+    }
+  } else {
+    0f
+  }
+
+  val baroTimeString = if (isBaroActive && baroExpiryLong != null) {
+    val diffMillis = baroExpiryLong - now
+    if (diffMillis <= 0L) {
+      "イベント終了"
+    } else {
+      val totalSec = diffMillis / 1000
+      val sec = totalSec % 60
+      val min = (totalSec / 60) % 60
+      val hour = (totalSec / 3600) % 24
+      val day = totalSec / 86400
+
+      val secStr = sec.toString().padStart(2, '0')
+      val minStr = min.toString().padStart(2, '0')
+      val hourStr = hour.toString().padStart(2, '0')
+
+      if (day > 0) {
+        "${day}日${hourStr}時間${minStr}分${secStr}秒"
+      } else if (hour > 0) {
+        "${hour}時間${minStr}分${secStr}秒"
+      } else if (min > 0) {
+        "${min}分${secStr}秒"
+      } else {
+        "${sec}秒"
+      }
+    }
+  } else {
+    ""
+  }
+
   // 終了予定時刻（Expiry）超過および耐久値0%で即座に除外するフィルタリング
   val activeGoals = remember(goals, now) {
     goals.filter { eventGoal ->
@@ -78,7 +124,69 @@ fun EventsPage(
       )
     }
 
-    if (activeGoals.isEmpty()) {
+    if (isBaroActive) {
+      item {
+        val baroLocation = baro?.node?.let { Translations.translateRelay(it) } ?: "不明"
+        ListItem(
+          shape = androidx.compose.foundation.shape.RoundedCornerShape(20.dp)
+        ) {
+          Column(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+            Text(
+              text = "Baro Ki'Teer 来訪中",
+              style = MaterialTheme.typography.titleLarge,
+              fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+              color = MaterialTheme.colorScheme.onSurface
+            )
+            
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(
+              modifier = Modifier.fillMaxWidth(),
+              horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+              Text(
+                text = "訪問場所: $baroLocation",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+              )
+              Text(
+                text = String.format("%.1f%%", baroProgress * 100),
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
+              )
+            }
+            Spacer(modifier = Modifier.height(6.dp))
+            LinearProgressIndicator(
+              progress = { baroProgress.coerceIn(0f, 1f) },
+              modifier = Modifier.fillMaxWidth().height(8.dp),
+              color = MaterialTheme.colorScheme.primary,
+              trackColor = MaterialTheme.colorScheme.primaryContainer,
+              strokeCap = androidx.compose.ui.graphics.StrokeCap.Round
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(
+              modifier = Modifier.fillMaxWidth(),
+              horizontalArrangement = Arrangement.SpaceBetween,
+              verticalAlignment = Alignment.CenterVertically
+            ) {
+              Text(
+                text = "残り時間: $baroTimeString",
+                style = jp.girky.wf_noctuahub.ui.theme.getAppTypographyCondensed().bodyMedium.copy(
+                  fontFeatureSettings = "tnum"
+                ),
+                fontWeight = androidx.compose.ui.text.font.FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+              )
+            }
+          }
+        }
+      }
+    }
+
+    if (activeGoals.isEmpty() && !isBaroActive) {
       item {
         Text(
           text = "現在アクティブなイベントはありません。",
