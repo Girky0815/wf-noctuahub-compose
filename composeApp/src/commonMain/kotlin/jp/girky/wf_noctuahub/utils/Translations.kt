@@ -46,15 +46,15 @@ object Translations {
   val resourceTypes = mapOf(
   "Marks of Valiance" to "剛勇の証",
   "Nitain Extract" to "ニタン抽出物",
-  "Orokin Catalyst" to "オロキンカタリスト",
+  "OrokinCatalystBlueprint" to "オロキンカタリスト設計図",
   "OrokinCatalyst" to "オロキンカタリスト",
-  "Orokin Reactor" to "オロキンリアクター",
   "OrokinReactor" to "オロキンリアクター",
-  "Exilus Adapter" to "エクシラスアダプター",
+  "OrokinReactorBlueprint" to "オロキンリアクター設計図",
+  "ExilusAdapterBlueprint" to "エクシラスアダプター",
   "Forma" to "フォーマ",
   "Detonite Injector" to "デトナイトインジェクター",
   "Fieldron" to "フィールドロン",
-  "Mutagen Mass" to "ミュータジェンマス",
+  "MutagenMass" to "ミュータジェンマス",
   "Alad V Nav Coordinate" to "Alad V ナビ座標",
   "Synthula" to "シンスラ",
   "Kavat Genetic Code" to "キャバット遺伝子コード",
@@ -68,7 +68,10 @@ object Translations {
   "Systems Component" to "システム",
   "Systems" to "システム",
   "AscensionEventResourceItem" to "ボラタイル・モート",
-  "GuardianTitle" to "ホノリア"
+  "GuardianTitle" to "ホノリア",
+  "ArchonCrystalNiraMythic" to "Tauforged アルコンの欠片「琥珀」",
+  "ArchonCrystalAmarMythic" to "Tauforged アルコンの欠片「真紅」",
+  "ArchonCrystalBorealMythic" to "Tauforged アルコンの欠片「蒼天」"
   )
 
   // 敵勢力の日本語訳
