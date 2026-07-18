@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.ColorLens
 import androidx.compose.material.icons.filled.Info
@@ -52,12 +53,15 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
+import jp.girky.wf_noctuahub.ui.pages.VersionHistoryPage
+
 enum class SettingsSubPage {
   MAIN,
   APPEARANCE,
   DATA_MANAGEMENT,
   DASHBOARD_SETTINGS,
-  LICENSE_INFO
+  LICENSE_INFO,
+  VERSION_HISTORY
 }
 
 @Composable
@@ -132,6 +136,7 @@ fun SettingsPage(
             SettingsSubPage.DATA_MANAGEMENT -> "データ管理"
             SettingsSubPage.DASHBOARD_SETTINGS -> "ダッシュボードの設定"
             SettingsSubPage.LICENSE_INFO -> "ライセンス情報"
+            SettingsSubPage.VERSION_HISTORY -> "バージョン履歴"
             else -> ""
           },
           style = MaterialTheme.typography.titleLarge,
@@ -231,6 +236,13 @@ fun SettingsPage(
             title = "Warframe Wiki (日本語)",
             subtitle = "日本語Wikiを参照する",
             onClick = { uriHandler.openUri("https://wikiwiki.jp/warframe") }
+          )
+           ListTile(
+            leadingIcon = { Icon(Icons.Default.History, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
+            title = "バージョン履歴",
+            subtitle = "過去のアップデート更新履歴を表示します",
+            trailingContent = { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null) },
+            onClick = { currentSubPage = SettingsSubPage.VERSION_HISTORY }
           )
           ListTile(
             leadingIcon = { Icon(Icons.Default.Palette, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
@@ -805,6 +817,11 @@ fun SettingsPage(
           ListTile(title = "Noto Sans JP Font", subtitle = "SIL Open Font License 1.1\nhttps://fonts.google.com/noto", onClick = null)
           ListTile(title = "UI Reference: Tomato", subtitle = "MIT License\nhttps://github.com/nsh07/Tomato", onClick = null)
         }
+      }
+
+      SettingsSubPage.VERSION_HISTORY -> {
+        // バージョン履歴サブ画面
+        VersionHistoryPage()
       }
     }
   }
