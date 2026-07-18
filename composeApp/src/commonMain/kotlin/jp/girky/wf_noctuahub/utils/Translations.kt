@@ -617,6 +617,7 @@ object Translations {
   "SeasonDailyMercyKill" to Pair("慈悲なし", "Mercy で敵を1体倒す"),
   "SeasonDailyPlayEmote" to Pair("表現豊か", "ギアメニューからエモートを1回行う"),
   "SeasonDailyCollectCredits" to Pair("貯蓄家", "合計 15,000 Cr を拾う"),
+  "SeasonDailyTwoForOne" to Pair("一石二鳥", "1回の弓矢での攻撃で2体以上の敵を倒す"),
 
   "SeasonDailyVisitFeaturedDojo" to Pair("旅行目的", "特選Dojoを訪れる"),
   "SeasonDailyDeployAirSupport" to Pair("風通し良好", "エアリアルサポートチャージを展開する"),
@@ -647,6 +648,8 @@ object Translations {
   "SeasonWeeklySanctuaryOnslaught" to Pair("テスト被験者", "サンクチュアリ交戦(通常/エリート)を8ゾーンクリアする"),
   "SeasonWeeklyUseForma" to Pair("極性付与", "シミュラクラム以外の場所で任意の武器や Warframe にフォーマを使用して極性を付与する"),
   "SeasonWeeklySolveCiphers" to Pair("ハッカー", "コンソールを10個ハッキングする"),
+  "SeasonWeeklyCompleteTreasures" to Pair("生を吹き込む", "ウィークリーアヤタントレジャーハントをクリアする"),
+  "SeasonWeeklyKillEnemiesInMech" to Pair("ネクロライザー", "ネクロメカで100体の敵を倒す"),
 
 
   // エリートウィークリー
@@ -664,6 +667,8 @@ object Translations {
   "SeasonWeeklyHardFriendsSurvival" to Pair("耐久", "耐久系ミッションを最低20分進めてクリアする"),
   "SeasonWeeklyHardEliteSanctuaryOnslaught" to Pair("エリートテスト被験者", "エリートサンクチュアリ交戦を8ゾーンクリアする"),
   "SeasonWeeklyHardEliteBeastSlayer" to Pair("エリート獣殺し", "鋼の道のり版デュヴィリ(エクスペリエンス or ローン・ストーリー)でオロワームを倒す"),
+  "SeasonWeeklyHardTerminated" to Pair("殲滅", "隔離庫のネクロメカを3体倒す"),
+  "SeasonWeeklyHardKillEximus" to Pair("エクシマス処刑人(ハード)", "100体のエクシマスを倒す"),
   )
 
   fun translateNightwaveChallenge(challenge: String): Pair<String, String> {
@@ -702,19 +707,19 @@ object Translations {
   val calendarUpgrades = mapOf(
     // ヘックスブースト (パッシブ効果)
     "MeleeAttackSpeed" to Pair("容赦なし", "近接攻撃速度+25%。"),
-    "MeleeCriticalChance" to Pair("熟練の精度", "近接クリティカル率+20% (ヘビー攻撃は2倍)。"),
+    "MeleeCritChance" to Pair("熟練の精度", "近接クリティカル率+20% (ヘビー攻撃は2倍)。"),
     "Armor" to Pair("分厚い皮膚", "装甲値+250。"),
     "CompanionDamage" to Pair("援助は任せろ", "スペクターとコンパニオンのダメージが+250%増加する。"),
     "PsionicFeedback" to Pair("サイオニックフィードバック", "ダメージ時 被ダメージ時、10%の確率で半径5mの放射線爆発 (250ダメージ) を起こす。"),
     "MagazineCapacity" to Pair("ヘビーマガジン", "マガジンサイズを25%増やす。"),
     "GasChanceToPrimaryAndSecondary" to Pair("毒性弾", "プライマリ武器とセカンダリ武器は25%のガス状態異常確率を追加で得る。"),
-    "Punchcard" to Pair("パンチカード", "プライマリ武器の貫通距離を1.5m追加する。"),
-    "HealingEffects" to Pair("エスプレッソショット", "エネルギー回復 +2EN/s"),
+    "PunchToPrimary" to Pair("パンチカード", "プライマリ武器の貫通距離を1.5m追加する。"),
+    "EnergyRestoration" to Pair("エスプレッソショット", "エネルギー回復 +2EN/s"),
     "RecoveryBoost" to Pair("救急医療", "オーブピックアップがもたらすすべての回復効果が25%増加する。"),
     "EnergyOrbToAbilityRange" to Pair("視野拡大", "エネルギーオーブ回収時10秒間、アビリティ範囲が10%増加する。"),
-    "PowerGains" to Pair("パワーゲイン", "アビリティ威力+25%。"),
+    "AbilityStrength" to Pair("パワーゲイン", "アビリティ威力+25%。"),
     "BottledLightning" to Pair("瓶詰めの稲妻", "すべての武器に25%の状態異常ダメージと電気状態異常確率を追加する。"),
-    "HardenUp" to Pair("硬化", "オーバーシールドの上限が50%上昇する(オーバーシールド上限 1,800)。キル時に50シールド回復する。"),
+    "OvershieldCap" to Pair("硬化", "オーバーシールドの上限が50%上昇する(オーバーシールド上限 1,800)。キル時に50シールド回復する。"),
     
     // ヘックスファクター (条件発動効果)
     "ComboKiller" to Pair("コンボキラー", "コンボ倍率は、近接攻撃後に敵がフィニッシャー待機状態になる確率を高める。コンボ倍率ごとに5%増加し、Venka Primeの場合は最大65%まで上昇する。"),
@@ -727,7 +732,7 @@ object Translations {
     "CopyAndPaste" to Pair("コピー＆ペースト", "125エネルギーを消費するごとに、現在展開されているスペクターかコンパニオンのスペクトルクローンをランダムに生み出す。"),
     "BlastEveryXShots" to Pair("楽しんでこい", "10発ごとにヒット時爆発スタックが10追加される。"),
     "CumulativeCartridges" to Pair("累積カートリッジ", "リロードするまで、ショットごとに状態異常確率が1%増加する。"),
-    "FreeShot" to Pair("フリーショット", "状態異常を引き起こすと、10%の確率で起こした状態異常の弾丸をマガジンに充填する。"),
+    "RefundBulletOnStatusProc" to Pair("フリーショット", "状態異常を引き起こすと、10%の確率で起こした状態異常の弾丸をマガジンに充填する。"),
     "TrickShot" to Pair("トリックショット", "弾がヒットする度に、追尾弾を発射する確率が10%増加する。発砲する度に追尾弾確率は5%低下する。"),
     "MagneticMenace" to Pair("磁気の脅威", "アビリティを5回使うたびに前方50m以内の敵は磁気状態異常を受ける。"),
     "SharingIsCaring" to Pair("分け合いは大事", "アビリティを10回発動するたびに、自身と味方が次に発動するアビリティのコストを0にする。"),
@@ -735,7 +740,7 @@ object Translations {
     "ForceOfAttraction" to Pair("引力", "磁気状態異常は、スタック毎1m範囲で周辺の敵を引き寄せる。"),
     "ElectricalDamageOnBulletJump" to Pair("ダイナモジャンプ", "バレットジャンプから着地後の5秒間は電気ダメージが50%増加する。"),
     "StaticAccumulation" to Pair("静電気蓄積", "移動距離1mごとに電気ダメージが付与される。攻撃時に蓄積した静電気の10%が消費される。"),
-    "FrequentFlyerBenefits" to Pair("フリークエントフライヤー特典", "空中では、リロード速度、発射速度、発動速度、近接攻撃速度が100%増加する。"),
+    "SpeedBuffsWhenAirborne" to Pair("フリークエントフライヤー特典", "空中では、リロード速度、発射速度、発動速度、近接攻撃速度が100%増加する。"),
     "HitAndSplit" to Pair("ヒット＆スプリット", "近接攻撃のクリティカルヒットは、確率で攻撃速度と移動速度を10秒間5%上昇させる。"),
     "TargetedTherapeutics" to Pair("標的治療薬", "ヘルスオーブを撃つと回収できる。回収時にヘルスオーブは25%の確率で分裂する。"),
     "GenerateOmniOrbsOnWeakKill" to Pair("強制輸血", "弱点への攻撃で敵を倒すとユニバーサルオーブが25%の確率で生成される。"),
@@ -810,7 +815,7 @@ object Translations {
     "CalendarMajorArtifactPack" to "アルケインパック",
     "CalendarVosforPack" to "ヴォスフォル",
     "CalendarRivenPack" to "Riven MOD",
-    "CalendarArtifactPack" to "ヘックストレジャーパック",
+    "CalendarArtifactPack" to "1999 アルケイン",
     "ResourceDropChance3DayStoreItem" to "リソースドロップブースター (3日間)",
     "ModDropChanceBooster3DayStoreItem" to "MODドロップブースター (3日間)",
     "AffinityBooster3DayStoreItem" to "アフィニティブースター (3日間)",
