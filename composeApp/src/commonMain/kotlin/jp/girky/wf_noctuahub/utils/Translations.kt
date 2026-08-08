@@ -609,7 +609,7 @@ object Translations {
   "SeasonDailyKillEnemiesWithCorrosive" to Pair("メルトダウン", "敵を150体腐食属性で倒す"),
   "SeasonDailyKillEnemiesWithBlast" to Pair("爆弾魔", "敵を150体爆発属性で倒す"),
   "SeasonDailyKillEnemiesWithCold" to Pair("急速冷凍", "敵を150体冷気属性で倒す"),
-  "SeasonDailyKillEnemiesWithElectric" to Pair("回路のショート", "敵を150体電気属性で倒す"),
+  "SeasonDailyKillEnemiesWithElectricity" to Pair("回路のショート", "敵を150体電気属性で倒す"),
   "SeasonDailyKillEnemiesWithFire" to Pair("放火魔", "敵を150体火炎属性で倒す"),
   "SeasonDailyKillEnemiesWithToxin" to Pair("毒殺者", "敵を150体毒属性で倒す"),
   "SeasonDailyKillEnemiesWithMagnetic" to Pair("引き寄せる力", "敵を150体磁気属性で倒す"),
@@ -627,6 +627,7 @@ object Translations {
   "SeasonDailyPlayEmote" to Pair("表現豊か", "ギアメニューからエモートを1回行う"),
   "SeasonDailyCollectCredits" to Pair("貯蓄家", "合計 15,000 Cr を拾う"),
   "SeasonDailyTwoForOne" to Pair("一石二鳥", "1回の弓矢での攻撃で2体以上の敵を倒す"),
+  "SeasonDailyInteractWithPet" to Pair("忠誠心", "作戦拠点でペットと触れ合う"),
 
   "SeasonDailyVisitFeaturedDojo" to Pair("旅行目的", "特選Dojoを訪れる"),
   "SeasonDailyDeployAirSupport" to Pair("風通し良好", "エアリアルサポートチャージを展開する"),
@@ -637,8 +638,7 @@ object Translations {
   "SeasonDailyCompleteMission" to Pair("エージェント", "ミッションを1回クリアする"),
   "SeasonDailyDeployGlyph" to Pair("グラフィティ", "ギアメニューに「グリフプリズム」を装備し、ミッション中に使用してグリフを展開する"),
   "SeasonDailyKillEnemiesWithAbilities" to Pair("力の誇示", "アビリティで敵を150体倒す"),
-  
-
+  "SeasonDailySuspendFiveEnemies" to Pair("激突", "1回のヘビースラムで5体の敵を浮遊させる"),
 
   // ウィークリー (末尾の数字は関数側で動的に抽出するためキーからは除外)
   "SeasonWeeklyPermanentCompleteMissions" to Pair("ミッション完了", "ミッションを15回完了する"),
@@ -659,7 +659,10 @@ object Translations {
   "SeasonWeeklySolveCiphers" to Pair("ハッカー", "コンソールを10個ハッキングする"),
   "SeasonWeeklyCompleteTreasures" to Pair("生を吹き込む", "ウィークリーアヤタントレジャーハントをクリアする"),
   "SeasonWeeklyKillEnemiesInMech" to Pair("ネクロライザー", "ネクロメカで100体の敵を倒す"),
-
+  "SeasonWeeklyUnlockRelics" to Pair("レリックの解放", "任意のレリックを3個解放する"),
+  "SeasonWeeklyCompleteKuva" to Pair("死神を恐れるな", "クバサイフォンミッションを3回クリアする"),
+  "SeasonWeeklyIDecree" to Pair("我が命ず", "1回のデュヴィリセッションまたはサーキットで布告を15個集める"),
+  "SeasonWeeklyIsolationBounties" to Pair("隔離庫ハンター", "ダイモスのカンビオン荒地で隔離庫依頼をクリアする"),
 
   // エリートウィークリー
   "SeasonWeeklyEliteCompleteMission" to Pair("完璧な", "ミッションを1回完了する"),
@@ -678,6 +681,10 @@ object Translations {
   "SeasonWeeklyHardEliteBeastSlayer" to Pair("エリート獣殺し", "鋼の道のり版デュヴィリ(エクスペリエンス or ローン・ストーリー)でオロワームを倒す"),
   "SeasonWeeklyHardTerminated" to Pair("殲滅", "隔離庫のネクロメカを3体倒す"),
   "SeasonWeeklyHardKillEximus" to Pair("エクシマス処刑人(ハード)", "100体のエクシマスを倒す"),
+  "SeasonWeeklyHardCompleteConquest" to Pair("実験体志願", "深淵アルキメデアまたは次元アルキメデアをクリアする"),
+  "SeasonWeeklyHardIndexWinStreak" to Pair("デイ・トレーダー", "インデックスで敵にスコアを取らせずに3回連続で勝利する"),
+  "SeasonWeeklyHardAntiquarian" to Pair("好古家", "Lith/Meso/Neo/Axi の各エラのレリックを解放する"),
+  "SeasonWeeklyHardKillExploiterOrb" to Pair("利益こそ正義", "エクスプロイターオーブを倒す"),
   )
 
   fun translateNightwaveChallenge(challenge: String): Pair<String, String> {
@@ -727,11 +734,11 @@ object Translations {
     "RecoveryBoost" to Pair("救急医療", "オーブピックアップがもたらすすべての回復効果が25%増加する。"),
     "EnergyOrbToAbilityRange" to Pair("視野拡大", "エネルギーオーブ回収時10秒間、アビリティ範囲が10%増加する。"),
     "AbilityStrength" to Pair("パワーゲイン", "アビリティ威力+25%。"),
-    "BottledLightning" to Pair("瓶詰めの稲妻", "すべての武器に25%の状態異常ダメージと電気状態異常確率を追加する。"),
+    "ElectricStatusDamageAndChance" to Pair("瓶詰めの稲妻", "すべての武器に25%の状態異常ダメージと電気状態異常確率を追加する。"),
     "OvershieldCap" to Pair("硬化", "オーバーシールドの上限が50%上昇する(オーバーシールド上限 1,800)。キル時に50シールド回復する。"),
     
     // ヘックスファクター (条件発動効果)
-    "ComboKiller" to Pair("コンボキラー", "コンボ倍率は、近接攻撃後に敵がフィニッシャー待機状態になる確率を高める。コンボ倍率ごとに5%増加し、Venka Primeの場合は最大65%まで上昇する。"),
+    "FinisherChancePerComboMultiplier" to Pair("コンボキラー", "コンボ倍率は、近接攻撃後に敵がフィニッシャー待機状態になる確率を高める。コンボ倍率ごとに5%増加し、Venka Primeの場合は最大65%まで上昇する。"),
     "HeavyJavelin" to Pair("ヘビージャベリン", "ヘビー近接攻撃は、3m範囲で1000ダメージ（コンボ倍率で変動）与えるRadial Javelinを発動する。"),
     "SliceAndDice" to Pair("スライス＆ダイス", "近接スライディング攻撃は、スライディング攻撃のクリティカル確率を5%、スライディング速度を20%増加させ、スライディング近接攻撃ごとに10秒間スライディング摩擦を10%減少させる。最大10まで重複。"),
     "EnergyWavesOnCombo" to Pair("コンボウェーブ", "コンボ倍率が7倍になると、すべての近接攻撃はエネルギー波を放つ。"),
@@ -748,7 +755,7 @@ object Translations {
     "Overpower" to Pair("圧倒的な力", "アビリティ発動時、アビリティの規定消費エネルギー単位ごとに、5秒間アビリティ威力が2%増加し、アビリティ効率が1%悪化する。上限：アビリティ威力 +150%、効率 -75%。"),
     "ForceOfAttraction" to Pair("引力", "磁気状態異常は、スタック毎1m範囲で周辺の敵を引き寄せる。"),
     "ElectricalDamageOnBulletJump" to Pair("ダイナモジャンプ", "バレットジャンプから着地後の5秒間は電気ダメージが50%増加する。"),
-    "StaticAccumulation" to Pair("静電気蓄積", "移動距離1mごとに電気ダメージが付与される。攻撃時に蓄積した静電気の10%が消費される。"),
+    "ElectricDamagePerDistance" to Pair("静電気蓄積", "移動距離1mごとに電気ダメージが付与される。攻撃時に蓄積した静電気の10%が消費される。"),
     "SpeedBuffsWhenAirborne" to Pair("フリークエントフライヤー特典", "空中では、リロード速度、発射速度、発動速度、近接攻撃速度が100%増加する。"),
     "HitAndSplit" to Pair("ヒット＆スプリット", "近接攻撃のクリティカルヒットは、確率で攻撃速度と移動速度を10秒間5%上昇させる。"),
     "TargetedTherapeutics" to Pair("標的治療薬", "ヘルスオーブを撃つと回収できる。回収時にヘルスオーブは25%の確率で分裂する。"),
@@ -842,6 +849,7 @@ object Translations {
     "MeleeArcaneAdapter" to "近接アルケインアダプター",
     "OrokinCatalystBlueprint" to "オロキンカタリストの設計図",
     "OrokinReactorBlueprint" to "オロキンリアクターの設計図",
+    "CircuitSilverSteelPathFusionBundle" to "6,000 Endo",
     
     // アルケイン
     "ArcaneBellicose" to "アルケイン ベリコーズ",
