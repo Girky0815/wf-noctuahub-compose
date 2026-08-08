@@ -71,7 +71,13 @@ object Translations {
   "GuardianTitle" to "ホノリア",
   "ArchonCrystalNiraMythic" to "Tauforged アルコンの欠片「琥珀」",
   "ArchonCrystalAmarMythic" to "Tauforged アルコンの欠片「真紅」",
-  "ArchonCrystalBorealMythic" to "Tauforged アルコンの欠片「蒼天」"
+  "ArchonCrystalBorealMythic" to "Tauforged アルコンの欠片「蒼天」",
+  "Nakak Pearl" to "Nakak 真珠",
+  "Nakak Pearls" to "Nakak 真珠",
+  "NakakPearl" to "Nakak 真珠",
+  "NakakPearls" to "Nakak 真珠",
+  "WaterFightBucks" to "Nakak 真珠",
+  "WaterFightBuck" to "Nakak 真珠"
   )
 
   // 敵勢力の日本語訳
@@ -911,7 +917,20 @@ object Translations {
   "Razorback" to "Razorback Armada",
   "RazorbackArmada" to "Razorback Armada",
   "Fomorian" to "フォーモリアン戦艦の脅威",
-  "BalorFomorian" to "フォーモリアン戦艦の脅威"
+  "BalorFomorian" to "フォーモリアン戦艦の脅威",
+  "DogDays" to "ドッグ・デイズ",
+  "DogDaysEventName" to "ドッグ・デイズ",
+  "DogDaysTacticalAlert" to "ドッグ・デイズ",
+  "Dog Days" to "ドッグ・デイズ",
+  "Dog Days Tactical Alert" to "ドッグ・デイズ",
+  "WaterFight" to "ドッグ・デイズ",
+  "WaterFightEvent" to "ドッグ・デイズ",
+  "WaterFightToolTip" to "ドッグ・デイズ",
+  "WaterFightTitle" to "ドッグ・デイズ",
+  "WaterFightEventName" to "ドッグ・デイズ",
+  "/Lotus/Language/Events/WaterFightToolTip" to "ドッグ・デイズ",
+  "/Lotus/Language/Events/WaterFightTitle" to "ドッグ・デイズ",
+  "/Lotus/Language/Events/WaterFight" to "ドッグ・デイズ"
   )
 
   fun translateEvent(eventDescOrTag: String): String {
@@ -926,6 +945,7 @@ object Translations {
     if (lower.contains("heatfissures")) return "サーミアの裂け目"
     if (lower.contains("razorback")) return "Razorback Armada"
     if (lower.contains("fomorian")) return "フォーモリアン戦艦の脅威"
+    if (lower.contains("dogdays") || lower.contains("dog days") || lower.contains("waterfight")) return "ドッグ・デイズ"
 
     // リレー名としての翻訳を試みる
     val relayName = translateRelay(eventDescOrTag)

@@ -196,12 +196,21 @@ fun EventsPage(
       }
     } else {
       items(activeGoals) { eventGoal ->
-        val eventDesc = if (eventGoal.desc != null) {
-          val eventNameTranslated = Translations.translateEvent(eventGoal.desc)
-          if (eventNameTranslated != eventGoal.desc) {
+        val rawTitle = eventGoal.desc.takeUnless { it.isNullOrBlank() }
+          ?: eventGoal.toolTip.takeUnless { it.isNullOrBlank() }
+          ?: eventGoal.tag.takeUnless { it.isNullOrBlank() }
+
+        val eventDesc = if (rawTitle != null) {
+          val eventNameTranslated = Translations.translateEvent(rawTitle)
+          if (eventNameTranslated != rawTitle) {
             eventNameTranslated
           } else {
-            onLocalize(eventGoal.desc)
+            val localized = onLocalize(rawTitle)
+            if (localized != rawTitle) {
+              localized
+            } else {
+              Translations.translateEvent(eventGoal.tag.orEmpty().ifBlank { rawTitle })
+            }
           }
         } else {
           "不明なイベント"
@@ -209,23 +218,32 @@ fun EventsPage(
 
         val descLower = eventGoal.desc?.lowercase() ?: ""
         val tagLower = eventGoal.tag?.lowercase() ?: ""
+        val toolTipLower = eventGoal.toolTip?.lowercase() ?: ""
 
         // グール粛清
-        val isGhoulType = descLower.contains("ghoul") || tagLower.contains("ghoul")
+        val isGhoulType = descLower.contains("ghoul") || tagLower.contains("ghoul") || toolTipLower.contains("ghoul")
 
         // 進捗を表示するもの
         val isProgressType = descLower.contains("jadeshadows") || 
                    descLower.contains("belly") || 
                    descLower.contains("heatfissures") || 
+                   descLower.contains("waterfight") ||
+                   descLower.contains("dogdays") ||
                    tagLower.contains("jadeshadows") || 
                    tagLower.contains("belly") || 
-                   tagLower.contains("heatfissures")
+                   tagLower.contains("heatfissures") ||
+                   tagLower.contains("waterfight") ||
+                   tagLower.contains("dogdays") ||
+                   toolTipLower.contains("waterfight") ||
+                   toolTipLower.contains("dogdays")
 
         // 残り耐久力を表示するもの
         val isHealthType = descLower.contains("razorback") || 
                    descLower.contains("fomorian") || 
                    tagLower.contains("razorback") || 
-                   tagLower.contains("fomorian")
+                   tagLower.contains("fomorian") ||
+                   toolTipLower.contains("razorback") ||
+                   toolTipLower.contains("fomorian")
 
         val expiryLong = eventGoal.expiry?.epochMillis ?: 0L
         val diffMillis = expiryLong - now
