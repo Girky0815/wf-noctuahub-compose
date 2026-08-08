@@ -1,10 +1,10 @@
 package jp.girky.wf_noctuahub.platform
 
 object LibraryVersions {
-    const val AGP = "9.2.1"
-    const val COMPOSE = "1.12.0-beta02"
-    const val KOTLIN = "2.4.0"
-    const val KTOR = "3.5.1"
+    const val AGP = "9.3.1"
+    const val COMPOSE = "1.12.0-beta03"
+    const val KOTLIN = "2.4.10"
+    const val KTOR = "3.5.2"
     const val SERIALIZATION = "1.11.0"
     const val DATETIME = "0.8.0"
     const val MATERIAL_KOLOR = "5.0.0"
