@@ -55,6 +55,14 @@ import kotlinx.datetime.toLocalDateTime
 
 import jp.girky.wf_noctuahub.ui.pages.VersionHistoryPage
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.core.tween
+
 enum class SettingsSubPage {
   MAIN,
   APPEARANCE,
@@ -79,6 +87,11 @@ fun SettingsPage(
 
   var currentSubPage by remember { mutableStateOf(SettingsSubPage.MAIN) }
   var showDeleteConfirmDialog by remember { mutableStateOf(false) }
+
+  // サブページ切り替え時にスクロール位置を最上部にリセット
+  LaunchedEffect(currentSubPage) {
+    scrollState.scrollTo(0)
+  }
 
   // サブページが開いている場合は、戻るボタンでメイン設定画面に戻る
   BackHandler(enabled = currentSubPage != SettingsSubPage.MAIN) {
@@ -146,7 +159,25 @@ fun SettingsPage(
       }
     }
 
-    when (currentSubPage) {
+    AnimatedContent(
+      targetState = currentSubPage,
+      transitionSpec = {
+        val isGoingToSubPage = targetState != SettingsSubPage.MAIN
+        if (isGoingToSubPage) {
+          // 詳細設定へ進む (右方向のアニメーション: 右から左へスライドイン + フェード)
+          (slideInHorizontally(animationSpec = tween(300)) { width -> width / 3 } + fadeIn(animationSpec = tween(300)))
+            .togetherWith(slideOutHorizontally(animationSpec = tween(300)) { width -> -width / 3 } + fadeOut(animationSpec = tween(200)))
+        } else {
+          // メイン設定に戻る (左方向のアニメーション: 左から右へスライドイン + フェード)
+          (slideInHorizontally(animationSpec = tween(300)) { width -> -width / 3 } + fadeIn(animationSpec = tween(300)))
+            .togetherWith(slideOutHorizontally(animationSpec = tween(300)) { width -> width / 3 } + fadeOut(animationSpec = tween(200)))
+        }
+      }
+    ) { subPage ->
+      Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+      ) {
+        when (subPage) {
       SettingsSubPage.MAIN -> {
         // 設定トップ画面
         SectionTitle(title = "設定")
@@ -825,4 +856,6 @@ fun SettingsPage(
       }
     }
   }
+}
+}
 }
