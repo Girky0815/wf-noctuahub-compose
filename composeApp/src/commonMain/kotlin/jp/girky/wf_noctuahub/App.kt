@@ -41,6 +41,13 @@ import androidx.compose.material.icons.rounded.CalendarToday
 import androidx.compose.material.icons.rounded.Repeat
 import jp.girky.wf_noctuahub.ui.pages.SettingsPage
 import jp.girky.wf_noctuahub.data.repository.AppSettings
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.core.tween
 import com.russhwolf.settings.ObservableSettings
 import com.russhwolf.settings.Settings
 import jp.girky.wf_noctuahub.ui.pages.StatusPage
@@ -139,14 +146,26 @@ fun App() {
 
   val screenHistory = remember { mutableStateListOf(Screen.Status) }
   val currentScreen = screenHistory.lastOrNull() ?: Screen.Status
+  var isNavigatingBack by remember { mutableStateOf(false) }
 
   val navigateTo: (Screen) -> Unit = { screen ->
     if (screen == Screen.Status) {
+      isNavigatingBack = true
       screenHistory.clear()
       screenHistory.add(Screen.Status)
     } else {
       if (screenHistory.lastOrNull() != screen) {
-        screenHistory.add(screen)
+        val indexInHistory = screenHistory.indexOf(screen)
+        if (indexInHistory != -1) {
+          isNavigatingBack = true
+          // 履歴に既に存在する場合はその位置まで戻す
+          while (screenHistory.size > indexInHistory + 1) {
+            screenHistory.removeAt(screenHistory.lastIndex)
+          }
+        } else {
+          isNavigatingBack = false
+          screenHistory.add(screen)
+        }
       }
     }
   }
@@ -154,6 +173,7 @@ fun App() {
   val appExiter = rememberAppExiter()
   BackHandler(enabled = true) {
     if (screenHistory.size > 1) {
+      isNavigatingBack = true
       screenHistory.removeAt(screenHistory.lastIndex)
     } else {
       appExiter()
@@ -537,118 +557,134 @@ fun App() {
           }
         }
       } else {
-      when (currentScreen) {
-        Screen.Status -> {
-        val cetusOffset by appSettings.cetusOffsetFlow.collectAsState(0)
-        val vallisOffset by appSettings.vallisOffsetFlow.collectAsState(0)
-        StatusPage(
-          worldState = worldState,
-          cetusOffset = cetusOffset,
-          vallisOffset = vallisOffset,
-          onLocalize = { viewModel.localize(it) }
-        )
-        }
-        Screen.News -> {
-        NewsPage(
-          events = worldState?.events,
-          onLocalize = { viewModel.localize(it) }
-        )
-        }
-        Screen.Events -> {
-        EventsPage(
-          worldState = worldState,
-          onLocalize = { viewModel.localize(it) }
-        )
-        }
-        Screen.Links -> {
-        LinksPage()
-        }
-        Screen.Fissures -> {
-        FissuresPage(
-          worldState = worldState,
-          onLocalize = { viewModel.localize(it) },
-          onGetRegionInfo = { viewModel.getRegionInfo(it) }
-        )
-        }
-        Screen.Nightwave -> {
-        NightwavePage(
-          worldState = worldState,
-          onTranslateNightwave = { Translations.translateNightwaveChallenge(it) }
-        )
-        }
-        Screen.Sortie -> {
-        SortiePage(
-          worldState = worldState,
-          onLocalize = { viewModel.localize(it) },
-          onGetRegionInfo = { viewModel.getRegionInfo(it) }
-        )
-        }
-        Screen.Baro -> {
-        BaroPage(
-          worldState = worldState,
-          onLocalize = { viewModel.localize(it) },
-          onGetModDescription = { viewModel.getModDescription(it) },
-          onGetModCompat = { viewModel.getModCompat(it) }
-        )
-        }
-        Screen.Resurgence -> {
-        ResurgencePage(
-          worldState = worldState,
-          onLocalize = { viewModel.localize(it) }
-        )
-        }
-        Screen.Calendar1999 -> {
-        val showRawPaths by viewModel.repository.showRawPathsFlow.collectAsState(false)
-        Calendar1999Page(
-          worldState = worldState,
-          onLocalize = { viewModel.localize(it) },
-          showRawPaths = showRawPaths
-        )
-        }
-        Screen.Circuit -> {
-        CircuitPage(
-          worldState = worldState,
-          onLocalize = { viewModel.localize(it) }
-        )
-        }
-        Screen.ArchonHunt -> {
-        ArchonHuntPage(
-          worldState = worldState,
-          onLocalize = { viewModel.localize(it) },
-          onGetRegionInfo = { viewModel.getRegionInfo(it) }
-        )
-        }
-        Screen.Descendia -> {
-        DescendiaPage(
-          worldState = worldState,
-          onLocalize = { viewModel.localize(it) }
-        )
-        }
-        Screen.Archimedea -> {
-        ArchimedeaPage(
-          worldState = worldState,
-          onLocalize = { viewModel.localize(it) }
-        )
-        }
-        Screen.Settings -> {
-        SettingsPage(
-          appSettings = appSettings,
-          worldState = worldState,
-          errorMessage = errorMessage,
-          fetchState = fetchState,
-          onNavigateToUpdate = { navigateTo(Screen.Update) }
-        )
-        }
-        Screen.Update -> {
-        jp.girky.wf_noctuahub.ui.pages.UpdatePage(
-          onBack = {
-            if (screenHistory.size > 1) {
-              screenHistory.removeAt(screenHistory.lastIndex)
-            } else {
-              navigateTo(Screen.Settings)
-            }
+      AnimatedContent(
+        targetState = currentScreen,
+        transitionSpec = {
+          val isForward = if (isNavigatingBack) false else (targetState.ordinal > initialState.ordinal)
+          if (isForward) {
+            // 下層へ進む / 右側メニューへ移動（右から左へスライドイン + フェード）
+            (slideInHorizontally(animationSpec = tween(300)) { width -> width / 5 } + fadeIn(animationSpec = tween(300)))
+              .togetherWith(slideOutHorizontally(animationSpec = tween(300)) { width -> -width / 5 } + fadeOut(animationSpec = tween(200)))
+          } else {
+            // 上層へ戻る / 左側メニューへ移動（左から右へスライドイン + フェード）
+            (slideInHorizontally(animationSpec = tween(300)) { width -> -width / 5 } + fadeIn(animationSpec = tween(300)))
+              .togetherWith(slideOutHorizontally(animationSpec = tween(300)) { width -> width / 5 } + fadeOut(animationSpec = tween(200)))
           }
-        )
+        }
+      ) { targetScreen ->
+        when (targetScreen) {
+          Screen.Status -> {
+            val cetusOffset by appSettings.cetusOffsetFlow.collectAsState(0)
+            val vallisOffset by appSettings.vallisOffsetFlow.collectAsState(0)
+            StatusPage(
+              worldState = worldState,
+              cetusOffset = cetusOffset,
+              vallisOffset = vallisOffset,
+              onLocalize = { viewModel.localize(it) }
+            )
+          }
+          Screen.News -> {
+            NewsPage(
+              events = worldState?.events,
+              onLocalize = { viewModel.localize(it) }
+            )
+          }
+          Screen.Events -> {
+            EventsPage(
+              worldState = worldState,
+              onLocalize = { viewModel.localize(it) }
+            )
+          }
+          Screen.Links -> {
+            LinksPage()
+          }
+          Screen.Fissures -> {
+            FissuresPage(
+              worldState = worldState,
+              onLocalize = { viewModel.localize(it) },
+              onGetRegionInfo = { viewModel.getRegionInfo(it) }
+            )
+          }
+          Screen.Nightwave -> {
+            NightwavePage(
+              worldState = worldState,
+              onTranslateNightwave = { Translations.translateNightwaveChallenge(it) }
+            )
+          }
+          Screen.Sortie -> {
+            SortiePage(
+              worldState = worldState,
+              onLocalize = { viewModel.localize(it) },
+              onGetRegionInfo = { viewModel.getRegionInfo(it) }
+            )
+          }
+          Screen.Baro -> {
+            BaroPage(
+              worldState = worldState,
+              onLocalize = { viewModel.localize(it) },
+              onGetModDescription = { viewModel.getModDescription(it) },
+              onGetModCompat = { viewModel.getModCompat(it) }
+            )
+          }
+          Screen.Resurgence -> {
+            ResurgencePage(
+              worldState = worldState,
+              onLocalize = { viewModel.localize(it) }
+            )
+          }
+          Screen.Calendar1999 -> {
+            val showRawPaths by viewModel.repository.showRawPathsFlow.collectAsState(false)
+            Calendar1999Page(
+              worldState = worldState,
+              onLocalize = { viewModel.localize(it) },
+              showRawPaths = showRawPaths
+            )
+          }
+          Screen.Circuit -> {
+            CircuitPage(
+              worldState = worldState,
+              onLocalize = { viewModel.localize(it) }
+            )
+          }
+          Screen.ArchonHunt -> {
+            ArchonHuntPage(
+              worldState = worldState,
+              onLocalize = { viewModel.localize(it) },
+              onGetRegionInfo = { viewModel.getRegionInfo(it) }
+            )
+          }
+          Screen.Descendia -> {
+            DescendiaPage(
+              worldState = worldState,
+              onLocalize = { viewModel.localize(it) }
+            )
+          }
+          Screen.Archimedea -> {
+            ArchimedeaPage(
+              worldState = worldState,
+              onLocalize = { viewModel.localize(it) }
+            )
+          }
+          Screen.Settings -> {
+            SettingsPage(
+              appSettings = appSettings,
+              worldState = worldState,
+              errorMessage = errorMessage,
+              fetchState = fetchState,
+              onNavigateToUpdate = { navigateTo(Screen.Update) }
+            )
+          }
+          Screen.Update -> {
+            jp.girky.wf_noctuahub.ui.pages.UpdatePage(
+              onBack = {
+                if (screenHistory.size > 1) {
+                  screenHistory.removeAt(screenHistory.lastIndex)
+                } else {
+                  navigateTo(Screen.Settings)
+                }
+              }
+            )
+          }
         }
       }
       }
