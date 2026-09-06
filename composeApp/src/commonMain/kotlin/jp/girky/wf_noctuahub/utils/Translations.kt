@@ -628,6 +628,7 @@ object Translations {
   "SeasonDailyCollectCredits" to Pair("貯蓄家", "合計 15,000 Cr を拾う"),
   "SeasonDailyTwoForOne" to Pair("一石二鳥", "1回の弓矢での攻撃で2体以上の敵を倒す"),
   "SeasonDailyInteractWithPet" to Pair("忠誠心", "作戦拠点でペットと触れ合う"),
+  "SeasonDailyArtist" to Pair("芸術家", "装備のカラーをカスタマイズする"),
 
   "SeasonDailyVisitFeaturedDojo" to Pair("旅行目的", "特選Dojoを訪れる"),
   "SeasonDailyDeployAirSupport" to Pair("風通し良好", "エアリアルサポートチャージを展開する"),
@@ -663,6 +664,7 @@ object Translations {
   "SeasonWeeklyCompleteKuva" to Pair("死神を恐れるな", "クバサイフォンミッションを3回クリアする"),
   "SeasonWeeklyIDecree" to Pair("我が命ず", "1回のデュヴィリセッションまたはサーキットで布告を15個集める"),
   "SeasonWeeklyIsolationBounties" to Pair("隔離庫ハンター", "ダイモスのカンビオン荒地で隔離庫依頼をクリアする"),
+  "SeasonWeeklyFeedHelminth" to Pair("獣への餌付け", "Helminth へ素材を与える"),
 
   // エリートウィークリー
   "SeasonWeeklyEliteCompleteMission" to Pair("完璧な", "ミッションを1回完了する"),
@@ -685,6 +687,7 @@ object Translations {
   "SeasonWeeklyHardIndexWinStreak" to Pair("デイ・トレーダー", "インデックスで敵にスコアを取らせずに3回連続で勝利する"),
   "SeasonWeeklyHardAntiquarian" to Pair("好古家", "Lith/Meso/Neo/Axi の各エラのレリックを解放する"),
   "SeasonWeeklyHardKillExploiterOrb" to Pair("利益こそ正義", "エクスプロイターオーブを倒す"),
+  "SeasonWeeklyHardZarimanBountyHunter" to Pair("Zariman 賞金稼ぎ", "Zariman で依頼ミッションを4個クリアする"),
   )
 
   fun translateNightwaveChallenge(challenge: String): Pair<String, String> {
@@ -1061,8 +1064,8 @@ object Translations {
     "SHOTGUN" to "ショットガン",
     "PISTOL" to "ピストル",
     "ARCHWING" to "アークウイング",
-    "ARCH-GUN" to "アークガン",
-    "ARCH-MELEE" to "アーク近接",
+    "ARCH-GUN" to "AKガン",
+    "ARCH-MELEE" to "AK近接",
     "SENTINEL" to "センチネル/ペット",
     "COMPANION" to "コンパニオン",
     "STANCE" to "スタンス",
@@ -1072,8 +1075,8 @@ object Translations {
     "EXILUS" to "エクシラス",
     "K-DRIVE" to "K-ドライブ",
     "AMP" to "アンプ",
-    "ARCHGUN" to "アークガン",
-    "ARCHMELEE" to "アーク近接"
+    "ARCHGUN" to "AKガン",
+    "ARCHMELEE" to "AK近接"
   )
 
   /**
