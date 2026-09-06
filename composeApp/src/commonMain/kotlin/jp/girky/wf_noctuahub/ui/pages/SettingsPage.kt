@@ -36,6 +36,7 @@ import jp.girky.wf_noctuahub.data.repository.AppSettings
 import jp.girky.wf_noctuahub.utils.ThemeMode
 import jp.girky.wf_noctuahub.utils.AppThemeStyle
 import jp.girky.wf_noctuahub.utils.AppThemeContrast
+import jp.girky.wf_noctuahub.utils.AppHaptics
 import jp.girky.wf_noctuahub.platform.BackupRestoreButtons
 import kotlinx.coroutines.launch
 import jp.girky.wf_noctuahub.ui.components.ui.ExpressiveButtonGroup
@@ -74,12 +75,13 @@ enum class SettingsSubPage {
 
 @Composable
 fun SettingsPage(
-  appSettings: AppSettings,
-  worldState: WorldStateResponse? = null,
-  errorMessage: String? = null,
-  fetchState: FetchState = FetchState.SUCCESS,
-  onNavigateToUpdate: () -> Unit = {},
-  modifier: Modifier = Modifier
+    appSettings: AppSettings,
+    appHaptics: AppHaptics,
+    worldState: WorldStateResponse? = null,
+    errorMessage: String? = null,
+    fetchState: FetchState = FetchState.SUCCESS,
+    onNavigateToUpdate: () -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
   val scrollState = rememberScrollState()
   val coroutineScope = rememberCoroutineScope()
@@ -654,7 +656,8 @@ fun SettingsPage(
                 parts[0].trim() to parts[1].trim()
               }
               appSettings.importSettingsFromMap(map)
-            }
+            },
+            appHaptics = appHaptics
           )
 
           HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = MaterialTheme.colorScheme.outlineVariant)

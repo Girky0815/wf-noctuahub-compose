@@ -83,6 +83,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import jp.girky.wf_noctuahub.platform.BackHandler
 import jp.girky.wf_noctuahub.platform.rememberAppExiter
+import jp.girky.wf_noctuahub.utils.rememberAppHaptics
+import jp.girky.wf_noctuahub.utils.AppHaptics
 
 enum class Screen(val route: String, val icon: androidx.compose.ui.graphics.vector.ImageVector, val label: String) {
   Status("status", Icons.Rounded.Dashboard, "ステータス"),
@@ -111,6 +113,7 @@ fun App() {
     val s = jp.girky.wf_noctuahub.data.repository.createSettings()
     jp.girky.wf_noctuahub.data.repository.AppSettings(s) 
   }
+  val appHaptics = rememberAppHaptics(appSettings)
   
   val themeMode by appSettings.themeModeFlow.collectAsState(jp.girky.wf_noctuahub.utils.ThemeMode.SYSTEM_DEFAULT)
   val seedColorArgb by appSettings.seedColorFlow.collectAsState(0xFF6750A4.toInt())
@@ -283,6 +286,19 @@ fun App() {
 
   val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
+  // メニュー（ドロワー）開閉時のハプティクス
+  var lastDrawerTarget by remember { mutableStateOf(drawerState.targetValue) }
+  LaunchedEffect(drawerState.targetValue) {
+    if (lastDrawerTarget != drawerState.targetValue) {
+      if (drawerState.targetValue == DrawerValue.Open) {
+        appHaptics.triggerMenuOpen()
+      } else {
+        appHaptics.triggerMenuClose()
+      }
+      lastDrawerTarget = drawerState.targetValue
+    }
+  }
+
   Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.surfaceContainerHigh) {
     ModalNavigationDrawer(
     drawerState = drawerState,
@@ -327,10 +343,7 @@ fun App() {
             ) 
           },
           containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
-          onClick = {
-            navigateTo(screen)
-            coroutineScope.launch { drawerState.close() }
-          }
+          onClick = { appHaptics.triggerToggle(isOn = true); navigateTo(screen); coroutineScope.launch { drawerState.close() } }
           )
         }
         }
@@ -445,7 +458,7 @@ fun App() {
           ) 
           },
           selected = isSelected,
-          onClick = { navigateTo(screen) },
+          onClick = { appHaptics.triggerToggle(isOn = true); navigateTo(screen) },
           colors = androidx.compose.material3.NavigationBarItemDefaults.colors(
           selectedIconColor = MaterialTheme.colorScheme.primary,
           selectedTextColor = MaterialTheme.colorScheme.primary,
@@ -461,6 +474,27 @@ fun App() {
     @OptIn(ExperimentalMaterial3Api::class)
     val pullState = androidx.compose.material3.pulltorefresh.rememberPullToRefreshState()
     val isRefreshingState = fetchState == FetchState.LOADING_WORLDSTATE || fetchState == FetchState.LOADING_EXPORT
+
+    // Pull-To-Refresh のしきい値到達時のハプティクス
+    var hasTriggeredThresholdHaptic by remember { mutableStateOf(false) }
+    LaunchedEffect(pullState.distanceFraction) {
+      if (pullState.distanceFraction >= 1f && !hasTriggeredThresholdHaptic && !isRefreshingState) {
+        appHaptics.triggerPullRefreshThreshold()
+        hasTriggeredThresholdHaptic = true
+      } else if (pullState.distanceFraction < 0.1f) {
+        hasTriggeredThresholdHaptic = false
+      }
+    }
+
+    // Pull-To-Refresh の更新完了時のハプティクス
+    var wasRefreshing by remember { mutableStateOf(false) }
+    LaunchedEffect(isRefreshingState) {
+      if (wasRefreshing && !isRefreshingState && fetchState == FetchState.SUCCESS) {
+        appHaptics.triggerPullRefreshComplete()
+      }
+      wasRefreshing = isRefreshingState
+    }
+
     @OptIn(ExperimentalMaterial3Api::class)
     androidx.compose.material3.pulltorefresh.PullToRefreshBox(
       state = pullState,
@@ -668,6 +702,7 @@ fun App() {
           Screen.Settings -> {
             SettingsPage(
               appSettings = appSettings,
+              appHaptics = appHaptics,
               worldState = worldState,
               errorMessage = errorMessage,
               fetchState = fetchState,

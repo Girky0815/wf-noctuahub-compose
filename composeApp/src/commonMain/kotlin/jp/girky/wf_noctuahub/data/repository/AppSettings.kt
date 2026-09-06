@@ -60,6 +60,28 @@ class AppSettings(private val pref: ObservableSettings) {
   val vallisOffsetFlow: Flow<Int> = getIntFlow("vallis_offset", 0)
   val showRawPathsFlow: Flow<Boolean> = getBooleanFlow("show_raw_paths", false)
 
+  // ハプティクス設定
+  val hapticsEnabledFlow: Flow<Boolean> = getBooleanFlow("haptics_enabled", true)
+  val hapticsPullToRefreshEnabledFlow: Flow<Boolean> = getBooleanFlow("haptics_pull_refresh_enabled", true)
+  val hapticsToggleEnabledFlow: Flow<Boolean> = getBooleanFlow("haptics_toggle_enabled", true)
+  val hapticsMenuEnabledFlow: Flow<Boolean> = getBooleanFlow("haptics_menu_enabled", true)
+
+  fun setHapticsEnabled(enabled: Boolean) {
+    pref.putBoolean("haptics_enabled", enabled)
+  }
+
+  fun setHapticsPullToRefreshEnabled(enabled: Boolean) {
+    pref.putBoolean("haptics_pull_refresh_enabled", enabled)
+  }
+
+  fun setHapticsToggleEnabled(enabled: Boolean) {
+    pref.putBoolean("haptics_toggle_enabled", enabled)
+  }
+
+  fun setHapticsMenuEnabled(enabled: Boolean) {
+    pref.putBoolean("haptics_menu_enabled", enabled)
+  }
+
   fun setShowRawPaths(enabled: Boolean) {
     pref.putBoolean("show_raw_paths", enabled)
   }
@@ -116,7 +138,11 @@ class AppSettings(private val pref: ObservableSettings) {
       "theme_style" to pref.getString("theme_style", AppThemeStyle.TONAL_SPOT.name),
       "theme_contrast" to pref.getString("theme_contrast", AppThemeContrast.MEDIUM.name),
       "cetus_offset" to pref.getInt("cetus_offset", 0).toString(),
-      "vallis_offset" to pref.getInt("vallis_offset", 0).toString()
+      "vallis_offset" to pref.getInt("vallis_offset", 0).toString(),
+      "haptics_enabled" to pref.getBoolean("haptics_enabled", true).toString(),
+      "haptics_pull_refresh_enabled" to pref.getBoolean("haptics_pull_refresh_enabled", true).toString(),
+      "haptics_toggle_enabled" to pref.getBoolean("haptics_toggle_enabled", true).toString(),
+      "haptics_menu_enabled" to pref.getBoolean("haptics_menu_enabled", true).toString()
     )
   }
 
@@ -134,6 +160,10 @@ class AppSettings(private val pref: ObservableSettings) {
     }
     map["cetus_offset"]?.toIntOrNull()?.let { setCetusOffset(it) }
     map["vallis_offset"]?.toIntOrNull()?.let { setVallisOffset(it) }
+    map["haptics_enabled"]?.toBooleanStrictOrNull()?.let { setHapticsEnabled(it) }
+    map["haptics_pull_refresh_enabled"]?.toBooleanStrictOrNull()?.let { setHapticsPullToRefreshEnabled(it) }
+    map["haptics_toggle_enabled"]?.toBooleanStrictOrNull()?.let { setHapticsToggleEnabled(it) }
+    map["haptics_menu_enabled"]?.toBooleanStrictOrNull()?.let { setHapticsMenuEnabled(it) }
   }
 
   fun clearSettings() {

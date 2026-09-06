@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import java.awt.FileDialog
 import java.awt.Frame
-import java.io.File
+import jp.girky.wf_noctuahub.utils.AppHaptics
 
 @Composable
 actual fun BackupRestoreButtons(

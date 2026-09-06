@@ -2,6 +2,7 @@ package jp.girky.wf_noctuahub.platform
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import jp.girky.wf_noctuahub.utils.AppHaptics
 
 /**
  * プラットフォーム固有のファイルピッカーを利用してバックアップ・復元を行うUIコンポーネント。
@@ -12,5 +13,6 @@ import androidx.compose.ui.Modifier
 expect fun BackupRestoreButtons(
   modifier: Modifier = Modifier,
   onExport: suspend () -> String,
-  onImport: suspend (String) -> Unit
+  onImport: suspend (String) -> Unit,
+  appHaptics: AppHaptics
 )

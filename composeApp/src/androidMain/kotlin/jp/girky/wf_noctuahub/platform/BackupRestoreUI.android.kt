@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import jp.girky.wf_noctuahub.utils.AppHaptics
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -19,7 +20,8 @@ import java.io.OutputStream
 actual fun BackupRestoreButtons(
   modifier: Modifier,
   onExport: suspend () -> String,
-  onImport: suspend (String) -> Unit
+  onImport: suspend (String) -> Unit,
+  appHaptics: AppHaptics
 ) {
   val context = LocalContext.current
   val coroutineScope = rememberCoroutineScope()
