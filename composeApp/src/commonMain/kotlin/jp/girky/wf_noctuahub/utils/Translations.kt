@@ -77,7 +77,9 @@ object Translations {
   "NakakPearl" to "Nakak 真珠",
   "NakakPearls" to "Nakak 真珠",
   "WaterFightBucks" to "Nakak 真珠",
-  "WaterFightBuck" to "Nakak 真珠"
+  "WaterFightBuck" to "Nakak 真珠",
+  "UmbraFormaBlueprint" to "Umbra フォーマ設計図",
+  "RivenIdentifier" to "ベール Riven サイファー",
   )
 
   // 敵勢力の日本語訳
@@ -608,10 +610,10 @@ object Translations {
   "SeasonDailyKillEnemiesWithViral" to Pair("バズれ", "敵を150体感染属性で倒す"),
   "SeasonDailyKillEnemiesWithCorrosive" to Pair("メルトダウン", "敵を150体腐食属性で倒す"),
   "SeasonDailyKillEnemiesWithBlast" to Pair("爆弾魔", "敵を150体爆発属性で倒す"),
-  "SeasonDailyKillEnemiesWithCold" to Pair("急速冷凍", "敵を150体冷気属性で倒す"),
+  "SeasonDailyKillEnemiesWithFreeze" to Pair("急速冷凍", "敵を150体冷気属性で倒す"),
   "SeasonDailyKillEnemiesWithElectricity" to Pair("回路のショート", "敵を150体電気属性で倒す"),
   "SeasonDailyKillEnemiesWithFire" to Pair("放火魔", "敵を150体火炎属性で倒す"),
-  "SeasonDailyKillEnemiesWithToxin" to Pair("毒殺者", "敵を150体毒属性で倒す"),
+  "SeasonDailyKillEnemiesWithPoison" to Pair("毒殺者", "敵を150体毒属性で倒す"),
   "SeasonDailyKillEnemiesWithMagnetic" to Pair("引き寄せる力", "敵を150体磁気属性で倒す"),
   "SeasonDailyKillEnemiesWithRadiation" to Pair("原子炉", "敵を150体放射線属性で倒す"),
   "SeasonDailyKillEnemiesWithGas" to Pair("バイオハザード", "敵を150体ガス属性で倒す"),
@@ -742,7 +744,7 @@ object Translations {
     
     // ヘックスファクター (条件発動効果)
     "FinisherChancePerComboMultiplier" to Pair("コンボキラー", "コンボ倍率は、近接攻撃後に敵がフィニッシャー待機状態になる確率を高める。コンボ倍率ごとに5%増加し、Venka Primeの場合は最大65%まで上昇する。"),
-    "HeavyJavelin" to Pair("ヘビージャベリン", "ヘビー近接攻撃は、3m範囲で1000ダメージ（コンボ倍率で変動）与えるRadial Javelinを発動する。"),
+    "RadialJavelinOnHeavy" to Pair("ヘビージャベリン", "ヘビー近接攻撃は、3m範囲で1000ダメージ（コンボ倍率で変動）与えるRadial Javelinを発動する。"),
     "SliceAndDice" to Pair("スライス＆ダイス", "近接スライディング攻撃は、スライディング攻撃のクリティカル確率を5%、スライディング速度を20%増加させ、スライディング近接攻撃ごとに10秒間スライディング摩擦を10%減少させる。最大10まで重複。"),
     "EnergyWavesOnCombo" to Pair("コンボウェーブ", "コンボ倍率が7倍になると、すべての近接攻撃はエネルギー波を放つ。"),
     "MoreTheMerrier" to Pair("大は小を兼ねる", "20m以内の非テンノの味方全員が、範囲内の味方ごとに近接攻撃速度5%と発射速度20%を得る。"),
