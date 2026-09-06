@@ -10,13 +10,15 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import java.awt.FileDialog
 import java.awt.Frame
+import java.io.File
 import jp.girky.wf_noctuahub.utils.AppHaptics
 
 @Composable
 actual fun BackupRestoreButtons(
   modifier: Modifier,
   onExport: suspend () -> String,
-  onImport: suspend (String) -> Unit
+  onImport: suspend (String) -> Unit,
+  appHaptics: AppHaptics
 ) {
   val coroutineScope = rememberCoroutineScope()
 
