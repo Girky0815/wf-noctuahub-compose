@@ -667,6 +667,7 @@ object Translations {
   "SeasonWeeklyIDecree" to Pair("我が命ず", "1回のデュヴィリセッションまたはサーキットで布告を15個集める"),
   "SeasonWeeklyIsolationBounties" to Pair("隔離庫ハンター", "ダイモスのカンビオン荒地で隔離庫依頼をクリアする"),
   "SeasonWeeklyFeedHelminth" to Pair("獣への餌付け", "Helminth へ素材を与える"),
+  "SeasonWeeklyCompleteInvasionMissions" to Pair("侵略者", "侵略ミッションを6回クリアする"),
 
   // エリートウィークリー
   "SeasonWeeklyEliteCompleteMission" to Pair("完璧な", "ミッションを1回完了する"),
@@ -690,6 +691,8 @@ object Translations {
   "SeasonWeeklyHardAntiquarian" to Pair("好古家", "Lith/Meso/Neo/Axi の各エラのレリックを解放する"),
   "SeasonWeeklyHardKillExploiterOrb" to Pair("利益こそ正義", "エクスプロイターオーブを倒す"),
   "SeasonWeeklyHardZarimanBountyHunter" to Pair("Zariman 賞金稼ぎ", "Zariman で依頼ミッションを4個クリアする"),
+  "SeasonWeeklyHardBattleHardened" to Pair("熟練", "ペリタの乱ミッションで6つ以上の司令をクリアした状態で完了する"),
+  "SeasonWeeklyHardFallenAngel" to Pair("堕天使", "Zariman で Void 天使を3体倒す"),
   )
 
   fun translateNightwaveChallenge(challenge: String): Pair<String, String> {
@@ -736,7 +739,7 @@ object Translations {
     "GasChanceToPrimaryAndSecondary" to Pair("毒性弾", "プライマリ武器とセカンダリ武器は25%のガス状態異常確率を追加で得る。"),
     "PunchToPrimary" to Pair("パンチカード", "プライマリ武器の貫通距離を1.5m追加する。"),
     "EnergyRestoration" to Pair("エスプレッソショット", "エネルギー回復 +2EN/s"),
-    "RecoveryBoost" to Pair("救急医療", "オーブピックアップがもたらすすべての回復効果が25%増加する。"),
+    "HealingEffects" to Pair("救急医療", "オーブピックアップがもたらすすべての回復効果が25%増加する。"),
     "EnergyOrbToAbilityRange" to Pair("視野拡大", "エネルギーオーブ回収時10秒間、アビリティ範囲が10%増加する。"),
     "AbilityStrength" to Pair("パワーゲイン", "アビリティ威力+25%。"),
     "ElectricStatusDamageAndChance" to Pair("瓶詰めの稲妻", "すべての武器に25%の状態異常ダメージと電気状態異常確率を追加する。"),
@@ -756,14 +759,14 @@ object Translations {
     "RefundBulletOnStatusProc" to Pair("フリーショット", "状態異常を引き起こすと、10%の確率で起こした状態異常の弾丸をマガジンに充填する。"),
     "TrickShot" to Pair("トリックショット", "弾がヒットする度に、追尾弾を発射する確率が10%増加する。発砲する度に追尾弾確率は5%低下する。"),
     "MagneticMenace" to Pair("磁気の脅威", "アビリティを5回使うたびに前方50m以内の敵は磁気状態異常を受ける。"),
-    "SharingIsCaring" to Pair("分け合いは大事", "アビリティを10回発動するたびに、自身と味方が次に発動するアビリティのコストを0にする。"),
+    "SharedFreeAbilityEveryXCasts" to Pair("分け合いは大事", "アビリティを10回発動するたびに、自身と味方が次に発動するアビリティのコストを0にする。"),
     "Overpower" to Pair("圧倒的な力", "アビリティ発動時、アビリティの規定消費エネルギー単位ごとに、5秒間アビリティ威力が2%増加し、アビリティ効率が1%悪化する。上限：アビリティ威力 +150%、効率 -75%。"),
     "ForceOfAttraction" to Pair("引力", "磁気状態異常は、スタック毎1m範囲で周辺の敵を引き寄せる。"),
     "ElectricalDamageOnBulletJump" to Pair("ダイナモジャンプ", "バレットジャンプから着地後の5秒間は電気ダメージが50%増加する。"),
     "ElectricDamagePerDistance" to Pair("静電気蓄積", "移動距離1mごとに電気ダメージが付与される。攻撃時に蓄積した静電気の10%が消費される。"),
     "SpeedBuffsWhenAirborne" to Pair("フリークエントフライヤー特典", "空中では、リロード速度、発射速度、発動速度、近接攻撃速度が100%増加する。"),
     "HitAndSplit" to Pair("ヒット＆スプリット", "近接攻撃のクリティカルヒットは、確率で攻撃速度と移動速度を10秒間5%上昇させる。"),
-    "TargetedTherapeutics" to Pair("標的治療薬", "ヘルスオーブを撃つと回収できる。回収時にヘルスオーブは25%の確率で分裂する。"),
+    "OrbsDuplicateOnPickup" to Pair("標的治療薬", "ヘルスオーブを撃つと回収できる。回収時にヘルスオーブは25%の確率で分裂する。"),
     "GenerateOmniOrbsOnWeakKill" to Pair("強制輸血", "弱点への攻撃で敵を倒すとユニバーサルオーブが25%の確率で生成される。"),
     "ShieldRefill" to Pair("シールド充填", "エネルギーオーブは100シールドとオーバーシールドを与える。"),
     "BadMedicine" to Pair("悪い薬品", "ヘルスオーブは拾うと範囲10mの爆発を起こし、敵にダメージを与える。爆発に巻き込まれた敵一体につき30秒間50装甲値を得る。")
@@ -833,6 +836,7 @@ object Translations {
 
   val calendarRewards = mapOf(
     "CalendarKuvaBundleSmall" to "2,000 クバ",
+    "CalendarKuvaBundleLarge" to "6,000 クバ",
     "CalendarMajorArtifactPack" to "アルケインパック",
     "CalendarVosforPack" to "ヴォスフォル",
     "CalendarRivenPack" to "Riven MOD",
@@ -855,6 +859,7 @@ object Translations {
     "OrokinCatalystBlueprint" to "オロキンカタリストの設計図",
     "OrokinReactorBlueprint" to "オロキンリアクターの設計図",
     "CircuitSilverSteelPathFusionBundle" to "6,000 Endo",
+    
     
     // アルケイン
     "ArcaneBellicose" to "アルケイン ベリコーズ",
@@ -943,7 +948,8 @@ object Translations {
   "WaterFightEventName" to "ドッグ・デイズ",
   "/Lotus/Language/Events/WaterFightToolTip" to "ドッグ・デイズ",
   "/Lotus/Language/Events/WaterFightTitle" to "ドッグ・デイズ",
-  "/Lotus/Language/Events/WaterFight" to "ドッグ・デイズ"
+  "/Lotus/Language/Events/WaterFight" to "ドッグ・デイズ",
+  "InfestedPlains" to "疫病の星"
   )
 
   fun translateEvent(eventDescOrTag: String): String {
