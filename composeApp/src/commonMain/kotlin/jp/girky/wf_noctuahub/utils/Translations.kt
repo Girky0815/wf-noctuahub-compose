@@ -642,6 +642,7 @@ object Translations {
   "SeasonDailyDeployGlyph" to Pair("グラフィティ", "ギアメニューに「グリフプリズム」を装備し、ミッション中に使用してグリフを展開する"),
   "SeasonDailyKillEnemiesWithAbilities" to Pair("力の誇示", "アビリティで敵を150体倒す"),
   "SeasonDailySuspendFiveEnemies" to Pair("激突", "1回のヘビースラムで5体の敵を浮遊させる"),
+  "SeasonDailyPickUpEnergy" to Pair("精力満々", "エネルギーオーブを20個拾うか，オペレーター(漂流者)で20回Void Sling をしてエネルギーを盗む"),
 
   // ウィークリー (末尾の数字は関数側で動的に抽出するためキーからは除外)
   "SeasonWeeklyPermanentCompleteMissions" to Pair("ミッション完了", "ミッションを15回完了する"),
@@ -654,6 +655,7 @@ object Translations {
   "SeasonWeeklyCompleteClemMission" to Pair("良き友", "Clemの週ミッションを完了する"),
   "SeasonWeeklyCollector" to Pair("収集者", "デュヴィリで素材を100個集める"),
   "SeasonWeeklyCatchRareVenusFish" to Pair("金星の釣り人", "オーブ峡谷で3匹のレアなサーボ魚を捕まえる"),
+  "SeasonWeeklyMineRareVenusResources" to Pair("金星の採掘人", "オーブ峡谷でレア宝石か鉱石を3個採掘する"),
   "SeasonWeeklyNightAndDay" to Pair("昼と夜", "カンビオン荒地で Vome または Fass の残余を10個集める"),
   "SeasonWeeklyFinelyTuned" to Pair("調弦済み", "デュヴィリで異なる Shawzin の曲を3曲演奏する"),
   "SeasonWeeklyUnlockDragonVaults" to Pair("お宝収集", "ダイモス・遺跡船タイル(抹殺/防衛除く)でドラゴンキー貯蔵庫を4個解放する"),
@@ -668,6 +670,7 @@ object Translations {
   "SeasonWeeklyIsolationBounties" to Pair("隔離庫ハンター", "ダイモスのカンビオン荒地で隔離庫依頼をクリアする"),
   "SeasonWeeklyFeedHelminth" to Pair("獣への餌付け", "Helminth へ素材を与える"),
   "SeasonWeeklyCompleteInvasionMissions" to Pair("侵略者", "侵略ミッションを6回クリアする"),
+  "SeasonWeeklySniperOffense" to Pair("スナイパー攻撃", "スナイパーライフルで150体倒す"),
 
   // エリートウィークリー
   "SeasonWeeklyEliteCompleteMission" to Pair("完璧な", "ミッションを1回完了する"),
@@ -755,7 +758,7 @@ object Translations {
     "AtonementOpportunity" to Pair("つぐなう機会", "倒した敵は、状態異常のスタックごとに1%の確率で味方のスペクターとして復活する。スペクターは30秒間活動する。"),
     "CopyAndPaste" to Pair("コピー＆ペースト", "125エネルギーを消費するごとに、現在展開されているスペクターかコンパニオンのスペクトルクローンをランダムに生み出す。"),
     "BlastEveryXShots" to Pair("楽しんでこい", "10発ごとにヒット時爆発スタックが10追加される。"),
-    "CumulativeCartridges" to Pair("累積カートリッジ", "リロードするまで、ショットごとに状態異常確率が1%増加する。"),
+    "StatusChancePerAmmoSpent" to Pair("累積カートリッジ", "リロードするまで、ショットごとに状態異常確率が1%増加する。"),
     "RefundBulletOnStatusProc" to Pair("フリーショット", "状態異常を引き起こすと、10%の確率で起こした状態異常の弾丸をマガジンに充填する。"),
     "TrickShot" to Pair("トリックショット", "弾がヒットする度に、追尾弾を発射する確率が10%増加する。発砲する度に追尾弾確率は5%低下する。"),
     "MagneticMenace" to Pair("磁気の脅威", "アビリティを5回使うたびに前方50m以内の敵は磁気状態異常を受ける。"),
@@ -765,7 +768,7 @@ object Translations {
     "ElectricalDamageOnBulletJump" to Pair("ダイナモジャンプ", "バレットジャンプから着地後の5秒間は電気ダメージが50%増加する。"),
     "ElectricDamagePerDistance" to Pair("静電気蓄積", "移動距離1mごとに電気ダメージが付与される。攻撃時に蓄積した静電気の10%が消費される。"),
     "SpeedBuffsWhenAirborne" to Pair("フリークエントフライヤー特典", "空中では、リロード速度、発射速度、発動速度、近接攻撃速度が100%増加する。"),
-    "HitAndSplit" to Pair("ヒット＆スプリット", "近接攻撃のクリティカルヒットは、確率で攻撃速度と移動速度を10秒間5%上昇させる。"),
+    "AttackAndMovementSpeedOnCritMelee" to Pair("ヒット＆スプリット", "近接攻撃のクリティカルヒットは、確率で攻撃速度と移動速度を10秒間5%上昇させる。"),
     "OrbsDuplicateOnPickup" to Pair("標的治療薬", "ヘルスオーブを撃つと回収できる。回収時にヘルスオーブは25%の確率で分裂する。"),
     "GenerateOmniOrbsOnWeakKill" to Pair("強制輸血", "弱点への攻撃で敵を倒すとユニバーサルオーブが25%の確率で生成される。"),
     "ShieldRefill" to Pair("シールド充填", "エネルギーオーブは100シールドとオーバーシールドを与える。"),
@@ -783,10 +786,10 @@ object Translations {
     "CalendarKillEnemiesWithMeleeMedium" to Pair("刃にかけて (普通)", "150体の敵を近接武器で倒す"),
     "CalendarKillEnemiesWithMeleeHard" to Pair("刃にかけて (難しい)", "300体の敵を近接武器で倒す"),
 
-    // 力の照明 (Demonstration of Power)
-    "CalendarKillEnemiesWithAbilitiesEasy" to Pair("力の照明 (簡単)", "150体の敵をアビリティで倒す"),
-    "CalendarKillEnemiesWithAbilitiesMedium" to Pair("力の照明 (普通)", "300体の敵をアビリティで倒す"),
-    "CalendarKillEnemiesWithAbilitiesHard" to Pair("力の照明 (難しい)", "500体の敵をアビリティで倒す"),
+    // 力の証明 (Demonstration of Power)
+    "CalendarKillEnemiesWithAbilitiesEasy" to Pair("力の証明 (簡単)", "150体の敵をアビリティで倒す"),
+    "CalendarKillEnemiesWithAbilitiesMedium" to Pair("力の証明 (普通)", "300体の敵をアビリティで倒す"),
+    "CalendarKillEnemiesWithAbilitiesHard" to Pair("力の証明 (難しい)", "500体の敵をアビリティで倒す"),
 
     // エクスエクシマス (Ex-Eximus)
     "CalendarKillEximusEasy" to Pair("エクスエクシマス (簡単)", "10体のエクシマスを倒す"),
