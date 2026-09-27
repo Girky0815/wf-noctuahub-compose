@@ -548,7 +548,10 @@ object Translations {
   "UpperLimb" to "アッパーリム",
   "LowerLimb" to "ロアーリム",
   "Guard" to "ガード",
-  "Heatsink" to "ヒートシンク"
+  "Heatsink" to "ヒートシンク",
+  "Forma" to "フォーマ",
+  "OrokinReactor" to "オロキンリアクター",
+  "OrokinCatalyst" to "オロキンカタリスト",
   )
 
   val invasionMaterials = mapOf(
