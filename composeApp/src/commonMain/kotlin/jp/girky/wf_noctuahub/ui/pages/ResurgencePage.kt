@@ -35,10 +35,21 @@ fun ResurgencePage(
   val expiryString = expiryLong?.let { Instant.fromEpochMilliseconds(it).toString() }
   val manifest = resurgence.manifest ?: emptyList()
   
-  // Powersuits を含むものを Prime Warframe として抽出
+  // Sentinels または Pets を含むものを Prime コンパニオン として抽出
+  val primeCompanions = manifest.filter { item ->
+    val type = item.itemType ?: ""
+    type.contains("Sentinels", ignoreCase = true) ||
+      type.contains("KubrowPet", ignoreCase = true) ||
+      type.contains("CatbrowPet", ignoreCase = true) ||
+      type.contains("CreaturePets", ignoreCase = true)
+  }
+
+  // Powersuits を含むもののうち、コンパニオン（Sentinelsなど）を除外したものを Prime Warframe として抽出
   val primeWarframes = manifest.filter { item ->
     val type = item.itemType ?: ""
-    type.contains("Powersuits", ignoreCase = true)
+    type.contains("Powersuits", ignoreCase = true) &&
+      !type.contains("Sentinels", ignoreCase = true) &&
+      !type.contains("Pet", ignoreCase = true)
   }
 
   // Weapons を含むものを Prime 武器 として抽出
@@ -103,6 +114,32 @@ fun ResurgencePage(
               },
               onClick = {
                 val url = WikiUtils.getResurgenceWarframeUrl(name)
+                uriHandler.openUri(url)
+              }
+            )
+          }
+        }
+        Spacer(modifier = Modifier.height(24.dp))
+      }
+    }
+
+    if (primeCompanions.isNotEmpty()) {
+      item {
+        SectionTitle(title = "復活中の Prime コンパニオン", modifier = Modifier.padding(bottom = 8.dp))
+        ListGroup {
+          for (resItem in primeCompanions) {
+            val name = onLocalize(resItem.itemType ?: "")
+            ListTile(
+              title = name,
+              trailingContent = {
+                Icon(
+                  imageVector = Icons.Rounded.ChevronRight,
+                  contentDescription = "Wikiを開く",
+                  tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                )
+              },
+              onClick = {
+                val url = WikiUtils.getResurgenceCompanionUrl(name)
                 uriHandler.openUri(url)
               }
             )

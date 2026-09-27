@@ -39,6 +39,26 @@ object WikiUtils {
   }
 
   /**
+   * Prime Resurgence のコンパニオン（センチネル等）用 Wiki URL を生成する
+   * @param localizedName 表示名（例: "Helios Prime", "Shade Prime", "Nautilus Prime"）
+   * 規則: Nautilus Prime のみ "https://wikiwiki.jp/warframe/%E3%82%BB%E3%83%B3%E3%83%81%E3%83%8D%E3%83%AB#NautilusPrime"
+   * それ以外はすべて小文字にして末尾のスペースを除去（例: "heliosprime", "shadeprime"）
+   */
+  fun getResurgenceCompanionUrl(localizedName: String): String {
+    val cleanName = localizedName
+      .replace("(?i)\\s+Blueprint$".toRegex(), "")
+      .replace("(?i)\\s+設計図$".toRegex(), "")
+      .trim()
+
+    val anchor = if (cleanName.equals("Nautilus Prime", ignoreCase = true)) {
+      "NautilusPrime"
+    } else {
+      cleanName.replace(" ", "").lowercase()
+    }
+    return "https://wikiwiki.jp/warframe/%E3%82%BB%E3%83%B3%E3%83%81%E3%83%8D%E3%83%AB#$anchor"
+  }
+
+  /**
    * 武器用 Wiki URL を生成する
    * @param localizedName 表示名（例: "Prisma Grinlok"）
    * 規則: すべて大文字に変換し、空白は "%20"、「&」は全角「＆」(%EF%BC%86) に変換する
