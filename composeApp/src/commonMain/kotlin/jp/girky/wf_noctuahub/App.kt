@@ -299,7 +299,7 @@ fun App() {
     }
   }
 
-  Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.surfaceContainerHigh) {
+  Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.surfaceContainer) {
     ModalNavigationDrawer(
     drawerState = drawerState,
     drawerContent = {

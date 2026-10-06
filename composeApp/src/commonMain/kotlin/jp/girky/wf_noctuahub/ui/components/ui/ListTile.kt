@@ -82,7 +82,7 @@ fun ListTile(
 fun ListItem(
   modifier: Modifier = Modifier,
   containerColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.surfaceBright,
-  shape: androidx.compose.ui.graphics.Shape = RoundedCornerShape(4.dp),
+  shape: androidx.compose.ui.graphics.Shape = RoundedCornerShape(6.dp),
   onClick: (() -> Unit)? = null,
   content: @Composable ColumnScope.() -> Unit
 ) {
