@@ -15,7 +15,7 @@ class WarframeApiClient(private val platformInfo: String = "pc") {
 
   val client = HttpClient {
     install(io.ktor.client.plugins.UserAgent) {
-      agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 NoctuaHub/1.0"
+      agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
     }
     install(HttpTimeout) {
       requestTimeoutMillis = 60000
