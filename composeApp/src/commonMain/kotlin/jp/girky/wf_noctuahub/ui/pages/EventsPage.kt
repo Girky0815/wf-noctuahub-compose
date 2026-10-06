@@ -9,13 +9,96 @@ import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import jp.girky.wf_noctuahub.data.api.model.WorldStateResponse
-import jp.girky.wf_noctuahub.data.api.model.WsReward
+import jp.girky.wf_noctuahub.data.api.model.WsGoal
 import jp.girky.wf_noctuahub.ui.components.ui.ListItem
 import jp.girky.wf_noctuahub.utils.currentTimeMillis
 import jp.girky.wf_noctuahub.utils.Translations
 import kotlinx.coroutines.delay
+
+/**
+ * イベントの進捗バー表示タイプ
+ */
+enum class EventProgressType {
+  TIME_REMAINING, // 未定義/デフォルト: 残り時間に応じた進捗バー
+  PROGRESS,       // 達成度・討伐数などの進捗（Count / Goal）
+  HEALTH,         // 残り耐久力（Fomorian, Razorback など）
+  GHOUL_ACTIVITY  // グール活動レベル
+}
+
+/**
+ * イベント定義
+ * 今後イベントが追加された際は、このリストにキーワードや条件を追加することで
+ * 自力で容易に耐久度や進捗、カスタム表示を設定できます。
+ */
+data class EventCustomDefinition(
+  val keywords: List<String>,
+  val progressType: EventProgressType,
+  val customLabel: String? = null,
+  val hasInterimMilestones: Boolean = false,
+  val isHealthTypeImmediateRemoval: Boolean = false
+)
+
+object EventDefinitions {
+  /**
+   * 個別定義されたイベント設定リスト。
+   * 新しいイベントが追加された場合は、ここに定義を追加・更新してください。
+   */
+  val definitions = listOf(
+    // グール粛清
+    EventCustomDefinition(
+      keywords = listOf("ghoul"),
+      progressType = EventProgressType.GHOUL_ACTIVITY,
+      customLabel = "グール活動レベル"
+    ),
+    // 獣の巣窟作戦 (Jade Shadows / Belly of the Beast)
+    EventCustomDefinition(
+      keywords = listOf("jadeshadows", "belly"),
+      progressType = EventProgressType.PROGRESS,
+      hasInterimMilestones = true
+    ),
+    // サーミアの裂け目
+    EventCustomDefinition(
+      keywords = listOf("heatfissures", "heatfissure"),
+      progressType = EventProgressType.PROGRESS
+    ),
+    // ドッグ・デイズ
+    EventCustomDefinition(
+      keywords = listOf("waterfight", "dogdays", "dog days"),
+      progressType = EventProgressType.PROGRESS
+    ),
+    // 耐久型イベント: Razorback Armada / フォーモリアン戦艦の脅威
+    EventCustomDefinition(
+      keywords = listOf("razorback", "fomorian"),
+      progressType = EventProgressType.HEALTH,
+      customLabel = "残り耐久力",
+      isHealthTypeImmediateRemoval = true
+    )
+  )
+
+  /**
+   * イベントのDesc, Tag, ToolTipから該当するイベント定義を検索
+   */
+  fun findDefinition(goal: WsGoal): EventCustomDefinition? {
+    val textSources = listOfNotNull(goal.desc, goal.tag, goal.toolTip).map { it.lowercase() }
+    return definitions.firstOrNull { def ->
+      def.keywords.any { keyword ->
+        val kwLower = keyword.lowercase()
+        textSources.any { it.contains(kwLower) }
+      }
+    }
+  }
+
+  /**
+   * 耐久値0%で即座に除外すべきイベントかどうかを判定
+   */
+  fun isHealthType(goal: WsGoal): Boolean {
+    val def = findDefinition(goal)
+    return def?.isHealthTypeImmediateRemoval == true
+  }
+}
 
 @Composable
 fun EventsPage(
@@ -89,13 +172,7 @@ fun EventsPage(
       }
 
       // 2. 耐久型イベントの耐久値0%による即時削除
-      val descLower = eventGoal.desc?.lowercase() ?: ""
-      val tagLower = eventGoal.tag?.lowercase() ?: ""
-      val isHealthType = descLower.contains("razorback") || 
-                         descLower.contains("fomorian") || 
-                         tagLower.contains("razorback") || 
-                         tagLower.contains("fomorian")
-      if (isHealthType) {
+      if (EventDefinitions.isHealthType(eventGoal)) {
         val health = (eventGoal.healthPct ?: 1.0).toFloat()
         if (health <= 0f) {
           return@filter false // 耐久が0%になったものは即座に非表示
@@ -216,35 +293,7 @@ fun EventsPage(
           "不明なイベント"
         }
 
-        val descLower = eventGoal.desc?.lowercase() ?: ""
-        val tagLower = eventGoal.tag?.lowercase() ?: ""
-        val toolTipLower = eventGoal.toolTip?.lowercase() ?: ""
-
-        // グール粛清
-        val isGhoulType = descLower.contains("ghoul") || tagLower.contains("ghoul") || toolTipLower.contains("ghoul")
-
-        // 進捗を表示するもの
-        val isProgressType = descLower.contains("jadeshadows") || 
-                   descLower.contains("belly") || 
-                   descLower.contains("heatfissures") || 
-                   descLower.contains("waterfight") ||
-                   descLower.contains("dogdays") ||
-                   tagLower.contains("jadeshadows") || 
-                   tagLower.contains("belly") || 
-                   tagLower.contains("heatfissures") ||
-                   tagLower.contains("waterfight") ||
-                   tagLower.contains("dogdays") ||
-                   toolTipLower.contains("waterfight") ||
-                   toolTipLower.contains("dogdays")
-
-        // 残り耐久力を表示するもの
-        val isHealthType = descLower.contains("razorback") || 
-                   descLower.contains("fomorian") || 
-                   tagLower.contains("razorback") || 
-                   tagLower.contains("fomorian") ||
-                   toolTipLower.contains("razorback") ||
-                   toolTipLower.contains("fomorian")
-
+        val activationLong = eventGoal.activation?.epochMillis ?: 0L
         val expiryLong = eventGoal.expiry?.epochMillis ?: 0L
         val diffMillis = expiryLong - now
         val timeString = if (expiryLong <= 0L) {
@@ -273,6 +322,10 @@ fun EventsPage(
           }
         }
 
+        // イベント定義の検索
+        val customDef = EventDefinitions.findDefinition(eventGoal)
+        val progressType = customDef?.progressType ?: EventProgressType.TIME_REMAINING
+
         ListItem(
           shape = androidx.compose.foundation.shape.RoundedCornerShape(20.dp)
         ) {
@@ -286,176 +339,192 @@ fun EventsPage(
             
             Spacer(modifier = Modifier.height(12.dp))
 
-            if (isGhoulType) {
-              val activity = (eventGoal.healthPct ?: 1.0).toFloat()
-              val activityPercent = String.format("%.1f", activity * 100)
-              
-              Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-              ) {
-                Text(
-                  text = "グール活動レベル",
-                  style = MaterialTheme.typography.bodyMedium,
-                  color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                  text = "$activityPercent%",
-                  style = MaterialTheme.typography.bodyMedium,
-                  fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                  color = MaterialTheme.colorScheme.error
-                )
-              }
-              Spacer(modifier = Modifier.height(6.dp))
-              LinearProgressIndicator(
-                progress = { activity.coerceIn(0f, 1f) },
-                modifier = Modifier.fillMaxWidth().height(8.dp),
-                color = MaterialTheme.colorScheme.error,
-                trackColor = MaterialTheme.colorScheme.errorContainer,
-                strokeCap = androidx.compose.ui.graphics.StrokeCap.Round
-              )
-            } else if (isProgressType) {
-              val count = eventGoal.count ?: 0
-              val rawGoal = eventGoal.goal
-              val progress = if (rawGoal != null && rawGoal > 0) {
-                count.toFloat() / rawGoal.toFloat()
-              } else {
-                count.toFloat() / 100f
-              }
-              val progressPercent = (progress * 100).toDouble()
-              val percentString = String.format("%.1f", progressPercent)
-
-              val progressText = if (rawGoal != null && rawGoal > 0) {
-                "進捗状況: $count / $rawGoal"
-              } else {
-                "進捗状況"
-              }
-              
-              Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-              ) {
-                Text(
-                  text = progressText,
-                  style = MaterialTheme.typography.bodyMedium,
-                  color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                  text = "$percentString%",
-                  style = MaterialTheme.typography.bodyMedium,
-                  fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                  color = MaterialTheme.colorScheme.primary
-                )
-              }
-              Spacer(modifier = Modifier.height(6.dp))
-              LinearProgressIndicator(
-                progress = { progress.coerceIn(0f, 1f) },
-                modifier = Modifier.fillMaxWidth().height(8.dp),
-                color = MaterialTheme.colorScheme.primary,
-                trackColor = MaterialTheme.colorScheme.primaryContainer,
-                strokeCap = androidx.compose.ui.graphics.StrokeCap.Round
-              )
-
-              // 獣の巣窟作戦 (Jade Shadows) のための節目仕掛け
-              val isJadeShadows = descLower.contains("jadeshadows") || tagLower.contains("jadeshadows")
-              if (isJadeShadows) {
+            when (progressType) {
+              EventProgressType.GHOUL_ACTIVITY -> {
+                val activity = (eventGoal.healthPct ?: 1.0).toFloat()
+                val activityPercent = String.format("%.1f", activity * 100)
+                
                 Row(
-                  modifier = Modifier.fillMaxWidth().padding(top = 6.dp),
+                  modifier = Modifier.fillMaxWidth(),
                   horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                  Text("0%", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                  
-                  val activeColor = MaterialTheme.colorScheme.primary
-                  val inactiveColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                  
                   Text(
-                    text = "▼ 30% (第一報酬)", 
-                    style = MaterialTheme.typography.bodySmall, 
-                    fontWeight = if (progressPercent >= 30.0) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Normal,
-                    color = if (progressPercent >= 30.0) activeColor else inactiveColor
+                    text = customDef?.customLabel ?: "グール活動レベル",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                   )
                   Text(
-                    text = "▼ 60% (第二報酬)", 
-                    style = MaterialTheme.typography.bodySmall, 
-                    fontWeight = if (progressPercent >= 60.0) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Normal,
-                    color = if (progressPercent >= 60.0) activeColor else inactiveColor
+                    text = "$activityPercent%",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.error
+                  )
+                }
+                Spacer(modifier = Modifier.height(6.dp))
+                LinearProgressIndicator(
+                  progress = { activity.coerceIn(0f, 1f) },
+                  modifier = Modifier.fillMaxWidth().height(8.dp),
+                  color = MaterialTheme.colorScheme.error,
+                  trackColor = MaterialTheme.colorScheme.errorContainer,
+                  strokeCap = androidx.compose.ui.graphics.StrokeCap.Round
+                )
+              }
+
+              EventProgressType.PROGRESS -> {
+                val count = eventGoal.count ?: 0
+                val rawGoal = eventGoal.goal
+                val progress = if (rawGoal != null && rawGoal > 0) {
+                  count.toFloat() / rawGoal.toFloat()
+                } else {
+                  count.toFloat() / 100f
+                }
+                val progressPercent = (progress * 100).toDouble()
+                val percentString = String.format("%.1f", progressPercent)
+
+                val progressText = if (rawGoal != null && rawGoal > 0) {
+                  "進捗状況: $count / $rawGoal"
+                } else {
+                  customDef?.customLabel ?: "進捗状況"
+                }
+                
+                Row(
+                  modifier = Modifier.fillMaxWidth(),
+                  horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                  Text(
+                    text = progressText,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                   )
                   Text(
-                    text = "▼ 90% (第三報酬)", 
-                    style = MaterialTheme.typography.bodySmall, 
-                    fontWeight = if (progressPercent >= 90.0) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Normal,
-                    color = if (progressPercent >= 90.0) activeColor else inactiveColor
+                    text = "$percentString%",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
                   )
-                  
-                  Text("100%", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                Spacer(modifier = Modifier.height(6.dp))
+                LinearProgressIndicator(
+                  progress = { progress.coerceIn(0f, 1f) },
+                  modifier = Modifier.fillMaxWidth().height(8.dp),
+                  color = MaterialTheme.colorScheme.primary,
+                  trackColor = MaterialTheme.colorScheme.primaryContainer,
+                  strokeCap = androidx.compose.ui.graphics.StrokeCap.Round
+                )
+
+                // 節目（報酬マイルストーン）表示がある場合（例: 獣の巣窟作戦）
+                if (customDef?.hasInterimMilestones == true) {
+                  Row(
+                    modifier = Modifier.fillMaxWidth().padding(top = 6.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                  ) {
+                    Text("0%", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    
+                    val activeColor = MaterialTheme.colorScheme.primary
+                    val inactiveColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                    
+                    Text(
+                      text = "▼ 30% (第一報酬)", 
+                      style = MaterialTheme.typography.bodySmall, 
+                      fontWeight = if (progressPercent >= 30.0) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Normal,
+                      color = if (progressPercent >= 30.0) activeColor else inactiveColor
+                    )
+                    Text(
+                      text = "▼ 60% (第二報酬)", 
+                      style = MaterialTheme.typography.bodySmall, 
+                      fontWeight = if (progressPercent >= 60.0) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Normal,
+                      color = if (progressPercent >= 60.0) activeColor else inactiveColor
+                    )
+                    Text(
+                      text = "▼ 90% (第三報酬)", 
+                      style = MaterialTheme.typography.bodySmall, 
+                      fontWeight = if (progressPercent >= 90.0) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Normal,
+                      color = if (progressPercent >= 90.0) activeColor else inactiveColor
+                    )
+                    
+                    Text("100%", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                  }
                 }
               }
-            } else if (isHealthType) {
-              val health = (eventGoal.healthPct ?: 1.0).toFloat()
-              val healthPercent = String.format("%.1f", health * 100)
-              
-              val relayName = eventGoal.node?.let { onLocalize(it) }
-              if (relayName != null) {
-                Text(
-                  text = "襲撃対象: $relayName",
-                  style = MaterialTheme.typography.bodyMedium,
-                  color = MaterialTheme.colorScheme.onSurfaceVariant,
-                  modifier = Modifier.padding(bottom = 8.dp)
+
+              EventProgressType.HEALTH -> {
+                val health = (eventGoal.healthPct ?: 1.0).toFloat()
+                val healthPercent = String.format("%.1f", health * 100)
+                
+                val relayName = eventGoal.node?.let { onLocalize(it) }
+                if (relayName != null) {
+                  Text(
+                    text = "襲撃対象: $relayName",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                  )
+                }
+                
+                Row(
+                  modifier = Modifier.fillMaxWidth(),
+                  horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                  Text(
+                    text = customDef?.customLabel ?: "残り耐久力",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                  )
+                  Text(
+                    text = "$healthPercent%",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.error
+                  )
+                }
+                Spacer(modifier = Modifier.height(6.dp))
+                LinearProgressIndicator(
+                  progress = { health.coerceIn(0f, 1f) },
+                  modifier = Modifier.fillMaxWidth().height(8.dp),
+                  color = MaterialTheme.colorScheme.error,
+                  trackColor = MaterialTheme.colorScheme.errorContainer,
+                  strokeCap = androidx.compose.ui.graphics.StrokeCap.Round
                 )
               }
-              
-              Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-              ) {
-                Text(
-                  text = "残り耐久力",
-                  style = MaterialTheme.typography.bodyMedium,
-                  color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                  text = "$healthPercent%",
-                  style = MaterialTheme.typography.bodyMedium,
-                  fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                  color = MaterialTheme.colorScheme.error
-                )
-              }
-              Spacer(modifier = Modifier.height(6.dp))
-              LinearProgressIndicator(
-                progress = { health.coerceIn(0f, 1f) },
-                modifier = Modifier.fillMaxWidth().height(8.dp),
-                color = MaterialTheme.colorScheme.error,
-                trackColor = MaterialTheme.colorScheme.errorContainer,
-                strokeCap = androidx.compose.ui.graphics.StrokeCap.Round
-              )
-            } else {
-              val health = (eventGoal.healthPct ?: 1.0).toFloat()
-              val healthPercent = String.format("%.1f", health * 100)
-              
-              Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-              ) {
-                Text(
-                  text = "進行度",
-                  style = MaterialTheme.typography.bodyMedium,
-                  color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                  text = "$healthPercent%",
-                  style = MaterialTheme.typography.bodyMedium,
-                  fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                  color = MaterialTheme.colorScheme.secondary
+
+              EventProgressType.TIME_REMAINING -> {
+                // デフォルト/未定義: 残り時間に応じた進捗バー
+                val timeProgress = if (activationLong > 0L && expiryLong > activationLong) {
+                  val total = expiryLong - activationLong
+                  val remaining = expiryLong - now
+                  (remaining.toFloat() / total.toFloat()).coerceIn(0f, 1f)
+                } else if (expiryLong > now) {
+                  1f
+                } else {
+                  0f
+                }
+                val percentString = String.format("%.1f%%", timeProgress * 100)
+
+                Row(
+                  modifier = Modifier.fillMaxWidth(),
+                  horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                  Text(
+                    text = "残り期間",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                  )
+                  Text(
+                    text = percentString,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                  )
+                }
+                Spacer(modifier = Modifier.height(6.dp))
+                LinearProgressIndicator(
+                  progress = { timeProgress },
+                  modifier = Modifier.fillMaxWidth().height(8.dp),
+                  color = MaterialTheme.colorScheme.primary,
+                  trackColor = MaterialTheme.colorScheme.primaryContainer,
+                  strokeCap = androidx.compose.ui.graphics.StrokeCap.Round
                 )
               }
-              Spacer(modifier = Modifier.height(6.dp))
-              LinearProgressIndicator(
-                progress = { health.coerceIn(0f, 1f) },
-                modifier = Modifier.fillMaxWidth().height(8.dp),
-                color = MaterialTheme.colorScheme.secondary,
-                trackColor = MaterialTheme.colorScheme.secondaryContainer,
-                strokeCap = androidx.compose.ui.graphics.StrokeCap.Round
-              )
             }
 
             Spacer(modifier = Modifier.height(12.dp))
