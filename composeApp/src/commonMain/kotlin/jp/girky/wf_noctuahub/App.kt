@@ -446,7 +446,9 @@ fun App() {
     },
     bottomBar = {
       if (currentScreen != Screen.Update) {
-      NavigationBar {
+      NavigationBar(
+        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+      ) {
         listOf(Screen.Status, Screen.News, Screen.Events, Screen.Fissures, Screen.Settings).forEach { screen ->
         val isSelected = currentScreen == screen
         NavigationBarItem(
