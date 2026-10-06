@@ -674,6 +674,8 @@ object Translations {
   "SeasonWeeklyFeedHelminth" to Pair("獣への餌付け", "Helminth へ素材を与える"),
   "SeasonWeeklyCompleteInvasionMissions" to Pair("侵略者", "侵略ミッションを6回クリアする"),
   "SeasonWeeklySniperOffense" to Pair("スナイパー攻撃", "スナイパーライフルで150体倒す"),
+  "SeasonWeeklyCompleteRace" to Pair("あらよっと!", "ホルバニア セントラルモールの Ollies Crash Course をプレイし，レースをクリアする"),
+  "SeasonWeeklyCompleteVenusRace" to Pair("搭乗時刻", "オーブ峡谷か，カンビオン荒地にて，任意の K-ドライブ レースを完了する"),
 
   // エリートウィークリー
   "SeasonWeeklyEliteCompleteMission" to Pair("完璧な", "ミッションを1回完了する"),
@@ -699,6 +701,7 @@ object Translations {
   "SeasonWeeklyHardZarimanBountyHunter" to Pair("Zariman 賞金稼ぎ", "Zariman で依頼ミッションを4個クリアする"),
   "SeasonWeeklyHardBattleHardened" to Pair("熟練", "ペリタの乱ミッションで6つ以上の司令をクリアした状態で完了する"),
   "SeasonWeeklyHardFallenAngel" to Pair("堕天使", "Zariman で Void 天使を3体倒す"),
+  "SeasonWeeklyHardKuvaSurvivalNoCapsules" to Pair("息を止めて", "クバ耐久ミッションを20分以上生き延びてクリアする"),
   )
 
   fun translateNightwaveChallenge(challenge: String): Pair<String, String> {
@@ -740,7 +743,7 @@ object Translations {
     "MeleeCritChance" to Pair("熟練の精度", "近接クリティカル率+20% (ヘビー攻撃は2倍)。"),
     "Armor" to Pair("分厚い皮膚", "装甲値+250。"),
     "CompanionDamage" to Pair("援助は任せろ", "スペクターとコンパニオンのダメージが+250%増加する。"),
-    "PsionicFeedback" to Pair("サイオニックフィードバック", "ダメージ時 被ダメージ時、10%の確率で半径5mの放射線爆発 (250ダメージ) を起こす。"),
+    "RadiationProcOnTakeDamage" to Pair("サイオニックフィードバック", "ダメージ時 被ダメージ時、10%の確率で半径5mの放射線爆発 (250ダメージ) を起こす。"),
     "MagazineCapacity" to Pair("ヘビーマガジン", "マガジンサイズを25%増やす。"),
     "GasChanceToPrimaryAndSecondary" to Pair("毒性弾", "プライマリ武器とセカンダリ武器は25%のガス状態異常確率を追加で得る。"),
     "PunchToPrimary" to Pair("パンチカード", "プライマリ武器の貫通距離を1.5m追加する。"),
@@ -756,7 +759,7 @@ object Translations {
     "RadialJavelinOnHeavy" to Pair("ヘビージャベリン", "ヘビー近接攻撃は、3m範囲で1000ダメージ（コンボ倍率で変動）与えるRadial Javelinを発動する。"),
     "SliceAndDice" to Pair("スライス＆ダイス", "近接スライディング攻撃は、スライディング攻撃のクリティカル確率を5%、スライディング速度を20%増加させ、スライディング近接攻撃ごとに10秒間スライディング摩擦を10%減少させる。最大10まで重複。"),
     "EnergyWavesOnCombo" to Pair("コンボウェーブ", "コンボ倍率が7倍になると、すべての近接攻撃はエネルギー波を放つ。"),
-    "MoreTheMerrier" to Pair("大は小を兼ねる", "20m以内の非テンノの味方全員が、範囲内の味方ごとに近接攻撃速度5%と発射速度20%を得る。"),
+    "CompanionsBuffNearbyPlayer" to Pair("大は小を兼ねる", "20m以内の非テンノの味方全員が、範囲内の味方ごとに近接攻撃速度5%と発射速度20%を得る。"),
     "CompanionsRadiationChance" to Pair("有効なフォールアウト", "スペクターまたはコンパニオンの攻撃は25%の確率で放射線状態異常を引き起こす。"),
     "AtonementOpportunity" to Pair("つぐなう機会", "倒した敵は、状態異常のスタックごとに1%の確率で味方のスペクターとして復活する。スペクターは30秒間活動する。"),
     "CopyAndPaste" to Pair("コピー＆ペースト", "125エネルギーを消費するごとに、現在展開されているスペクターかコンパニオンのスペクトルクローンをランダムに生み出す。"),
@@ -955,7 +958,9 @@ object Translations {
   "/Lotus/Language/Events/WaterFightToolTip" to "ドッグ・デイズ",
   "/Lotus/Language/Events/WaterFightTitle" to "ドッグ・デイズ",
   "/Lotus/Language/Events/WaterFight" to "ドッグ・デイズ",
-  "InfestedPlains" to "疫病の星"
+  "InfestedPlains" to "疫病の星",
+  "DeimosHalloween" to "Naberus の夜",
+  "Halloween" to "ハンターアラート:ハロウィンナイトメア"
   )
 
   fun translateEvent(eventDescOrTag: String): String {
@@ -971,6 +976,8 @@ object Translations {
     if (lower.contains("razorback")) return "Razorback Armada"
     if (lower.contains("fomorian")) return "フォーモリアン戦艦の脅威"
     if (lower.contains("dogdays") || lower.contains("dog days") || lower.contains("waterfight")) return "ドッグ・デイズ"
+    if (lower.contains("DeimosHalloween")) return "Naberus の夜"
+    if (lower.contains("Halloween")) return "ハンターアラート:ハロウィンナイトメア"
 
     // リレー名としての翻訳を試みる
     val relayName = translateRelay(eventDescOrTag)
