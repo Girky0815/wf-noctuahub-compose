@@ -75,7 +75,14 @@ object EventDefinitions {
       progressType = EventProgressType.HEALTH,
       customLabel = "残り耐久力",
       isHealthTypeImmediateRemoval = true
+    ),
+    // 一大作戦:Tauへの道
+    EventCustomDefinition(
+      keywords = listOf("RoadToTauEvent"),
+      progressType = EventProgressType.PROGRESS,
+      customLabel = "グローバル進捗"
     )
+
   )
 
   /**
