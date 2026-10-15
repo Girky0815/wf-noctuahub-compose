@@ -80,6 +80,7 @@ object Translations {
   "WaterFightBuck" to "Nakak 真珠",
   "UmbraFormaBlueprint" to "Umbra フォーマ設計図",
   "RivenIdentifier" to "ベール Riven サイファー",
+  "RoadToTauEventResource" to "ムーンフレッシュ",
   )
 
   // 敵勢力の日本語訳
@@ -634,6 +635,7 @@ object Translations {
   "SeasonDailyTwoForOne" to Pair("一石二鳥", "1回の弓矢での攻撃で2体以上の敵を倒す"),
   "SeasonDailyInteractWithPet" to Pair("忠誠心", "作戦拠点でペットと触れ合う"),
   "SeasonDailyArtist" to Pair("芸術家", "装備のカラーをカスタマイズする"),
+  "SeasonDailySlideKills" to Pair("アクセル全開", "スライディング中に10体の敵を倒す"),
 
   "SeasonDailyVisitFeaturedDojo" to Pair("旅行目的", "特選Dojoを訪れる"),
   "SeasonDailyDeployAirSupport" to Pair("風通し良好", "エアリアルサポートチャージを展開する"),
@@ -646,6 +648,7 @@ object Translations {
   "SeasonDailyKillEnemiesWithAbilities" to Pair("力の誇示", "アビリティで敵を150体倒す"),
   "SeasonDailySuspendFiveEnemies" to Pair("激突", "1回のヘビースラムで5体の敵を浮遊させる"),
   "SeasonDailyPickUpEnergy" to Pair("精力満々", "エネルギーオーブを20個拾うか，オペレーター(漂流者)で20回Void Sling をしてエネルギーを盗む"),
+  "SeasonDailyPlaceMarker" to Pair("コミュニケーター", "MODや素材を5個マークする"),
 
   // ウィークリー (末尾の数字は関数側で動的に抽出するためキーからは除外)
   "SeasonWeeklyPermanentCompleteMissions" to Pair("ミッション完了", "ミッションを15回完了する"),
@@ -676,6 +679,8 @@ object Translations {
   "SeasonWeeklySniperOffense" to Pair("スナイパー攻撃", "スナイパーライフルで150体倒す"),
   "SeasonWeeklyCompleteRace" to Pair("あらよっと!", "ホルバニア セントラルモールの Ollies Crash Course をプレイし，レースをクリアする"),
   "SeasonWeeklyCompleteVenusRace" to Pair("搭乗時刻", "オーブ峡谷か，カンビオン荒地にて，任意の K-ドライブ レースを完了する"),
+  "SeasonWeeklyCompleteNightmareMissions" to Pair("寝坊助", "ナイトメアミッションを3回クリアする"),
+  "SeasonWeeklyCompleteRescue" to Pair("救出者", "救出ミッションを3回クリアする"),
 
   // エリートウィークリー
   "SeasonWeeklyEliteCompleteMission" to Pair("完璧な", "ミッションを1回完了する"),
@@ -702,6 +707,7 @@ object Translations {
   "SeasonWeeklyHardBattleHardened" to Pair("熟練", "ペリタの乱ミッションで6つ以上の司令をクリアした状態で完了する"),
   "SeasonWeeklyHardFallenAngel" to Pair("堕天使", "Zariman で Void 天使を3体倒す"),
   "SeasonWeeklyHardKuvaSurvivalNoCapsules" to Pair("息を止めて", "クバ耐久ミッションを20分以上生き延びてクリアする"),
+  "SeasonWeeklyHardSpiderHunt" to Pair("クモ駆除", "デュヴィリの「島々を織りしもの」ミッションをクリアする"),
   )
 
   fun translateNightwaveChallenge(challenge: String): Pair<String, String> {
@@ -757,7 +763,7 @@ object Translations {
     // ヘックスファクター (条件発動効果)
     "FinisherChancePerComboMultiplier" to Pair("コンボキラー", "コンボ倍率は、近接攻撃後に敵がフィニッシャー待機状態になる確率を高める。コンボ倍率ごとに5%増加し、Venka Primeの場合は最大65%まで上昇する。"),
     "RadialJavelinOnHeavy" to Pair("ヘビージャベリン", "ヘビー近接攻撃は、3m範囲で1000ダメージ（コンボ倍率で変動）与えるRadial Javelinを発動する。"),
-    "SliceAndDice" to Pair("スライス＆ダイス", "近接スライディング攻撃は、スライディング攻撃のクリティカル確率を5%、スライディング速度を20%増加させ、スライディング近接攻撃ごとに10秒間スライディング摩擦を10%減少させる。最大10まで重複。"),
+    "MeleeSlideFowardMomentumOnEnemyHit" to Pair("スライス＆ダイス", "近接スライディング攻撃は、スライディング攻撃のクリティカル確率を5%、スライディング速度を20%増加させ、スライディング近接攻撃ごとに10秒間スライディング摩擦を10%減少させる。最大10まで重複。"),
     "EnergyWavesOnCombo" to Pair("コンボウェーブ", "コンボ倍率が7倍になると、すべての近接攻撃はエネルギー波を放つ。"),
     "CompanionsBuffNearbyPlayer" to Pair("大は小を兼ねる", "20m以内の非テンノの味方全員が、範囲内の味方ごとに近接攻撃速度5%と発射速度20%を得る。"),
     "CompanionsRadiationChance" to Pair("有効なフォールアウト", "スペクターまたはコンパニオンの攻撃は25%の確率で放射線状態異常を引き起こす。"),
@@ -769,7 +775,7 @@ object Translations {
     "TrickShot" to Pair("トリックショット", "弾がヒットする度に、追尾弾を発射する確率が10%増加する。発砲する度に追尾弾確率は5%低下する。"),
     "MagneticMenace" to Pair("磁気の脅威", "アビリティを5回使うたびに前方50m以内の敵は磁気状態異常を受ける。"),
     "SharedFreeAbilityEveryXCasts" to Pair("分け合いは大事", "アビリティを10回発動するたびに、自身と味方が次に発動するアビリティのコストを0にする。"),
-    "Overpower" to Pair("圧倒的な力", "アビリティ発動時、アビリティの規定消費エネルギー単位ごとに、5秒間アビリティ威力が2%増加し、アビリティ効率が1%悪化する。上限：アビリティ威力 +150%、効率 -75%。"),
+    "PowerStrengthAndEfficiencyPerEnergySpent" to Pair("圧倒的な力", "アビリティ発動時、アビリティの規定消費エネルギー単位ごとに、5秒間アビリティ威力が2%増加し、アビリティ効率が1%悪化する。上限：アビリティ威力 +150%、効率 -75%。"),
     "ForceOfAttraction" to Pair("引力", "磁気状態異常は、スタック毎1m範囲で周辺の敵を引き寄せる。"),
     "ElectricalDamageOnBulletJump" to Pair("ダイナモジャンプ", "バレットジャンプから着地後の5秒間は電気ダメージが50%増加する。"),
     "ElectricDamagePerDistance" to Pair("静電気蓄積", "移動距離1mごとに電気ダメージが付与される。攻撃時に蓄積した静電気の10%が消費される。"),
@@ -833,9 +839,9 @@ object Translations {
     "CalendarKillTechrotEnemiesWithAbilitiesHard" to Pair("契約無効 (難しい)", "300体のテックロットをアビリティで倒す"),
 
     // 戦車洗車 (Tankless Work)
-    "CalendarDestroyTankEasy" to Pair("戦車洗車", "1体の戦車を破壊する"),
-    "CalendarDestroyTankMedium" to Pair("戦車洗車", "1体の戦車を破壊する"),
-    "CalendarDestroyTankHard" to Pair("戦車洗車", "1体の戦車を破壊する"),
+    // "CalendarKillTankEasy" to Pair("戦車洗車", "1体の戦車を破壊する"),
+    // "CalendarKillTankMedium" to Pair("戦車洗車", "1体の戦車を破壊する"),
+    "CalendarKillTankHard" to Pair("戦車洗車", "1体の戦車を破壊する"),
 
     // 兵糧攻め (Starve the Beast)
     "CalendarDestroyPropsEasy" to Pair("兵糧攻め (簡単)", "75個のコンテナを破壊する"),
@@ -960,7 +966,8 @@ object Translations {
   "/Lotus/Language/Events/WaterFight" to "ドッグ・デイズ",
   "InfestedPlains" to "疫病の星",
   "DeimosHalloween" to "Naberus の夜",
-  "Halloween" to "ハンターアラート:ハロウィンナイトメア"
+  "Halloween" to "ハンターアラート:ハロウィンナイトメア",
+  "RoadToTauEvent" to "一大作戦: Tau への道"
   )
 
   fun translateEvent(eventDescOrTag: String): String {
