@@ -129,6 +129,46 @@ class AppSettings(private val pref: ObservableSettings) {
   fun setLastAppVersion(version: String) {
     pref.putString("last_app_version", version)
   }
+
+  fun getPrimeSeriesUpdatedAt(): String {
+    return pref.getString("prime_series_updated_at", "")
+  }
+
+  fun setPrimeSeriesUpdatedAt(updatedAt: String) {
+    pref.putString("prime_series_updated_at", updatedAt)
+  }
+
+  val favoritePrimeIdsFlow: Flow<Set<String>> = getStringFlow("favorite_prime_ids", "")
+    .map { serialized ->
+      if (serialized.isBlank()) {
+        emptySet()
+      } else {
+        serialized.split(",").filter { it.isNotBlank() }.toSet()
+      }
+    }
+
+  fun getFavoritePrimeIds(): Set<String> {
+    val serialized = pref.getString("favorite_prime_ids", "")
+    return if (serialized.isBlank()) {
+      emptySet()
+    } else {
+      serialized.split(",").filter { it.isNotBlank() }.toSet()
+    }
+  }
+
+  fun setFavoritePrimeIds(ids: Set<String>) {
+    pref.putString("favorite_prime_ids", ids.joinToString(","))
+  }
+
+  fun toggleFavoritePrimeId(id: String) {
+    val current = getFavoritePrimeIds().toMutableSet()
+    if (current.contains(id)) {
+      current.remove(id)
+    } else {
+      current.add(id)
+    }
+    setFavoritePrimeIds(current)
+  }
   
   fun exportSettingsAsMap(): Map<String, String> {
     return mapOf(
@@ -142,7 +182,8 @@ class AppSettings(private val pref: ObservableSettings) {
       "haptics_enabled" to pref.getBoolean("haptics_enabled", true).toString(),
       "haptics_pull_refresh_enabled" to pref.getBoolean("haptics_pull_refresh_enabled", true).toString(),
       "haptics_toggle_enabled" to pref.getBoolean("haptics_toggle_enabled", true).toString(),
-      "haptics_menu_enabled" to pref.getBoolean("haptics_menu_enabled", true).toString()
+      "haptics_menu_enabled" to pref.getBoolean("haptics_menu_enabled", true).toString(),
+      "favorite_prime_ids" to pref.getString("favorite_prime_ids", "")
     )
   }
 
@@ -164,6 +205,7 @@ class AppSettings(private val pref: ObservableSettings) {
     map["haptics_pull_refresh_enabled"]?.toBooleanStrictOrNull()?.let { setHapticsPullToRefreshEnabled(it) }
     map["haptics_toggle_enabled"]?.toBooleanStrictOrNull()?.let { setHapticsToggleEnabled(it) }
     map["haptics_menu_enabled"]?.toBooleanStrictOrNull()?.let { setHapticsMenuEnabled(it) }
+    map["favorite_prime_ids"]?.let { pref.putString("favorite_prime_ids", it) }
   }
 
   fun clearSettings() {

@@ -131,6 +131,8 @@ fun App() {
   val apiClient = remember { WarframeApiClient() }
   val repository = remember { WarframeRepository(apiClient, appSettings) }
   val viewModel = remember { MainViewModel(repository) }
+  val primeSeriesRepository = remember { jp.girky.wf_noctuahub.data.repository.PrimeSeriesRepository(apiClient.client, appSettings) }
+  val primeSeriesViewModel = remember { jp.girky.wf_noctuahub.ui.viewmodel.PrimeSeriesViewModel(primeSeriesRepository, appSettings, coroutineScope) }
 
   val fetchState by viewModel.fetchState.collectAsState()
   val errorMessage by viewModel.errorMessage.collectAsState()
@@ -708,7 +710,8 @@ fun App() {
               worldState = worldState,
               errorMessage = errorMessage,
               fetchState = fetchState,
-              onNavigateToUpdate = { navigateTo(Screen.Update) }
+              onNavigateToUpdate = { navigateTo(Screen.Update) },
+              primeSeriesViewModel = primeSeriesViewModel
             )
           }
           Screen.Update -> {

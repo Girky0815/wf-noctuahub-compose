@@ -1,0 +1,1102 @@
+{
+  "updatedAt": "2026-10-15T00:00:00Z",
+  "series": [
+    {
+      "id": "frost_prime_pack",
+      "name": "Frost Prime",
+      "releaseDate": "2013-05-03",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Frost/FrostPrime",
+          "name": "Frost Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Rifle/LatronPrime",
+          "name": "Latron Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Scythe/ReaperWeapon",
+          "name": "Reaper Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "mag_prime_pack",
+      "name": "Mag Prime",
+      "releaseDate": "2013-09-13",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Mag/MagPrime",
+          "name": "Mag Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Shotgun/PrimeBoar",
+          "name": "Boar Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/CronusSword/PrimeCronusLongSword",
+          "name": "Dakra Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "ember_prime_pack",
+      "name": "Ember Prime",
+      "releaseDate": "2013-11-20",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Ember/EmberPrime",
+          "name": "Ember Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Pistols/PrimeSicarus/PrimeSicarusPistol",
+          "name": "Sicarus Prime",
+          "category": "SECONDARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Glaives/PrimeGlaive/PrimeGlaiveWeapon",
+          "name": "Glaive Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "rhino_prime_pack",
+      "name": "Rhino Prime",
+      "releaseDate": "2014-03-05",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Rhino/RhinoPrime",
+          "name": "Rhino Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeBoltor/PrimeBoltor",
+          "name": "Boltor Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Gauntlet/PrimeAnkyros/PrimeAnkyros",
+          "name": "Ankyros Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "loki_prime_pack",
+      "name": "Loki Prime",
+      "releaseDate": "2014-06-11",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Loki/LokiPrime",
+          "name": "Loki Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Staff/PrimeBo/PrimeBoWeapon",
+          "name": "Bo Prime",
+          "category": "MELEE"
+        },
+        {
+          "uniqueName": "/Lotus/Types/Sentinels/SentinelPowerSuits/WyrmPrime",
+          "name": "Wyrm Prime",
+          "category": "SENTINEL"
+        }
+      ]
+    },
+    {
+      "id": "nyx_prime_pack",
+      "name": "Nyx Prime",
+      "releaseDate": "2014-09-23",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Jade/NyxPrime",
+          "name": "Nyx Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/ThrowingWeapons/PrimeThrowingStar/PrimeHikou",
+          "name": "Hikou Prime",
+          "category": "SECONDARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Axe/PrimeScindo/PrimeScindoWeapon",
+          "name": "Scindo Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "nova_prime_pack",
+      "name": "Nova Prime",
+      "releaseDate": "2014-12-16",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/AntiMatter/NovaPrime",
+          "name": "Nova Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeSoma/PrimeSomaRifle",
+          "name": "Soma Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Pistols/PrimeVasto/PrimeVastoPistol",
+          "name": "Vasto Prime",
+          "category": "SECONDARY"
+        }
+      ]
+    },
+    {
+      "id": "volt_prime_pack",
+      "name": "Volt Prime",
+      "releaseDate": "2015-03-24",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Volt/VoltPrime",
+          "name": "Volt Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Powersuits/Archwing/PrimeJetPack/PrimeJetPack",
+          "name": "Odonata Prime",
+          "category": "ARCHWING"
+        }
+      ]
+    },
+    {
+      "id": "ash_prime_pack",
+      "name": "Ash Prime",
+      "releaseDate": "2015-07-07",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Ninja/AshPrime",
+          "name": "Ash Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeVectis/PrimeVectisRifle",
+          "name": "Vectis Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Types/Sentinels/SentinelPowerSuits/CarrierPrime",
+          "name": "Carrier Prime",
+          "category": "SENTINEL"
+        }
+      ]
+    },
+    {
+      "id": "trinity_prime_pack",
+      "name": "Trinity Prime",
+      "releaseDate": "2015-10-06",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Trinity/TrinityPrime",
+          "name": "Trinity Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/PrimeDualKamas/PrimeDualKamas",
+          "name": "Dual Kamas Prime",
+          "category": "MELEE"
+        },
+        {
+          "uniqueName": "/Lotus/Types/Friendly/Pets/Kubrow/KavasaPrimeCollar",
+          "name": "Kavasa Prime Collar",
+          "category": "COMPANION"
+        }
+      ]
+    },
+    {
+      "id": "saryn_prime_pack",
+      "name": "Saryn Prime",
+      "releaseDate": "2016-02-16",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Saryn/SarynPrime",
+          "name": "Saryn Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Swords/PrimeKatana/PrimeNikana",
+          "name": "Nikana Prime",
+          "category": "MELEE"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/ThrowingWeapons/PrimeLiDagger/PrimeLiDagger",
+          "name": "Spira Prime",
+          "category": "SECONDARY"
+        }
+      ]
+    },
+    {
+      "id": "vauban_prime_pack",
+      "name": "Vauban Prime",
+      "releaseDate": "2016-05-17",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Trapper/TrapperPrime",
+          "name": "Vauban Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Pistols/PrimeAkstiletto/PrimeAkstiletto",
+          "name": "Akstiletto Prime",
+          "category": "SECONDARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/PrimeFragor/PrimeFragor",
+          "name": "Fragor Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "nekros_prime_pack",
+      "name": "Nekros Prime",
+      "releaseDate": "2016-08-23",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Necro/NekrosPrime",
+          "name": "Nekros Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeTigris/PrimeTigris",
+          "name": "Tigris Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Swords/PrimeGalatine/PrimeGalatine",
+          "name": "Galatine Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "valkyr_prime_pack",
+      "name": "Valkyr Prime",
+      "releaseDate": "2016-11-22",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Berserker/ValkyrPrime",
+          "name": "Valkyr Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Bows/PrimeCernos/PrimeCernos",
+          "name": "Cernos Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/PrimeVenKa/PrimeVenkaClaws",
+          "name": "Venka Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "banshee_prime_pack",
+      "name": "Banshee Prime",
+      "releaseDate": "2017-02-28",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Banshee/BansheePrime",
+          "name": "Banshee Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Pistols/AllNew1hSG/AllNew1hSG",
+          "name": "Euphona Prime",
+          "category": "SECONDARY"
+        },
+        {
+          "uniqueName": "/Lotus/Types/Sentinels/SentinelPowerSuits/HeliosPrime",
+          "name": "Helios Prime",
+          "category": "SENTINEL"
+        }
+      ]
+    },
+    {
+      "id": "oberon_prime_pack",
+      "name": "Oberon Prime",
+      "releaseDate": "2017-05-30",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Paladin/PaladinPrime",
+          "name": "Oberon Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeSybaris/PrimeSybarisRifle",
+          "name": "Sybaris Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/PrimeSilvaAegis/PrimeSilvaAegis",
+          "name": "Silva & Aegis Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "hydroid_prime_pack",
+      "name": "Hydroid Prime",
+      "releaseDate": "2017-08-29",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Pirate/HydroidPrime",
+          "name": "Hydroid Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Pistols/PrimeBallistica/PrimeBallistica",
+          "name": "Ballistica Prime",
+          "category": "SECONDARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Swords/PrimeNamiSkyla/PrimeNamiSkyla",
+          "name": "Nami Skyla Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "mirage_prime_pack",
+      "name": "Mirage Prime",
+      "releaseDate": "2017-12-12",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Harlequin/MiragePrime",
+          "name": "Mirage Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Pistols/PrimeAkbolto/PrimeAkBoltoWeapon",
+          "name": "Akbolto Prime",
+          "category": "SECONDARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/PrimeKogake/KogakePrimeKnuckles",
+          "name": "Kogake Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "zephyr_prime_pack",
+      "name": "Zephyr Prime",
+      "releaseDate": "2018-03-20",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Tengu/ZephyrPrime",
+          "name": "Zephyr Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeTiberon/PrimeTiberonRifle",
+          "name": "Tiberon Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Tonfa/TonfaContestWinnerPrime/TonfaContestWinnerPrimeWeapon",
+          "name": "Kronen Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "limbo_prime_pack",
+      "name": "Limbo Prime",
+      "releaseDate": "2018-06-19",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Magician/LimboPrime",
+          "name": "Limbo Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Pistols/PrimePyrana/PrimePyranaPistol",
+          "name": "Pyrana Prime",
+          "category": "SECONDARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Swords/PRapier/DestrezaPrime",
+          "name": "Destreza Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "chroma_prime_pack",
+      "name": "Chroma Prime",
+      "releaseDate": "2018-09-25",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Dragon/ChromaPrime",
+          "name": "Chroma Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/RubicoPrime/RubicoPrimeWeapon",
+          "name": "Rubico Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Swords/PrimeGram/PrimeGram",
+          "name": "Gram Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "mesa_prime_pack",
+      "name": "Mesa Prime",
+      "releaseDate": "2018-12-18",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Cowgirl/MesaPrime",
+          "name": "Mesa Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Pistols/PrimeAkjagara/AkJagaraPrime",
+          "name": "Akjagara Prime",
+          "category": "SECONDARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Gunblade/RedeemerPrime/RedeemerPrimeWep",
+          "name": "Redeemer Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "equinox_prime_pack",
+      "name": "Equinox Prime",
+      "releaseDate": "2019-04-02",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/YinYang/EquinoxPrime",
+          "name": "Equinox Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeStradavar/PrimeStradavarGun",
+          "name": "Stradavar Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Staff/TipedoPrime/TipedoPrimeWeapon",
+          "name": "Tipedo Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "wukong_prime_pack",
+      "name": "Wukong Prime",
+      "releaseDate": "2019-07-06",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/MonkeyKing/WukongPrime",
+          "name": "Wukong Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeZhuge/PrimeZhugeCrossbow",
+          "name": "Zhuge Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/PrimeNinkondi/PrimeNikondi",
+          "name": "Ninkondi Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "atlas_prime_pack",
+      "name": "Atlas Prime",
+      "releaseDate": "2019-10-01",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Brawler/AtlasPrime",
+          "name": "Atlas Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/PrimeTekko/PrimeTekko",
+          "name": "Tekko Prime",
+          "category": "MELEE"
+        },
+        {
+          "uniqueName": "/Lotus/Types/Sentinels/SentinelPowerSuits/DethcubePrime",
+          "name": "Dethcube Prime",
+          "category": "SENTINEL"
+        }
+      ]
+    },
+    {
+      "id": "ivara_prime_pack",
+      "name": "Ivara Prime",
+      "releaseDate": "2019-12-17",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Ranger/IvaraPrime",
+          "name": "Ivara Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeBaza/PrimeBazaGun",
+          "name": "Baza Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Pistols/PrimeAksomati/PrimeAksomati",
+          "name": "Aksomati Prime",
+          "category": "SECONDARY"
+        }
+      ]
+    },
+    {
+      "id": "titania_prime_pack",
+      "name": "Titania Prime",
+      "releaseDate": "2020-03-31",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Fairy/TitaniaPrime",
+          "name": "Titania Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeCorinth/PrimeCorinth",
+          "name": "Corinth Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Swords/PrimePangolinSword/PrimePangolinSword",
+          "name": "Pangolin Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "inaros_prime_pack",
+      "name": "Inaros Prime",
+      "releaseDate": "2020-07-14",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Sandman/InarosPrime",
+          "name": "Inaros Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimePanthera/PrimePanthera",
+          "name": "Panthera Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Swords/PrimeKaryst/PrimeKrisDagger",
+          "name": "Karyst Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "nezha_prime_pack",
+      "name": "Nezha Prime",
+      "releaseDate": "2020-10-27",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Nezha/NezhaPrime",
+          "name": "Nezha Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Polearms/PrimeGuandao/PrimeGuandaoWeapon",
+          "name": "Guandao Prime",
+          "category": "MELEE"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Pistols/PrimeZakti/PrimeZaktiPistol",
+          "name": "Zakti Prime",
+          "category": "SECONDARY"
+        }
+      ]
+    },
+    {
+      "id": "octavia_prime_pack",
+      "name": "Octavia Prime",
+      "releaseDate": "2021-02-23",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Bard/OctaviaPrime",
+          "name": "Octavia Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeTenora/TenoraPrimeWeapon",
+          "name": "Tenora Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Pistols/PrimePandero/PanderoPrimeWeapon",
+          "name": "Pandero Prime",
+          "category": "SECONDARY"
+        }
+      ]
+    },
+    {
+      "id": "gara_prime_pack",
+      "name": "Gara Prime",
+      "releaseDate": "2021-05-25",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Glass/GaraPrime",
+          "name": "Gara Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeAstilla/AstillaPrimeWeapon",
+          "name": "Astilla Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/PrimeVolnus/VolnusPrimeWeapon",
+          "name": "Volnus Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "nidus_prime_pack",
+      "name": "Nidus Prime",
+      "releaseDate": "2021-09-08",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Infestation/InfestationPrime",
+          "name": "Nidus Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeStrun/PrimeStrunWeapon",
+          "name": "Strun Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Pistols/PrimeMagnus/PrimeMagnusWeapon",
+          "name": "Magnus Prime",
+          "category": "SECONDARY"
+        }
+      ]
+    },
+    {
+      "id": "harrow_prime_pack",
+      "name": "Harrow Prime",
+      "releaseDate": "2021-12-15",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Priest/HarrowPrime",
+          "name": "Harrow Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeScourge/PrimeScourgeWeapon",
+          "name": "Scourge Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Pistols/PrimeKnell/PrimeKnellWeapon",
+          "name": "Knell Prime",
+          "category": "SECONDARY"
+        }
+      ]
+    },
+    {
+      "id": "garuda_prime_pack",
+      "name": "Garuda Prime",
+      "releaseDate": "2022-03-28",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Garuda/GarudaPrime",
+          "name": "Garuda Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeNagantaka/PrimeNagantakaWeapon",
+          "name": "Nagantaka Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Archwing/Primary/PrimeCorvas/PrimeCorvasWeapon",
+          "name": "Corvas Prime",
+          "category": "ARCHGUN"
+        }
+      ]
+    },
+    {
+      "id": "khora_prime_pack",
+      "name": "Khora Prime",
+      "releaseDate": "2022-07-16",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Khora/KhoraPrime",
+          "name": "Khora Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Pistols/PrimeHystrix/PrimeHystrixWeapon",
+          "name": "Hystrix Prime",
+          "category": "SECONDARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Swords/PrimeDualKeres/PrimeDualKeresWeapon",
+          "name": "Dual Keres Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "revenant_prime_pack",
+      "name": "Revenant Prime",
+      "releaseDate": "2022-10-05",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Revenant/RevenantPrime",
+          "name": "Revenant Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimePhantasma/PhantasmaPrimeShotgun",
+          "name": "Phantasma Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Swords/PrimeTatsu/PrimeTatsuWeapon",
+          "name": "Tatsu Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "baruuk_prime_pack",
+      "name": "Baruuk Prime",
+      "releaseDate": "2022-12-14",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Pacifist/BaruukPrime",
+          "name": "Baruuk Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Pistols/PrimeAfuris/PrimeAFurisWeapon",
+          "name": "Afuris Prime",
+          "category": "SECONDARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/SwordsAndBoards/PrimeCobraAndCrane/PrimeCobraAndCraneWeapon",
+          "name": "Cobra & Crane Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "hildryn_prime_pack",
+      "name": "Hildryn Prime",
+      "releaseDate": "2023-03-15",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/IronFrame/IronFramePrime",
+          "name": "Hildryn Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Archwing/Primary/PrimeLarkspur/PrimeLarkspurWeapon",
+          "name": "Larkspur Prime",
+          "category": "ARCHGUN"
+        },
+        {
+          "uniqueName": "/Lotus/Types/Sentinels/SentinelPowerSuits/ShadePrime",
+          "name": "Shade Prime",
+          "category": "SENTINEL"
+        }
+      ]
+    },
+    {
+      "id": "wisp_prime_pack",
+      "name": "Wisp Prime",
+      "releaseDate": "2023-07-27",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Wisp/WispPrime",
+          "name": "Wisp Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeFulmin/PrimeFulmin",
+          "name": "Fulmin Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Warfan/PrimeGunsen/PrimeGunsenWeapon",
+          "name": "Gunsen Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "grendel_prime_pack",
+      "name": "Grendel Prime",
+      "releaseDate": "2023-10-18",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Devourer/GrendelPrime",
+          "name": "Grendel Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Swords/PrimeMasseter/PrimeMasseter",
+          "name": "Masseter Prime",
+          "category": "MELEE"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Pistols/PrimeZylok/ZylokPrimePistol",
+          "name": "Zylok Prime",
+          "category": "SECONDARY"
+        }
+      ]
+    },
+    {
+      "id": "gauss_prime_pack",
+      "name": "Gauss Prime",
+      "releaseDate": "2024-01-17",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Runner/GaussPrime",
+          "name": "Gauss Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeAcceltra/PrimeAcceltraWeapon",
+          "name": "Acceltra Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Pistols/PrimeAkarius/PrimeAkariusWeapon",
+          "name": "Akarius Prime",
+          "category": "SECONDARY"
+        }
+      ]
+    },
+    {
+      "id": "protea_prime_pack",
+      "name": "Protea Prime",
+      "releaseDate": "2024-05-01",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Odalisk/ProteaPrime",
+          "name": "Protea Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Pistols/PrimeVelox/PrimeVeloxPistol",
+          "name": "Velox Prime",
+          "category": "SECONDARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Swords/PrimeOkina/PrimeOkina",
+          "name": "Okina Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "sevagoth_prime_pack",
+      "name": "Sevagoth Prime",
+      "releaseDate": "2024-08-21",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Wraith/SevagothPrime",
+          "name": "Sevagoth Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Pistols/PrimeEpitaph/PrimeEpitaphSidearmWeapon",
+          "name": "Epitaph Prime",
+          "category": "SECONDARY"
+        },
+        {
+          "uniqueName": "/Lotus/Types/Sentinels/SentinelPowerSuits/NautilusPrime",
+          "name": "Nautilus Prime",
+          "category": "SENTINEL"
+        }
+      ]
+    },
+    {
+      "id": "xaku_prime_pack",
+      "name": "Xaku Prime",
+      "releaseDate": "2024-11-13",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/BrokenFrame/XakuPrime",
+          "name": "Xaku Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Warfan/PrimeQuassus/PrimeQuassusWeapon",
+          "name": "Quassus Prime",
+          "category": "MELEE"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeTrumna/PrimeTrumnaWeapon",
+          "name": "Trumna Prime",
+          "category": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "lavos_prime_pack",
+      "name": "Lavos Prime",
+      "releaseDate": "2025-02-12",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Alchemist/LavosPrime",
+          "name": "Lavos Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeCedo/PrimeCedoWeapon",
+          "name": "Cedo Prime",
+          "category": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "yareli_prime_pack",
+      "name": "Yareli Prime",
+      "releaseDate": "2025-05-21",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Yareli/YareliPrime",
+          "name": "Yareli Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Pistols/PrimeKompressa/PrimeKompressa",
+          "name": "Kompressa Prime",
+          "category": "SECONDARY"
+        }
+      ]
+    },
+    {
+      "id": "caliban_prime_pack",
+      "name": "Caliban Prime",
+      "releaseDate": "2025-08-26",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Sentient/CalibanPrime",
+          "name": "Caliban Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeLightningGun/PrimeLightningGun",
+          "name": "Vadarya Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Scythe/PrimeVento/PrimeVentoScythe",
+          "name": "Venato Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "gyre_prime_pack",
+      "name": "Gyre Prime",
+      "releaseDate": "2025-12-10",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Gyre/GyrePrime",
+          "name": "Gyre Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeAlternox/PrimeAlternoxWeapon",
+          "name": "Alternox Prime",
+          "category": "PRIMARY"
+        }
+      ]
+    },
+    {
+      "id": "voruna_prime_pack",
+      "name": "Voruna Prime",
+      "releaseDate": "2026-04-08",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Werewolf/VorunaPrime",
+          "name": "Voruna Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimePerigale/PrimePerigaleSniper",
+          "name": "Perigale Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Melee/Axe/PrimeVorunaAxeWeapon",
+          "name": "Sarofang Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "citrine_prime_pack",
+      "name": "Citrine Prime",
+      "releaseDate": "2026-09-23",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Geode/CitrinePrime",
+          "name": "Citrine Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeSteflos/PrimeSteflosShotgun",
+          "name": "Steflos Prime",
+          "category": "PRIMARY"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/Archwing/Melee/PrimeCorufell/PrimeCorufellScytheWeapon",
+          "name": "Corufell Prime",
+          "category": "MELEE"
+        }
+      ]
+    },
+    {
+      "id": "styanax_prime_pack",
+      "name": "Styanax Prime",
+      "releaseDate": "2026-12-16",
+      "items": [
+        {
+          "uniqueName": "/Lotus/Powersuits/Hoplite/StyanaxPrime",
+          "name": "Styanax Prime",
+          "category": "WARFRAME"
+        },
+        {
+          "uniqueName": "/Lotus/Weapons/Tenno/LongGuns/PrimeAfentis/PrimeAfentisWeapon",
+          "name": "Afentis Prime",
+          "category": "PRIMARY"
+        }
+      ]
+    }
+  ]
+}

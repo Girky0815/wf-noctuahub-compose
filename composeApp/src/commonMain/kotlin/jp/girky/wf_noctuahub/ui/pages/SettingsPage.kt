@@ -21,7 +21,10 @@ import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
+import jp.girky.wf_noctuahub.ui.components.prime.PrimeSeriesList
+import jp.girky.wf_noctuahub.ui.viewmodel.PrimeSeriesViewModel
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -69,6 +72,7 @@ enum class SettingsSubPage {
   APPEARANCE,
   DATA_MANAGEMENT,
   DASHBOARD_SETTINGS,
+  PRIME_WATCHLIST,
   LICENSE_INFO,
   VERSION_HISTORY
 }
@@ -81,6 +85,7 @@ fun SettingsPage(
     errorMessage: String? = null,
     fetchState: FetchState = FetchState.SUCCESS,
     onNavigateToUpdate: () -> Unit = {},
+    primeSeriesViewModel: PrimeSeriesViewModel? = null,
     modifier: Modifier = Modifier
 ) {
   val scrollState = rememberScrollState()
@@ -150,6 +155,7 @@ fun SettingsPage(
             SettingsSubPage.APPEARANCE -> "外観設定"
             SettingsSubPage.DATA_MANAGEMENT -> "データ管理"
             SettingsSubPage.DASHBOARD_SETTINGS -> "ダッシュボードの設定"
+            SettingsSubPage.PRIME_WATCHLIST -> "Prime ウォッチリスト"
             SettingsSubPage.LICENSE_INFO -> "ライセンス情報"
             SettingsSubPage.VERSION_HISTORY -> "バージョン履歴"
             else -> ""
@@ -204,6 +210,13 @@ fun SettingsPage(
             leadingIcon = { Icon(Icons.Default.Dashboard, contentDescription = null) },
             trailingContent = { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null) },
             onClick = { currentSubPage = SettingsSubPage.DASHBOARD_SETTINGS }
+          )
+          ListTile(
+            title = "Prime ウォッチリスト",
+            subtitle = "欲しい Prime の登録・管理と Wiki 連携",
+            leadingIcon = { Icon(Icons.Default.Star, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
+            trailingContent = { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null) },
+            onClick = { currentSubPage = SettingsSubPage.PRIME_WATCHLIST }
           )
         }
 
@@ -813,6 +826,25 @@ fun SettingsPage(
               }
             }
           }
+        }
+      }
+
+      SettingsSubPage.PRIME_WATCHLIST -> {
+        // Prime ウォッチリストサブ画面
+        if (primeSeriesViewModel != null) {
+          PrimeSeriesList(
+            viewModel = primeSeriesViewModel,
+            showHeader = false
+          )
+        } else {
+          val contextScope = rememberCoroutineScope()
+          val client = remember { io.ktor.client.HttpClient() }
+          val repo = remember { jp.girky.wf_noctuahub.data.repository.PrimeSeriesRepository(client, appSettings) }
+          val vm = remember { PrimeSeriesViewModel(repo, appSettings, contextScope) }
+          PrimeSeriesList(
+            viewModel = vm,
+            showHeader = false
+          )
         }
       }
 

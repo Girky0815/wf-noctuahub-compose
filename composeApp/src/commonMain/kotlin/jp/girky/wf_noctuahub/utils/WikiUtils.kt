@@ -86,6 +86,20 @@ object WikiUtils {
   }
 
   /**
+   * Primeアイテムのカテゴリに応じた Wiki 日本語版 URL を生成する
+   * @param name アイテム名（例: "Frost Prime", "Latron Prime", "Shade Prime"）
+   * @param category カテゴリ（例: "WARFRAME", "PRIMARY", "SECONDARY", "MELEE", "SENTINEL", "ARCHGUN" 等）
+   */
+  fun getPrimeItemUrl(name: String, category: String): String {
+    val upperCat = category.uppercase()
+    return when {
+      upperCat.contains("WARFRAME") -> getResurgenceWarframeUrl(name)
+      upperCat.contains("SENTINEL") || upperCat.contains("COMPANION") || upperCat.contains("PET") -> getResurgenceCompanionUrl(name)
+      else -> getWeaponUrl(name)
+    }
+  }
+
+  /**
    * 通常サーキットの Warframe 用 Wiki URL を生成する
    * @param rawChoice APIから返される名前（例: "Saryn"）
    */
