@@ -21,6 +21,7 @@ fun ListTile(
   leadingIcon: @Composable (() -> Unit)? = null,
   trailingContent: @Composable (() -> Unit)? = null,
   onClick: (() -> Unit)? = null,
+  // shape: androidx.compose.ui.graphics.Shape = RoundedCornerShape(.dp),
   modifier: Modifier = Modifier,
   containerColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.surfaceBright,
   titleColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onSurface,
@@ -29,7 +30,7 @@ fun ListTile(
   Row(
     modifier = modifier
       .fillMaxWidth()
-      .background(containerColor, shape = RoundedCornerShape(2.dp))
+      .background(containerColor, shape = RoundedCornerShape(4.dp))
       .clickable(enabled = onClick != null) { onClick?.invoke() }
       .padding(horizontal = 16.dp, vertical = 14.dp),
     verticalAlignment = Alignment.CenterVertically
@@ -82,7 +83,7 @@ fun ListTile(
 fun ListItem(
   modifier: Modifier = Modifier,
   containerColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.surfaceBright,
-  shape: androidx.compose.ui.graphics.Shape = RoundedCornerShape(6.dp),
+  shape: androidx.compose.ui.graphics.Shape = RoundedCornerShape(8.dp),
   onClick: (() -> Unit)? = null,
   content: @Composable ColumnScope.() -> Unit
 ) {

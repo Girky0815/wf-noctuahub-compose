@@ -13,6 +13,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +32,7 @@ data class ExpressiveButtonOption(
 fun ExpressiveButtonGroup(
   options: List<ExpressiveButtonOption>,
   selectedIndex: Int,
+//  containerColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.surfaceContainerHigh,
   modifier: Modifier = Modifier
 ) {
   Row(
@@ -45,7 +48,12 @@ fun ExpressiveButtonGroup(
           0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
           options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
           else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
-        }
+        },
+        colors = ToggleButtonDefaults.toggleButtonColors(
+          containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+          contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        
       ) {
         option.icon?.let { icon ->
           Icon(
