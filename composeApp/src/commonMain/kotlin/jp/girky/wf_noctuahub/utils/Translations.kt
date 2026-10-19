@@ -649,6 +649,7 @@ object Translations {
   "SeasonDailySuspendFiveEnemies" to Pair("激突", "1回のヘビースラムで5体の敵を浮遊させる"),
   "SeasonDailyPickUpEnergy" to Pair("精力満々", "エネルギーオーブを20個拾うか，オペレーター(漂流者)で20回Void Sling をしてエネルギーを盗む"),
   "SeasonDailyPlaceMarker" to Pair("コミュニケーター", "MODや素材を5個マークする"),
+  "SeasonDailySwatter" to Pair("ハエたたき", "近接武器でドローン型エネミーを3体倒す"),
 
   // ウィークリー (末尾の数字は関数側で動的に抽出するためキーからは除外)
   "SeasonWeeklyPermanentCompleteMissions" to Pair("ミッション完了", "ミッションを15回完了する"),
@@ -681,6 +682,7 @@ object Translations {
   "SeasonWeeklyCompleteVenusRace" to Pair("搭乗時刻", "オーブ峡谷か，カンビオン荒地にて，任意の K-ドライブ レースを完了する"),
   "SeasonWeeklyCompleteNightmareMissions" to Pair("寝坊助", "ナイトメアミッションを3回クリアする"),
   "SeasonWeeklyCompleteRescue" to Pair("救出者", "救出ミッションを3回クリアする"),
+  "SeasonWeeklySabotageCaches" to Pair("貯蔵庫ハンター", "ミッション中に貯蔵庫を6個見つけて開ける"),
 
   // エリートウィークリー
   "SeasonWeeklyEliteCompleteMission" to Pair("完璧な", "ミッションを1回完了する"),
@@ -708,6 +710,9 @@ object Translations {
   "SeasonWeeklyHardFallenAngel" to Pair("堕天使", "Zariman で Void 天使を3体倒す"),
   "SeasonWeeklyHardKuvaSurvivalNoCapsules" to Pair("息を止めて", "クバ耐久ミッションを20分以上生き延びてクリアする"),
   "SeasonWeeklyHardSpiderHunt" to Pair("クモ駆除", "デュヴィリの「島々を織りしもの」ミッションをクリアする"),
+  "SeasonWeeklyHardGoingDown" to Pair("下へ", "ディセンディアミッションで Roathe を倒す"),
+  "SeasonWeeklyHardCompleteArchonHunt" to Pair("アルコンハンター", "アルコン討伐戦をクリアする"),
+
   )
 
   fun translateNightwaveChallenge(challenge: String): Pair<String, String> {
