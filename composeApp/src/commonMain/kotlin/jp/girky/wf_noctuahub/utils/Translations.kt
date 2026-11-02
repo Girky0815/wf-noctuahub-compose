@@ -629,6 +629,7 @@ object Translations {
   "SeasonDailyKillEnemiesWithHeadshots" to Pair("マークスマン", "ヘッドショットで敵を40体倒す"),
   "SeasonDailyKillEnemiesWhileOnKDrive" to Pair("スリルライダー", "K-ドライブ、ケイス、ベロシポッド、アトミサイクルに乗った状態で敵を20体倒す"),
   "SeasonDailyKillEnemiesWithSecondary" to Pair("小は大を征す", "セカンダリ武器で敵を150体倒す"),
+  "SeasonDailyKillEnemiesWithMelee" to Pair("剣の舞", "近接武器または近接型アビリティ武器で敵を150体倒す"),
   "SeasonDailyMercyKill" to Pair("慈悲なし", "Mercy で敵を1体倒す"),
   "SeasonDailyPlayEmote" to Pair("表現豊か", "ギアメニューからエモートを1回行う"),
   "SeasonDailyCollectCredits" to Pair("貯蓄家", "合計 15,000 Cr を拾う"),
@@ -650,6 +651,7 @@ object Translations {
   "SeasonDailyPickUpEnergy" to Pair("精力満々", "エネルギーオーブを20個拾うか，オペレーター(漂流者)で20回Void Sling をしてエネルギーを盗む"),
   "SeasonDailyPlaceMarker" to Pair("コミュニケーター", "MODや素材を5個マークする"),
   "SeasonDailySwatter" to Pair("ハエたたき", "近接武器でドローン型エネミーを3体倒す"),
+  "SeasonDailyWholeArsenal" to Pair("アーセナル全開", "10秒以内にプライマリ武器，セカンダリ武器，近接武器それぞれで敵を倒す"),
 
   // ウィークリー (末尾の数字は関数側で動的に抽出するためキーからは除外)
   "SeasonWeeklyPermanentCompleteMissions" to Pair("ミッション完了", "ミッションを15回完了する"),
@@ -683,6 +685,9 @@ object Translations {
   "SeasonWeeklyCompleteNightmareMissions" to Pair("寝坊助", "ナイトメアミッションを3回クリアする"),
   "SeasonWeeklyCompleteRescue" to Pair("救出者", "救出ミッションを3回クリアする"),
   "SeasonWeeklySabotageCaches" to Pair("貯蔵庫ハンター", "ミッション中に貯蔵庫を6個見つけて開ける"),
+  "SeasonWeeklyCollectHundredResources" to Pair("収集者", "素材を4,000個集める"),
+  "SeasonWeeklyMineRarePlainsResources" to Pair("地球の採掘人", "エイドロンの草原にてレア宝石か鉱石を3個採掘する"),
+  "SeasonWeeklyCompleteSortie" to Pair("ソーティスペシャリスト", "ソーティを1回通しでクリアする"),
 
   // エリートウィークリー
   "SeasonWeeklyEliteCompleteMission" to Pair("完璧な", "ミッションを1回完了する"),
@@ -712,6 +717,9 @@ object Translations {
   "SeasonWeeklyHardSpiderHunt" to Pair("クモ駆除", "デュヴィリの「島々を織りしもの」ミッションをクリアする"),
   "SeasonWeeklyHardGoingDown" to Pair("下へ", "ディセンディアミッションで Roathe を倒す"),
   "SeasonWeeklyHardCompleteArchonHunt" to Pair("アルコンハンター", "アルコン討伐戦をクリアする"),
+  "SeasonWeeklyHardFriendsMirrorDifense" to Pair("鏡よ鏡", "1回のミラー防衛ミッションで最低3ウェーブを完了してクリアする"),
+  "SeasonWeeklyHardTheManyMadeWhole" to Pair("塵も積もれば山となる", "アイアン・ウェイクでRivenの破片10個を ベール Riven Mod と交換する"),
+"SeasonWeeklyHardKillTank" to Pair("戦車破壊(仮)", "エフェルボン戦車を破壊する(仮)"),
 
   )
 
