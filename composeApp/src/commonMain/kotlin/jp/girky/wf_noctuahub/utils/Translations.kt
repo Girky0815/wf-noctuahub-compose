@@ -717,7 +717,7 @@ object Translations {
   "SeasonWeeklyHardSpiderHunt" to Pair("クモ駆除", "デュヴィリの「島々を織りしもの」ミッションをクリアする"),
   "SeasonWeeklyHardGoingDown" to Pair("下へ", "ディセンディアミッションで Roathe を倒す"),
   "SeasonWeeklyHardCompleteArchonHunt" to Pair("アルコンハンター", "アルコン討伐戦をクリアする"),
-  "SeasonWeeklyHardFriendsMirrorDifense" to Pair("鏡よ鏡", "1回のミラー防衛ミッションで最低3ウェーブを完了してクリアする"),
+  "SeasonWeeklyHardFriendsMirrorDefense" to Pair("鏡よ鏡", "1回のミラー防衛ミッションで最低3ウェーブを完了してクリアする"),
   "SeasonWeeklyHardTheManyMadeWhole" to Pair("塵も積もれば山となる", "アイアン・ウェイクでRivenの破片10個を ベール Riven Mod と交換する"),
 "SeasonWeeklyHardKillTank" to Pair("戦車破壊(仮)", "エフェルボン戦車を破壊する(仮)"),
 
