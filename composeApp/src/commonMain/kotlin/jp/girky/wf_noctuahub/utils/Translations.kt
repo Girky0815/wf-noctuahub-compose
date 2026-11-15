@@ -255,7 +255,6 @@ object Translations {
   "LowEnergy" to "低エネルギー",
   "HighDamage" to "被ダメージ増加",
   "Escapist" to "静かなる撤退",
-  "JadeGuardian" to "ジェイドガーディアン",
   "NC_SpikeCeiling" to "落下する破片",
   "SpikeCeiling" to "落下する破片",
   "PoisonGas" to "化学兵器",
@@ -282,11 +281,17 @@ object Translations {
   "VoidAberration" to "バンパイヤ・リミナス",
   "GenericFortifiedFoesWeakpointAura" to "弱点ハイライト",
   "HordeWeakPoints" to "弱点いっぱい",
+  "GrenadeSpawnAura" to "※アンフォールがスポーンする",
   "GrenadesOnly" to "アンフォールに弱い敵",
-  "GrenadeSpawnAura" to "アンフォールスポーン",
   "BasicRace" to "通常",
   "NC_MineField" to "地雷原",
   "Manics" to "マニック・マニア",
+  "NarmerPhobiaAura" to "※ディーコン視界内にいると移動速度が大幅に低下する",
+  "NarmerPhobia" to "ナルメル・ディーコン",
+  "JampSmash" to "ヘッドストンパー",
+  "HeavyWeaponsOnlyAura" to "※インフェルナムクリアまでアークウィングガン以外使用不可",
+  "HeavyWeaponsOnly" to "アークウィングガンに弱い敵",
+
 
   
   // エクシマス・カバル
@@ -296,11 +301,13 @@ object Translations {
   "ToxicFire" to "エクシマス・カバル: トキシックフレイム",
   "FreezeInShoot" to "エクシマス・カバル: フローズンライト",
   "ShockingLeech" to "エクシマス・カバル: ショッキングリーチ",
+  "JadeGuardian" to "エクシマス・カバル: ジェイドガーディアン",
 
-  // ボス
+  // ボス戦
   "HyenaPack" to "Hyenaパック",
   "InfestedBoyBand" to "テクノサイト・コーダ",
   "Raptor2" to "Raptors",
+  "CorruputedVor" to "Corrupted Vor",
 
   )
 
@@ -652,6 +659,8 @@ object Translations {
   "SeasonDailyPlaceMarker" to Pair("コミュニケーター", "MODや素材を5個マークする"),
   "SeasonDailySwatter" to Pair("ハエたたき", "近接武器でドローン型エネミーを3体倒す"),
   "SeasonDailyWholeArsenal" to Pair("アーセナル全開", "10秒以内にプライマリ武器，セカンダリ武器，近接武器それぞれで敵を倒す"),
+  "SeasonDailyDeploySpecter" to Pair("ドッペルゲンガー", "ギアメニューからスペクターを展開する(設計図は救出ミッション等で入手可能)"),
+  "SeasonDailyDonateLeverian" to Pair("パトロン", "任意のレベリアンにクレジットを寄付する(Dante レベリアンは寄付箱がないので除外)"),
 
   // ウィークリー (末尾の数字は関数側で動的に抽出するためキーからは除外)
   "SeasonWeeklyPermanentCompleteMissions" to Pair("ミッション完了", "ミッションを15回完了する"),
@@ -688,6 +697,8 @@ object Translations {
   "SeasonWeeklyCollectHundredResources" to Pair("収集者", "素材を4,000個集める"),
   "SeasonWeeklyMineRarePlainsResources" to Pair("地球の採掘人", "エイドロンの草原にてレア宝石か鉱石を3個採掘する"),
   "SeasonWeeklyCompleteSortie" to Pair("ソーティスペシャリスト", "ソーティを1回通しでクリアする"),
+  "SeasonWeeklyToAshes" to Pair("灰へ", "アルケインを分解しヴォスフォルを得る(要クリア: 壁の中の囁きクエスト)"),
+  "SeasonWeeklyHorsingAround" to Pair("馬々騒ぎ", "ケイスで 1,500m 飛行する"),
 
   // エリートウィークリー
   "SeasonWeeklyEliteCompleteMission" to Pair("完璧な", "ミッションを1回完了する"),
@@ -719,7 +730,8 @@ object Translations {
   "SeasonWeeklyHardCompleteArchonHunt" to Pair("アルコンハンター", "アルコン討伐戦をクリアする"),
   "SeasonWeeklyHardFriendsMirrorDefense" to Pair("鏡よ鏡", "1回のミラー防衛ミッションで最低3ウェーブを完了してクリアする"),
   "SeasonWeeklyHardTheManyMadeWhole" to Pair("塵も積もれば山となる", "アイアン・ウェイクでRivenの破片10個を ベール Riven Mod と交換する"),
-"SeasonWeeklyHardKillTank" to Pair("戦車破壊(仮)", "エフェルボン戦車を破壊する(仮)"),
+  "SeasonWeeklyHardKillTank" to Pair("戦車破壊(仮)", "エフェルボン戦車を破壊する(仮)"),
+  "SeasonWeeklyHardCollectUniqueResources" to Pair("素材収集者", "20種類の素材を集める"),
 
   )
 
@@ -785,7 +797,7 @@ object Translations {
     "BlastEveryXShots" to Pair("楽しんでこい", "10発ごとにヒット時爆発スタックが10追加される。"),
     "StatusChancePerAmmoSpent" to Pair("累積カートリッジ", "リロードするまで、ショットごとに状態異常確率が1%増加する。"),
     "RefundBulletOnStatusProc" to Pair("フリーショット", "状態異常を引き起こすと、10%の確率で起こした状態異常の弾丸をマガジンに充填する。"),
-    "TrickShot" to Pair("トリックショット", "弾がヒットする度に、追尾弾を発射する確率が10%増加する。発砲する度に追尾弾確率は5%低下する。"),
+    "GuidingMissilesChance" to Pair("トリックショット", "弾がヒットする度に、追尾弾を発射する確率が10%増加する。発砲する度に追尾弾確率は5%低下する。"),
     "MagneticMenace" to Pair("磁気の脅威", "アビリティを5回使うたびに前方50m以内の敵は磁気状態異常を受ける。"),
     "SharedFreeAbilityEveryXCasts" to Pair("分け合いは大事", "アビリティを10回発動するたびに、自身と味方が次に発動するアビリティのコストを0にする。"),
     "PowerStrengthAndEfficiencyPerEnergySpent" to Pair("圧倒的な力", "アビリティ発動時、アビリティの規定消費エネルギー単位ごとに、5秒間アビリティ威力が2%増加し、アビリティ効率が1%悪化する。上限：アビリティ威力 +150%、効率 -75%。"),
@@ -796,7 +808,7 @@ object Translations {
     "AttackAndMovementSpeedOnCritMelee" to Pair("ヒット＆スプリット", "近接攻撃のクリティカルヒットは、確率で攻撃速度と移動速度を10秒間5%上昇させる。"),
     "OrbsDuplicateOnPickup" to Pair("標的治療薬", "ヘルスオーブを撃つと回収できる。回収時にヘルスオーブは25%の確率で分裂する。"),
     "GenerateOmniOrbsOnWeakKill" to Pair("強制輸血", "弱点への攻撃で敵を倒すとユニバーサルオーブが25%の確率で生成される。"),
-    "ShieldRefill" to Pair("シールド充填", "エネルギーオーブは100シールドとオーバーシールドを与える。"),
+    "EnergyOrbsGrantShield" to Pair("シールド充填", "エネルギーオーブは100シールドとオーバーシールドを与える。"),
     "BadMedicine" to Pair("悪い薬品", "ヘルスオーブは拾うと範囲10mの爆発を起こし、敵にダメージを与える。爆発に巻き込まれた敵一体につき30秒間50装甲値を得る。")
   )
 
