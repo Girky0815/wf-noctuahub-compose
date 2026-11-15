@@ -397,7 +397,12 @@ fun SettingsPage(
         // カラー選択ツール（Android Canary 2606 風）ダイアログ
         if (showColorPickerDialog) {
           val initialColor = Color(seedColorArgb.toLong())
-          var currentHue by remember { mutableStateOf(jp.girky.wf_noctuahub.utils.ColorUtils.colorToHue(initialColor)) }
+          val initialHue = remember { jp.girky.wf_noctuahub.utils.ColorUtils.colorToHue(initialColor) }
+          val sliderState = rememberSliderState(
+            value = initialHue,
+            trackRange = 0f..360f
+          )
+          val currentHue = sliderState.value
           val selectedPickerColor = remember(currentHue) { jp.girky.wf_noctuahub.utils.ColorUtils.hsvToColor(currentHue) }
 
           AlertDialog(
@@ -448,9 +453,8 @@ fun SettingsPage(
 
                 @OptIn(ExperimentalMaterial3Api::class)
                 Slider(
-                  value = currentHue,
-                  onValueChange = { currentHue = it },
-                  valueRange = 0f..360f,
+                  state = sliderState,
+                  onValueChange = { sliderState.value = it },
                   modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp),

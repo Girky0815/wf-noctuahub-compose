@@ -64,8 +64,12 @@ kotlin {
 
 android {
     namespace = "jp.girky.wf_noctuahub"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-
+    compileSdk {
+        version = release(37) {
+            minorApiLevel = 2
+        }
+    }
+    
     signingConfigs {
         create("release") {
             val keystorePath = System.getenv("ANDROID_KEYSTORE_PATH")

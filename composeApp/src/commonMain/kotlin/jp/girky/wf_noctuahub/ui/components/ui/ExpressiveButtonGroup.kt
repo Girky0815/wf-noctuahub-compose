@@ -49,7 +49,7 @@ fun ExpressiveButtonGroup(
           options.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
           else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
         },
-        colors = ToggleButtonDefaults.toggleButtonColors(
+        colors = ToggleButtonDefaults.colors(
           containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
           contentColor = MaterialTheme.colorScheme.onSurfaceVariant
         )
